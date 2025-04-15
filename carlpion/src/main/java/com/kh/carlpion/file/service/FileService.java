@@ -5,8 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Base64;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,27 +24,23 @@ public class FileService {
 	}
 	
 	public String storage(MultipartFile file) {
-		StringBuilder sb = new StringBuilder();
-//		sb.append("_");
+		UUID uuid = UUID.randomUUID();	/* 32글자 */
 		
-		String currentTime = new SimpleDateFormat("yyyyMMdd_HHmmss_").format(new Date());
-		sb.append(currentTime);
+		Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();		
+		String uuidShort = encoder.encodeToString(uuid.toString().getBytes());	/* 22글자 */
 		
-		int randomNo = (int)(Math.random() * 900) + 100;	/*000*/
-		sb.append(randomNo);
+		String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));	/* 파일 확장자*/
+		String newFileName =  uuidShort + extension;
 		
-		String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-		sb.append(extension);
-		
-		Path tagetLocation = this.fileLocation.resolve(sb.toString());
-//		log.info("저장경로: {}",tagetLocation);
+		Path tagetLocation = this.fileLocation.resolve(newFileName);
+//		log.info("저장 경로 보기: {}",tagetLocation);
 		
 		try {
 			Files.copy(file.getInputStream(), tagetLocation, StandardCopyOption.REPLACE_EXISTING);
-			return "http://localhost/" + sb.toString();
+			return "http://localhost/" + newFileName;
 			
 		} catch (IOException e) {
-			throw new RuntimeException("파일을 저장할 수 없습니다.");
+			throw new RuntimeException("파일을 저장할 수 없습니다.");	/*Exception 바꾸기*/
 		}				
 	}
 }
