@@ -13,9 +13,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CommentNtDTO {
+public class CommentReviewDTO {
 	private Long commentNo;
-	private Long noticeNo;
+	private Long reviewNo;
 	private Long userNo;
 	private String content;
 	private Date createDate;
