@@ -1,4 +1,4 @@
-package com.kh.carlpion.announcement.model.dto;
+package com.kh.carlpion.notice.model.dto;
 
 import java.sql.Date;
 
