@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CommentRpDTO {
+public class CommentReportDTO {
 	private Long commentNo;
 	private Long reportNo;
 	private Long userNo;
