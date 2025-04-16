@@ -5,9 +5,10 @@ import java.util.List;
 import com.kh.carlpion.comment.model.dto.CommentReviewDTO;
 
 public interface CommentReviewService {
-	void save(CommentReviewDTO commentReviewDTO);
 	
-	List<CommentReviewDTO> findAll(Long reviewNo);
+	void saveReview(CommentReviewDTO commentReviewDTO);
 	
-	void deleteById(Long commentNo);
+	List<CommentReviewDTO> findAllReview(Long reviewNo);
+	
+	void deleteReviewById(Long commentNo);
 }

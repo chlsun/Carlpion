@@ -2,10 +2,12 @@ package com.kh.carlpion.review.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.review.model.dao.ReviewMapper;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 	
+	private final ReviewMapper reviewMapper;
 	private final FileService fileService;
 
 	@Override
@@ -25,7 +28,9 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public List<ReviewDTO> findAll(int pageNo) {
-		return null;
+		int pageSize = 10;
+		RowBounds rowBounds = new RowBounds(pageNo * pageSize, pageSize);
+		return reviewMapper.findAll(rowBounds);
 	}
 
 	@Override

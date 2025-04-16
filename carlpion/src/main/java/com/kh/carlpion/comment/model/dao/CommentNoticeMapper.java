@@ -1,11 +1,14 @@
-package com.kh.carlpion.comment.model.service;
+package com.kh.carlpion.comment.model.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import com.kh.carlpion.comment.model.dto.CommentNoticeDTO;
 
-public interface CommentNoticeService {
-	
+@Mapper
+public interface CommentNoticeMapper {
+
 	void saveNotice(CommentNoticeDTO commentNoticeDTO);
 	
 	List<CommentNoticeDTO> findAllNotice(Long noticeNo);
