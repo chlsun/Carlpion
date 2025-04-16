@@ -2,10 +2,12 @@ package com.kh.carlpion.notice.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.notice.model.dao.NoticeMapper;
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class NoticeServiceImpl implements NoticeService {
 	
+	private final NoticeMapper noticeMapper;
 	private final FileService fileService;
 
 	@Override
@@ -25,7 +28,9 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public List<NoticeDTO> findAll(int pageNo) {
-		return null;
+		int pageSize = 10;
+		RowBounds rowBounds = new RowBounds(pageNo * pageSize, pageSize);
+		return noticeMapper.findAll(rowBounds);
 	}
 
 	@Override
@@ -40,7 +45,6 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public void deleteById(Long noticeNo) {
-
+		
 	}
-
 }

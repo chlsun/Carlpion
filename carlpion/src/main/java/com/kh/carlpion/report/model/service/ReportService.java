@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.report.model.dto.ReportDTO;
 
 public interface ReportService {
+	
 	void save(ReportDTO reportDTO, MultipartFile file);
 	
 	List<ReportDTO> findAll(int pageNo);

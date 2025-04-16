@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
 
 public interface ReviewService {
+	
 	void save(ReviewDTO reviewDTO, MultipartFile file);
 	
 	List<ReviewDTO> findAll(int pageNo);

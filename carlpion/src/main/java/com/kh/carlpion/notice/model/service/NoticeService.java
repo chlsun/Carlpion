@@ -8,6 +8,7 @@ import com.kh.carlpion.notice.model.dto.NoticeDTO;
 
 
 public interface NoticeService {
+	
 	void save(NoticeDTO noticeDTO, MultipartFile file);
 	
 	List<NoticeDTO> findAll(int pageNo);

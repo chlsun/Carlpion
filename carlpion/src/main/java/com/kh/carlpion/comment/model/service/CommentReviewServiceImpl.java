@@ -15,17 +15,17 @@ import lombok.extern.slf4j.Slf4j;
 public class CommentReviewServiceImpl implements CommentReviewService {
 
 	@Override
-	public void save(CommentReviewDTO commentReviewDTO) {
+	public void saveReview(CommentReviewDTO commentReviewDTO) {
 
 	}
 
 	@Override
-	public List<CommentReviewDTO> findAll(Long reviewNo) {
+	public List<CommentReviewDTO> findAllReview(Long reviewNo) {
 		return null;
 	}
 
 	@Override
-	public void deleteById(Long commentNo) {
+	public void deleteReviewById(Long commentNo) {
 
 	}
 

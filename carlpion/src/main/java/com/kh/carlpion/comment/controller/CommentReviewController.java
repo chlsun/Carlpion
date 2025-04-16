@@ -27,19 +27,19 @@ public class CommentReviewController {
 	private final CommentReviewService commentReviewService;
 	
 	@PostMapping
-	public ResponseEntity<?> save(CommentReviewDTO commentReviewDTO) {
-		commentReviewService.save(commentReviewDTO);
+	public ResponseEntity<?> saveReview(CommentReviewDTO commentReviewDTO) {
+		commentReviewService.saveReview(commentReviewDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<CommentReviewDTO>> findAll(@RequestParam(name = "noticeNo") Long reviewNo) {
-		return ResponseEntity.ok(commentReviewService.findAll(reviewNo));
+	public ResponseEntity<List<CommentReviewDTO>> findAllReview(@RequestParam(name = "reviewNo") Long reviewNo) {
+		return ResponseEntity.ok(commentReviewService.findAllReview(reviewNo));
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteById(@PathVariable(name = "id") Long commentNo) {
-		commentReviewService.deleteById(commentNo);
+	public ResponseEntity<?> deleteReviewById(@PathVariable(name = "id") Long commentNo) {
+		commentReviewService.deleteReviewById(commentNo);
 		return ResponseEntity.noContent().build();
 	}
 }

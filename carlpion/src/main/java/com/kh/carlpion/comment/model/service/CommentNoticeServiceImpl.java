@@ -15,17 +15,17 @@ import lombok.extern.slf4j.Slf4j;
 public class CommentNoticeServiceImpl implements CommentNoticeService {
 
 	@Override
-	public void save(CommentNoticeDTO commentNoticeDTO) {
+	public void saveNotice(CommentNoticeDTO commentNoticeDTO) {
 
 	}
 
 	@Override
-	public List<CommentNoticeDTO> findAll(Long noticeNo) {
+	public List<CommentNoticeDTO> findAllNotice(Long noticeNo) {
 		return null;
 	}
 
 	@Override
-	public void deleteById(Long commentNo) {
+	public void deleteNoticeById(Long commentNo) {
 
 	}
 
