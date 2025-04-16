@@ -1,10 +1,11 @@
-package com.kh.carlpion.announcement.model.service;
+package com.kh.carlpion.notice.model.service;
 
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kh.carlpion.announcement.model.dto.NoticeDTO;
+import com.kh.carlpion.notice.model.dto.NoticeDTO;
+
 
 public interface NoticeService {
 	void save(NoticeDTO noticeDTO, MultipartFile file);
