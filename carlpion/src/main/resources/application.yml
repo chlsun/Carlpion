@@ -6,13 +6,11 @@ spring:
     url: jdbc:oracle:thin:@192.168.130.17:1521:XE
     username: C##PROJECTCP
     password: 1234
-
   profiles:
     include: private
-
+  include: mail
   mvc:
     static-path-pattern: 
-
   web:
     resources:
       static-locations:
@@ -28,5 +26,4 @@ server:
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    jdbc-type-for-null: VARCHAR
   mapper-locations: classpath:mapper/*.xml
