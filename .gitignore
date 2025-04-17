@@ -36,3 +36,4 @@ yarn-error.log*
 Thumbs.db
 
 application-private.yml
+application-mail.yml
