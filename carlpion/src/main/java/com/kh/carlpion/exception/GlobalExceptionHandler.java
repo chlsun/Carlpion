@@ -5,14 +5,25 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.kh.carlpion.exception.exceptions.DuplicateValueException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
+
+	public ResponseEntity<?> exceptionHandler(Exception e, HttpStatus status){
+		
+		return ResponseEntity.status(status).body(e.getMessage());
+	}
+
+	@ExceptionHandler(EmptyInputException.class)
+	public ResponseEntity<?> emptyInputError(EmptyInputException e){
+		
+		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+	}
 
 	@ExceptionHandler(DuplicateValueException.class)
 	public ResponseEntity<Map<String, String>> handleDuplicateValue(DuplicateValueException e) {
