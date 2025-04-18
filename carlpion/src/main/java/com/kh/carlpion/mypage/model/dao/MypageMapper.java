@@ -12,11 +12,17 @@ public interface MypageMapper {
 	
 	MypageDTO updateNickName(MypageDTO mypage);
 	
+	int checkNickName(MypageDTO mypage);
+	
 	void updatePassword(MypageDTO mypage);
 	
 	MypageDTO updateEmail(MypageDTO mypage);
 	
+	int checkEmail(MypageDTO mypage);
+	
 	MypageDTO updateProfile (MultipartFile file, long userNo);
 	
 	MypageDTO updateName(MypageDTO myapge);
+	
+	void deleteUser(MypageDTO mypage);
 }

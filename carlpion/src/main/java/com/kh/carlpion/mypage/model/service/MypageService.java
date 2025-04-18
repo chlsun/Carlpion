@@ -17,4 +17,9 @@ public interface MypageService {
 	MypageDTO updateProfile(MultipartFile file, Long userNo);
 	
 	MypageDTO updateName(MypageDTO mypage);
+	
+	void deleteUser(MypageDTO mypage);
+	
+	
+	
 }
