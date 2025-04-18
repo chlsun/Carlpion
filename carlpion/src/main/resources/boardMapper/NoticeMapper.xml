@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.notice.model.dao.NoticeMapper">
+	<insert 
+		id="save"
+		parameterType="com.kh.carlpion.notice.model.dto.NoticeDTO"
+	>
+		INSERT 
+		  INTO	CP_NOTICE
+		  	 (
+			 	USER_NO
+			 ,	TITLE
+			 , 	CONTENT
+			 , 	CREATE_DATE
+			 )
+		VALUES 
+			 (
+			   	#{userNo}
+			 , 	#{title} 	
+			 , 	#{content} 	
+			 , 	SYSDATE	
+			 )
+	</insert>
+	
+	<select 
+		id="findAll" 
+		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
+	>
+		SELECT 
+				NOTICE_NO	AS	noticeNo
+			 ,	USER_NO		AS	userNo
+			 ,	TITLE		AS	title
+			 ,	CONTENT		AS	content
+			 ,	CREATE_DATE	AS	createDate
+			 ,	COUNT
+		  FROM
+		  		CP_NOTICE n
+		  JOIN
+		  		CP_USER u 	ON 	u.USER_NO = n.USER_NO
+		  JOIN
+		  		CP_POINT p 	ON 	p.USER_NO = n.USER_NO	
+		 WHERE	
+		 		IS_ACTIVE = 'Y'
+		 ORDER
+		 	BY	
+		 		NOTICE_NO 	DESC
+		   	 , 	POINT 		DESC
+           	 ,  USER_LEVEL 	DESC
+	</select>
+	<select 
+		id="findById" 
+		parameterType="long"
+		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
+	>
+		SELECT 
+				NOTICE_NO	AS	noticeNo
+			 ,	USER_NO		AS	userNo
+			 ,	TITLE		AS	title
+			 ,	CONTENT		AS	content
+			 ,	CREATE_DATE	AS	createDate
+			 ,	COUNT
+			 ,	POINT
+			 ,	USER_LEVEL
+		  FROM
+		  		CP_NOTICE n
+		  JOIN
+		  		CP_USER u 	ON 	u.USER_NO = n.USER_NO
+		  JOIN
+		  		CP_POINT p 	ON 	p.USER_NO = n.USER_NO
+		 WHERE	
+		 		IS_ACTIVE = 'Y'
+		   AND	
+		   		NOTICE_NO = #{noticeNo} 
+	</select>
+	
+	<update id="updateById">
+		UPDATE
+				CP_NOTICE
+		   SET
+		   		TITLE = #{title}
+		   	 ,	CONTENT = #{content}
+		 WHERE	
+		 		NOTICE_NO = #{noticeNo}
+	</update>
+	<update id="deleteById">
+		UPDATE
+				CP_NOTICE
+		   SET
+		   		IS_ACTIVE = 'N'
+		 WHERE	
+		 		NOTICE_NO = #{noticeNo}
+	</update>
+</mapper>
