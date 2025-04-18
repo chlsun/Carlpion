@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.report.model.dto.ReportDTO;
+import com.kh.carlpion.report.model.vo.ReportVO;
 
 public interface ReportService {
 	

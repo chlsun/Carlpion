@@ -5,10 +5,11 @@
 <mapper namespace="com.kh.carlpion.review.model.dao.ReviewMapper">
 	<insert 
 		id="save"
-		parameterType="com.kh.carlpion.review.model.dto.ReviewDTO"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
 	>
 		INSERT 
-		  INTO	CP_REVIEW
+		  INTO	
+		  		CP_REVIEW
 		  	 (
 			 	USER_NO
 			 ,	TITLE
@@ -21,6 +22,24 @@
 			 , 	#{title} 	
 			 , 	#{content} 	
 			 , 	SYSDATE 	
+			 )
+	</insert>
+	<insert 
+		id="" 
+		parameterType=""
+	>
+	
+		INSERT
+		  INTO
+		  		CP_RV_FILE
+		  	 (
+				REVIEW_NO
+			 ,	FILE_URL
+			 )
+		VALUES
+			 (
+				#{reviewNo}
+			 ,	#{fileUrl}
 			 )
 	</insert>
 	

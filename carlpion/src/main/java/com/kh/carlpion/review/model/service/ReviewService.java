@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.review.model.dto.ReviewDTO;
+import com.kh.carlpion.review.model.vo.ReviewVO;
 
 public interface ReviewService {
 	

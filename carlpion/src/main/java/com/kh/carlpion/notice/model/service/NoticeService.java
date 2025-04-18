@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
+import com.kh.carlpion.notice.model.vo.NoticeVO;
 
 
 public interface NoticeService {

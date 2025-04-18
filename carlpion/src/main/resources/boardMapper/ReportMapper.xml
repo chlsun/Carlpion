@@ -5,10 +5,11 @@
 <mapper namespace="com.kh.carlpion.report.model.dao.ReportMapper">
 	<insert 
 		id="save"
-		parameterType="com.kh.carlpion.report.model.dto.ReportDTO"
+		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
 	>
 		INSERT 
-		  INTO	CP_REPORT
+		  INTO	
+		  		CP_REPORT
 		  	 (
 			 	USER_NO
 			 ,	TITLE

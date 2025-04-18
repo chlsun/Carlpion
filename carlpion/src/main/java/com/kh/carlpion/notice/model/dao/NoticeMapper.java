@@ -6,11 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
+import com.kh.carlpion.notice.model.vo.NoticeVO;
 
 @Mapper
 public interface NoticeMapper {	
 	
-	void save(NoticeDTO noticeDTO);	
+	void save(NoticeVO noticeVO);	
 	
 	List<NoticeDTO> findAll(RowBounds rowBounds);	
 	

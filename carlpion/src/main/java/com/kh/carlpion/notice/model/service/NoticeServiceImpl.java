@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.notice.model.dao.NoticeMapper;
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
+import com.kh.carlpion.notice.model.vo.NoticeVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,23 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public void save(NoticeDTO noticeDTO, MultipartFile file) {
+		// 수정 중
+//		NoticeVO requestData = NoticeVO
+//								.builder()
+//								.title(noticeDTO.getTitle())
+//								.content(noticeDTO.getContent())
+//								.userNo(noticeDTO.getUserNo())
+//								.build();
+//		
+//		noticeMapper.save(requestData);
+//		
+//		if(file != null && !file.isEmpty()) {			
+//			String filePath = fileService.storage(file);
+//			requestData = NoticeVO
+//							.builder()
+//							.fileUrl(filePath)
+//							.build();
+//		}
 		
 	}
 
@@ -35,16 +53,27 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public NoticeDTO findById(Long noticeNo) {
-		return null;
+		NoticeDTO noticeDTO = noticeMapper.findById(noticeNo);
+		
+		if(noticeNo == null) {
+			throw new RuntimeException("Not Find Notice");
+		}
+		return noticeDTO;
 	}
 
 	@Override
 	public NoticeDTO updateById(NoticeDTO noticeDTO, MultipartFile file) {
-		return null;
+		
+		if(file != null && !file.isEmpty()) {
+			String filePath = fileService.storage(file);
+			noticeDTO.setFileUrl(filePath);
+		}
+		noticeMapper.updateById(noticeDTO);
+		return noticeDTO;
 	}
 
 	@Override
 	public void deleteById(Long noticeNo) {
-		
+		noticeMapper.deleteById(noticeNo);
 	}
 }
