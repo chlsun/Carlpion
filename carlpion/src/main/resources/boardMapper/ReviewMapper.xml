@@ -28,19 +28,20 @@
 		id="" 
 		parameterType=""
 	>
-	
-		INSERT
-		  INTO
-		  		CP_RV_FILE
-		  	 (
-				REVIEW_NO
-			 ,	FILE_URL
-			 )
-		VALUES
-			 (
-				#{reviewNo}
-			 ,	#{fileUrl}
-			 )
+		<foreach collection="" open="" close="">
+			INSERT
+			  INTO
+			  		CP_RV_FILE
+			  	 (
+					REVIEW_NO
+				 ,	FILE_URL
+				 )
+			VALUES
+				 (
+					#{reviewNo}
+				 ,	#{fileUrl}
+				 )
+		</foreach>	
 	</insert>
 	
 	<select 
