@@ -19,12 +19,10 @@ public class MypageServiceImpl implements MypageService {
 	
 	
 	@Override
-	public ResponseEntity<String> updateNickName(MypageDTO mypage) {
-		int result =  mapper.updateNickName(mypage);
+	public 	MypageDTO updateNickName(MypageDTO mypage) {
+		MypageDTO result =  mapper.updateNickName(mypage);
 		
-		
-		 
-		 return ResponseEntity.status(HttpStatus.OK).body("닉네임 변경 성공");
+		 return result;
 	}
 	
 	@Override
@@ -33,24 +31,24 @@ public class MypageServiceImpl implements MypageService {
 	}
 
 	@Override
-	public ResponseEntity<String> updateEmail(MypageDTO mypage) {
-		 mapper.updateEmail(mypage);
-		return ResponseEntity.status(HttpStatus.OK).body("이메일 변경 성공");
+	public 	MypageDTO updateEmail(MypageDTO mypage) {
+		MypageDTO result = mapper.updateEmail(mypage);
+		return result;
 	}
 
 	@Override
-	public ResponseEntity<String> updateProfile(MultipartFile file, Long userNo) {
-		 mapper.updateProfile(file,userNo);
+	public 	MypageDTO updateProfile(MultipartFile file, Long userNo) {
+		MypageDTO result = mapper.updateProfile(file,userNo);
 	
 		
-		return ResponseEntity.status(HttpStatus.OK).body("프로필 수정 성공"); 
+		return result;
 	}
 
 	@Override
-	public ResponseEntity<String> updateName(MypageDTO mypage) {
-		mapper.updateName(mypage);
+	public 	MypageDTO updateName(MypageDTO mypage) {
+		MypageDTO result = mapper.updateName(mypage);
 		
-		return ResponseEntity.status(HttpStatus.OK).body("이름 수정 성공");
+		return result;
 	}
 
 	
