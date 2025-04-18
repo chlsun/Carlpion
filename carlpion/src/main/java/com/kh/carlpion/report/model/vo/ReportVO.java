@@ -1,19 +1,17 @@
-package com.kh.carlpion.report.model.dto;
+package com.kh.carlpion.report.model.vo;
 
 import java.sql.Date;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Value;
 
+@Value
+@Builder
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class ReportDTO {
+public class ReportVO {
 	private Long reportNo;
 	private Long userNo;
 	private String title;

@@ -35,17 +35,28 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public ReviewDTO findById(Long reviewNo) {
-		return null;
+		ReviewDTO reviewDTO = reviewMapper.findById(reviewNo);
+		
+		if(reviewNo == null) {
+			throw new RuntimeException("Not Find Notice");
+		}
+		return reviewDTO;
 	}
 
 	@Override
 	public ReviewDTO updateById(ReviewDTO reviewDTO, MultipartFile file) {
-		return null;
+		
+		if(file != null && !file.isEmpty()) {
+			String filePath = fileService.storage(file);
+			reviewDTO.setFileUrl(filePath);
+		}
+		reviewMapper.updateById(reviewDTO);
+		return reviewDTO;
 	}
 
 	@Override
 	public void deleteById(Long reviewNo) {
-
+		reviewMapper.deleteById(reviewNo);
 	}
 
 }

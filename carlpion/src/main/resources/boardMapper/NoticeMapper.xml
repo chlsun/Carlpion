@@ -5,10 +5,11 @@
 <mapper namespace="com.kh.carlpion.notice.model.dao.NoticeMapper">
 	<insert 
 		id="save"
-		parameterType="com.kh.carlpion.notice.model.dto.NoticeDTO"
+		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
 	>
 		INSERT 
-		  INTO	CP_NOTICE
+		  INTO	
+		  		CP_NOTICE
 		  	 (
 			 	USER_NO
 			 ,	TITLE

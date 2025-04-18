@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.report.model.dao.ReportMapper;
 import com.kh.carlpion.report.model.dto.ReportDTO;
+import com.kh.carlpion.report.model.vo.ReportVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,28 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public void save(ReportDTO reportDTO, MultipartFile file) {
-
+		
+		ReportVO requestData = null;
+		
+		if(file != null && !file.isEmpty()) {
+			String filePath = fileService.storage(file);
+			requestData = ReportVO
+							.builder()
+							.title(reportDTO.getTitle())
+							.content(reportDTO.getContent())
+							.userNo(reportDTO.getUserNo())
+							.fileUrl(filePath)
+							.build();
+		} else {
+			requestData = ReportVO
+							.builder()
+							.title(reportDTO.getTitle())
+							.content(reportDTO.getContent())
+							.userNo(reportDTO.getUserNo())
+							.build();
+		}
+//		log.info("save: {}", requestData);
+		reportMapper.save(requestData);
 	}
 
 	@Override
@@ -35,17 +57,27 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public ReportDTO findById(Long reportNo) {
-		return null;
+		ReportDTO reportDTO = reportMapper.findById(reportNo);
+		
+		if(reportNo == null) {
+			throw new RuntimeException("Not Find Report");
+		}
+		return reportDTO;
 	}
 
 	@Override
 	public ReportDTO updateById(ReportDTO reportDTO, MultipartFile file) {
-		return null;
+		
+		if(file != null && !file.isEmpty()) {
+			String filePath = fileService.storage(file);
+			reportDTO.setFileUrl(filePath);
+		}
+		reportMapper.updateById(reportDTO);
+		return reportDTO;
 	}
 
 	@Override
 	public void deleteById(Long reportNo) {
-
+		reportMapper.deleteById(reportNo);
 	}
-
 }

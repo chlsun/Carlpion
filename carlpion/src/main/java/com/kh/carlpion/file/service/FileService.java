@@ -20,7 +20,7 @@ public class FileService {
 	private final Path fileLocation;
 	
 	public FileService() {
-		this.fileLocation = Paths.get("").toAbsolutePath().normalize();
+		this.fileLocation = Paths.get("uploads").toAbsolutePath().normalize();
 	}
 	
 	public String storage(MultipartFile file) {
@@ -37,7 +37,7 @@ public class FileService {
 		
 		try {
 			Files.copy(file.getInputStream(), tagetLocation, StandardCopyOption.REPLACE_EXISTING);
-			return "http://localhost/" + newFileName;
+			return "http://localhost/uploads/" + newFileName.toString();
 			
 		} catch (IOException e) {
 			throw new RuntimeException("파일을 저장할 수 없습니다.");	/*Exception 바꾸기*/
