@@ -11,7 +11,8 @@
 			PASSWORD,
 			NICKNAME,
 			REALNAME,
-			EMAIL
+			EMAIL,
+			ROLE
 		FROM
 			CP_USER
 		WHERE
@@ -26,7 +27,8 @@
 			PASSWORD,
 			NICKNAME,
 			REALNAME,
-			EMAIL
+			EMAIL,
+			ROLE
 		FROM
 			CP_USER
 		WHERE
@@ -41,7 +43,8 @@
 			PASSWORD,
 			NICKNAME,
 			REALNAME,
-			EMAIL
+			EMAIL,
+			ROLE
 		FROM
 			CP_USER
 		WHERE

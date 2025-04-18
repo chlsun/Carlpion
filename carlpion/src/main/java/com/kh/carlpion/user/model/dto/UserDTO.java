@@ -41,4 +41,5 @@ public class UserDTO {
 	@NotBlank(message = "이메일은 비어있거나 공백이 포함될 수 없습니다.")
 	private String email;
 	
+	private String role;
 }
