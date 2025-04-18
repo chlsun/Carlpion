@@ -26,10 +26,19 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+>>>>>>> 9d97f720ce95014a32698eef903c691c66f4809a
+=======
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+>>>>>>> 9d97f720ce95014a32698eef903c691c66f4809a
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
