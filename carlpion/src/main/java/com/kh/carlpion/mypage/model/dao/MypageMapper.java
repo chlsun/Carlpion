@@ -10,13 +10,13 @@ import com.kh.carlpion.mypage.model.dto.MypageDTO;
 public interface MypageMapper {
 
 	
-	int updateNickName(MypageDTO mypage);
+	MypageDTO updateNickName(MypageDTO mypage);
 	
 	void updatePassword(MypageDTO mypage);
 	
-	int updateEmail(MypageDTO mypage);
+	MypageDTO updateEmail(MypageDTO mypage);
 	
-	int updateProfile (MultipartFile file, long userNo);
+	MypageDTO updateProfile (MultipartFile file, long userNo);
 	
-	int updateName(MypageDTO myapge);
+	MypageDTO updateName(MypageDTO myapge);
 }
