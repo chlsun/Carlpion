@@ -46,6 +46,7 @@ public class MypageServiceImpl implements MypageService {
 			throw new EmailDuplicateException("이미 존재하는 이메일 입니다.");
 			
 		}	
+		
 		MypageDTO result = mapper.updateEmail(mypage);
 		return result;
 	}
