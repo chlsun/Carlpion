@@ -2,6 +2,7 @@ package com.kh.carlpion.mypage.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +62,13 @@ public class MypageController {
 			
 	}
 		
-	
+	@DeleteMapping("/users")
+	public ResponseEntity<String> deleteUser(@RequestBody MypageDTO mypage){
+		
+		mypageService.deleteUser(mypage);
+		
+		return ResponseEntity.ok("탈퇴에 성공하셨습니다.");
+	} 
 	
 	
 	

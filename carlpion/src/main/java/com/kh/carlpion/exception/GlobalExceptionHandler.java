@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.kh.carlpion.exception.exceptions.DuplicateValueException;
+import com.kh.carlpion.exception.exceptions.EmailDuplicateException;
+import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
 
 @RestControllerAdvice
@@ -44,4 +46,18 @@ public class GlobalExceptionHandler {
 		
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 	}
+	
+	@ExceptionHandler(NickNameDuplicateException.class)
+	public ResponseEntity<?> handleNickNameDuplicate(NickNameDuplicateException e){
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+	}
+
+	@ExceptionHandler(EmailDuplicateException.class)
+	public ResponseEntity<?> handleEmailDuplicate(EmailDuplicateException e){
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+	}
+	
+	
+	
 }
