@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.user.model.dao.UserMapper">
+	<select id="selectUserByUsername"
+			parameterType="string"
+			resultType="com.kh.carlpion.user.model.dto.UserDTO">
+		SELECT
+			USERNAME,
+			PASSWORD,
+			NICKNAME,
+			REALNAME,
+			EMAIL
+		FROM
+			CP_USER
+		WHERE
+			USERNAME = #{username}
+	</select>
+	
+	<select id="selectUserByNickname"
+			parameterType="string"
+			resultType="com.kh.carlpion.user.model.dto.UserDTO">
+		SELECT
+			USERNAME,
+			PASSWORD,
+			NICKNAME,
+			REALNAME,
+			EMAIL
+		FROM
+			CP_USER
+		WHERE
+			NICKNAME = #{nickname}
+	</select>
+	
+	<select id="selectUserByEmail"
+			parameterType="string"
+			resultType="com.kh.carlpion.user.model.dto.UserDTO">
+		SELECT
+			USERNAME,
+			PASSWORD,
+			NICKNAME,
+			REALNAME,
+			EMAIL
+		FROM
+			CP_USER
+		WHERE
+			EMAIL = #{email}
+	</select>
+
+	<insert id="signUp"
+			parameterType="com.kh.carlpion.user.model.vo.UserVO">
+		INSERT INTO
+			CP_USER
+			(
+				USERNAME,
+				PASSWORD,
+				NICKNAME,
+				REALNAME,
+				EMAIL,
+				ROLE,
+				CREATE_DATE,
+				IS_ACTIVE
+			)
+		VALUES
+			(
+				#{username},
+				#{password},
+				#{nickname},
+				#{realname},
+				#{email},
+				DEFAULT,
+				DEFAULT,
+				DEFAULT
+			)
+	</insert>
+</mapper>
