@@ -2,5 +2,14 @@ spring:
   application:
     name: carlpion
 
+  datasource:
+    url: jdbc:oracle:thin:@112.221.156.34:12345:XE
+    username: C##PROJECTCP
+    password: 1234
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+
+  profiles:
+    active: private
+
 server:
   port: 80
