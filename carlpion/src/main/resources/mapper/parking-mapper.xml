@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.kh.carlpion.parking.model.dao.ParkingMapper">
+	<insert id="parkingInfoSetting" parameterType="list">
+  		<foreach collection="list" item="item" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+    		INTO CP_PARKING_INFO (
+      			PARKING_ID,
+      			PARKING_TITLE,
+      			PARKING_ADDR,
+      			LAT,
+      			LOT
+    		)
+    		VALUES (
+      			#{item.parkingId},
+      			#{item.parkingTitle},
+      			#{item.parkingAddr},
+      			#{item.lat},
+      			#{item.lot}
+    		)
+  		</foreach>
+	</insert>
+	
+	<select id="selectParkingId"
+			resultType="com.kh.carlpion.parking.model.dto.ParkingDTO">
+		SELECT
+			PARKING_ID parkingId
+		FROM 
+			CP_PARKING_INFO
+	</select>
+	
+	<select id="getParkingInfoByTitle"
+			resultType="com.kh.carlpion.parking.model.dto.ParkingDTO">
+		SELECT
+			   PARKING_ID parkingId
+			 , PARKING_TITLE parkingTitle
+			 , PARKING_ADDR parkingAddr
+			 , LAT lat
+			 , LOT lot
+		 FROM
+		       CP_PARKING_INFO
+		 WHERE
+			   PARKING_ADDR LIKE '%' || #{search} || '%'
+	</select>
+</mapper>

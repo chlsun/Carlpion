@@ -14,7 +14,26 @@ build/
 
 *.log
 
+node_modules/
+
+dist/
+
+.vite/
+node_modules/.vite
+
+.env
+.env.*.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.vscode/
+.idea/
+*.sublime-workspace
+
 .DS_Store
 Thumbs.db
 
 application-private.yml
+application-mail.yml
