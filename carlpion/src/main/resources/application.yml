@@ -19,11 +19,33 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 200MB
+<<<<<<< HEAD
+
+  datasource:
+    url: jdbc:oracle:thin:@112.221.156.34:12345:XE
+    username: C##PROJECTCP
+    password: 1234
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+
+  profiles:
+    active: private
+=======
+>>>>>>> 9d97f720ce95014a32698eef903c691c66f4809a
 
 server:
+<<<<<<< HEAD
   port: 80
+<<<<<<< HEAD
+=======
+  port: 80
+=======
+>>>>>>> 9d97f720ce95014a32698eef903c691c66f4809a
 
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:mapper/*.xml
+<<<<<<< HEAD
+>>>>>>> 9d97f720ce95014a32698eef903c691c66f4809a
+=======
+>>>>>>> 9d97f720ce95014a32698eef903c691c66f4809a
