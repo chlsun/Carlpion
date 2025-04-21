@@ -20,4 +20,8 @@ public interface NoticeMapper {
 	void updateById(NoticeDTO noticeDTO);	
 	
 	void deleteById(Long noticeNo);
+	
+	void saveFile(NoticeVO noticeVO);
+	
+	void deleteFileById(Long noticeNo);
 }

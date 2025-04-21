@@ -22,12 +22,12 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
 
 	@Override
 	public void saveNotice(CommentNoticeDTO commentNoticeDTO) {
-		CommentNoticeVO requestData = CommentNoticeVO
-										.builder()
-										.userNo(null)
-										.content(commentNoticeDTO.getContent())
-										.noticeNo(commentNoticeDTO.getNoticeNo())
-										.build();
+		
+		CommentNoticeVO requestData = CommentNoticeVO.builder()
+													 .userNo(null)
+													 .content(commentNoticeDTO.getContent())
+													 .noticeNo(commentNoticeDTO.getNoticeNo())
+													 .build();
 		commentNoticeMapper.saveNotice(requestData);
 	}
 

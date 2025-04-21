@@ -11,6 +11,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.exception.exceptions.FileSaveException;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -40,7 +42,7 @@ public class FileService {
 			return "http://localhost/uploads/" + newFileName.toString();
 			
 		} catch (IOException e) {
-			throw new RuntimeException("파일을 저장할 수 없습니다.");	/*Exception 바꾸기*/
+			throw new FileSaveException("파일을 저장할 수 없습니다.");
 		}				
 	}
 }

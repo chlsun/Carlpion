@@ -20,4 +20,8 @@ public interface ReportMapper {
 	void updateById(ReportDTO reportDTO);
 			
 	void deleteById(Long reportNo);
+	
+	void saveFile(ReportVO reportVO);
+	
+	void deleteFileById(Long reportNo);
 }

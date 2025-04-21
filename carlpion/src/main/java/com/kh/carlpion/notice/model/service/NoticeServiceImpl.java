@@ -6,6 +6,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.notice.model.dao.NoticeMapper;
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
@@ -24,24 +25,26 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public void save(NoticeDTO noticeDTO, MultipartFile file) {
-		// 수정 중
-//		NoticeVO requestData = NoticeVO
-//								.builder()
-//								.title(noticeDTO.getTitle())
-//								.content(noticeDTO.getContent())
-//								.userNo(noticeDTO.getUserNo())
-//								.build();
-//		
-//		noticeMapper.save(requestData);
-//		
-//		if(file != null && !file.isEmpty()) {			
-//			String filePath = fileService.storage(file);
-//			requestData = NoticeVO
-//							.builder()
-//							.fileUrl(filePath)
-//							.build();
-//		}
 		
+		
+		NoticeVO requestData = NoticeVO.builder()
+									   .title(noticeDTO.getTitle())
+									   .content(noticeDTO.getContent())
+									   .userNo(noticeDTO.getUserNo())
+									   .build();
+		noticeMapper.save(requestData);
+		
+		if(file != null && !file.isEmpty()) {			
+			String filePath = fileService.storage(file);
+			
+			NoticeVO requestFileData = NoticeVO.builder()
+											   .noticeNo(requestData.getNoticeNo())
+											   .fileUrl(filePath)
+											   .build();
+			noticeMapper.saveFile(requestFileData);
+			log.info("saveFile: {}", requestFileData);
+		}	
+		log.info("save: {}", requestData);
 	}
 
 	@Override
@@ -56,18 +59,19 @@ public class NoticeServiceImpl implements NoticeService {
 		NoticeDTO noticeDTO = noticeMapper.findById(noticeNo);
 		
 		if(noticeNo == null) {
-			throw new RuntimeException("Not Find Notice");
+			throw new NotFindException("Not Find Notice");
 		}
 		return noticeDTO;
 	}
 
 	@Override
 	public NoticeDTO updateById(NoticeDTO noticeDTO, MultipartFile file) {
-		
+			
 		if(file != null && !file.isEmpty()) {
 			String filePath = fileService.storage(file);
-			noticeDTO.setFileUrl(filePath);
+			noticeDTO.setFileUrl(filePath);			
 		}
+		
 		noticeMapper.updateById(noticeDTO);
 		return noticeDTO;
 	}

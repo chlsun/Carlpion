@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.kh.carlpion.exception.exceptions.DuplicateValueException;
+import com.kh.carlpion.exception.exceptions.FileSaveException;
+import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
 
 @RestControllerAdvice
@@ -44,4 +46,17 @@ public class GlobalExceptionHandler {
 		
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 	}
+	
+	
+	@ExceptionHandler(NotFindException.class)
+	public ResponseEntity<?> handleNotFind(NotFindException e) {
+		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(FileSaveException.class)
+	public ResponseEntity<?> handleFileSave(FileSaveException e) {
+		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	
 }

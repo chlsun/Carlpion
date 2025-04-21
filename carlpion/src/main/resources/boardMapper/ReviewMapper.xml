@@ -6,6 +6,9 @@
 	<insert 
 		id="save"
 		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+		useGeneratedKeys="true"
+		keyProperty="reviewNo"
+		keyColumn="REVIEW_NO"
 	>
 		INSERT 
 		  INTO	
@@ -25,23 +28,21 @@
 			 )
 	</insert>
 	<insert 
-		id="" 
-		parameterType=""
+		id="saveFile" 
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
 	>
-		<foreach collection="" open="" close="">
-			INSERT
-			  INTO
-			  		CP_RV_FILE
-			  	 (
-					REVIEW_NO
-				 ,	FILE_URL
-				 )
-			VALUES
-				 (
-					#{reviewNo}
-				 ,	#{fileUrl}
-				 )
-		</foreach>	
+		INSERT
+		  INTO
+		  		CP_RV_FILE
+		  	 (
+				REVIEW_NO
+			 ,	FILE_URL
+			 )
+		VALUES
+			 (
+				#{reviewNo}
+			 ,	#{fileUrl}
+			 )
 	</insert>
 	
 	<select 
