@@ -7,5 +7,9 @@ import com.kh.carlpion.token.model.vo.RefreshTokenVO;
 @Mapper
 public interface TokenMapper {
 
+	RefreshTokenVO selectToken(RefreshTokenVO refreshToken);
+	
 	int insertToken(RefreshTokenVO refreshToken);
+	
+	int deleteToken(RefreshTokenVO refreshToken);
 }

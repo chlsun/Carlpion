@@ -1,4 +1,4 @@
-package com.kh.carlpion.auth.model;
+package com.kh.carlpion.auth.model.vo;
 
 import java.util.Collection;
 
@@ -18,6 +18,7 @@ public class CarlpionUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = -8487810517261049492L;
 	
+	private Long userNo;
 	private String username;
 	private String password;
 	private String nickname;
