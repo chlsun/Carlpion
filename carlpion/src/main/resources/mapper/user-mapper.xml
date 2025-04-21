@@ -7,6 +7,7 @@
 			parameterType="string"
 			resultType="com.kh.carlpion.user.model.dto.UserDTO">
 		SELECT
+			USER_NO userNo,
 			USERNAME,
 			PASSWORD,
 			NICKNAME,
@@ -23,6 +24,7 @@
 			parameterType="string"
 			resultType="com.kh.carlpion.user.model.dto.UserDTO">
 		SELECT
+			USER_NO userNo,
 			USERNAME,
 			PASSWORD,
 			NICKNAME,
@@ -39,6 +41,7 @@
 			parameterType="string"
 			resultType="com.kh.carlpion.user.model.dto.UserDTO">
 		SELECT
+			USER_NO userNo,
 			USERNAME,
 			PASSWORD,
 			NICKNAME,

@@ -11,7 +11,7 @@ import lombok.Value;
 @ToString
 public class RefreshTokenVO {
 
-	private String username;
+	private Long userNo;
 	private String token;
 	private Long expirationDate;
 }

@@ -1,14 +1,18 @@
 package com.kh.carlpion.auth.model.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
-import com.kh.carlpion.auth.model.CarlpionUserDetails;
+import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
 import com.kh.carlpion.auth.model.dto.LoginDTO;
 import com.kh.carlpion.exception.exceptions.CustomAuthenticationException;
+import com.kh.carlpion.token.model.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,9 +21,10 @@ import lombok.RequiredArgsConstructor;
 public class AuthServiceImpl implements AuthService {
 	
 	private final AuthenticationManager authenticationManager;
+	private final TokenService tokenService;
 	
 	@Override
-	public void login(LoginDTO loginInfo) {
+	public Map<String, String> login(LoginDTO loginInfo) {
 		
 		String username = loginInfo.getUsername();
 		String password = loginInfo.getPassword();
@@ -35,6 +40,20 @@ public class AuthServiceImpl implements AuthService {
 		}
 		
 		CarlpionUserDetails user = (CarlpionUserDetails)authentication.getPrincipal();
+		
+		Map<String, String> loginResponse = new HashMap<String, String>();
+		
+		loginResponse.put("username", user.getUsername());
+		loginResponse.put("nickname", user.getNickname());
+		loginResponse.put("realname", user.getRealname());
+		loginResponse.put("email", user.getEmail());
+		loginResponse.put("accessToken", tokenService.generateAccessToken(user.getUsername()));
+		
+		if(isKeep) {
+			loginResponse.put("refreshToken", tokenService.generateRefreshToken(user.getUserNo(), user.getUsername()));
+		}
+
+		return loginResponse;
 	}
 
 }

@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.kh.carlpion.auth.model.CarlpionUserDetails;
+import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
 import com.kh.carlpion.exception.exceptions.CustomAuthenticationException;
 import com.kh.carlpion.user.model.dao.UserMapper;
 import com.kh.carlpion.user.model.dto.UserDTO;
@@ -30,7 +30,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new CustomAuthenticationException("아이디나 비밀번호를 잘못 입력 하셨습니다.");
 		}
 		
-		return CarlpionUserDetails.builder().username(user.getUsername())
+		return CarlpionUserDetails.builder().userNo(user.getUserNo())
+											.username(user.getUsername())
 											.password(user.getPassword())
 											.nickname(user.getNickname())
 											.realname(user.getRealname())
