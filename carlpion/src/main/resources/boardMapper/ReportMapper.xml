@@ -6,6 +6,9 @@
 	<insert 
 		id="save"
 		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+		useGeneratedKeys="true"
+		keyProperty="reportNo"
+		keyColumn="REPORT_NO"
 	>
 		INSERT 
 		  INTO	
@@ -22,6 +25,23 @@
 			 , 	#{title} 	
 			 , 	#{content} 	
 			 , 	SYSDATE 	
+			 )
+	</insert>
+	<insert 
+		id="saveFile"
+		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+	>
+		INSERT
+		  INTO	
+		  		CP_RP_FILE
+		  	 (
+				REPORT_NO
+			 ,	FILE_URL
+			 )
+		VALUES
+			 (
+				#{reportNo}
+			 ,	#{fileUrl}
 			 )
 	</insert>
 	

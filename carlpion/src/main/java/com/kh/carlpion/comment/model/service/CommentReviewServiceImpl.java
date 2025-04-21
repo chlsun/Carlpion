@@ -22,12 +22,12 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 
 	@Override
 	public void saveReview(CommentReviewDTO commentReviewDTO) {
-		CommentReviewVO requestData = CommentReviewVO
-										.builder()
-										.userNo(null)
-										.content(commentReviewDTO.getContent())
-										.reviewNo(commentReviewDTO.getReviewNo())
-										.build();
+		
+		CommentReviewVO requestData = CommentReviewVO.builder()
+													 .userNo(null)
+													 .content(commentReviewDTO.getContent())
+													 .reviewNo(commentReviewDTO.getReviewNo())
+													 .build();
 		commentReviewMapper.saveReview(requestData);
 	}
 

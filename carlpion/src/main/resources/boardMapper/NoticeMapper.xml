@@ -6,6 +6,9 @@
 	<insert 
 		id="save"
 		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+		useGeneratedKeys="true"
+		keyProperty="noticeNo"
+		keyColumn="NOTICE_NO"
 	>
 		INSERT 
 		  INTO	
@@ -23,6 +26,23 @@
 			 , 	#{content} 	
 			 , 	SYSDATE	
 			 )
+	</insert>
+	<insert 
+		id="saveFile" 
+		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+	>
+		INSERT
+		  INTO
+		  		CP_NT_FILE
+		  	 (
+				NOTICE_NO
+			 ,	FILE_URL
+			 )
+		VALUES
+			 (
+				#{noticeNo}
+			 ,	#{fileUrl}
+			 )	
 	</insert>
 	
 	<select 

@@ -22,12 +22,12 @@ public class CommentReportServiceImpl implements CommentReportService {
 	
 	@Override
 	public void saveReport(CommentReportDTO commentReportDTO) {
-		CommentReportVO requestData = CommentReportVO
-										.builder()
-										.userNo(null)
-										.content(commentReportDTO.getContent())
-										.reportNo(commentReportDTO.getReportNo())
-										.build();
+		
+		CommentReportVO requestData = CommentReportVO.builder()
+													 .userNo(null)
+													 .content(commentReportDTO.getContent())
+													 .reportNo(commentReportDTO.getReportNo())
+													 .build();
 		commentReportMapper.saveReport(requestData);
 	}
 

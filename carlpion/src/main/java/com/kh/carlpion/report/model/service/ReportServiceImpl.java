@@ -6,6 +6,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.report.model.dao.ReportMapper;
 import com.kh.carlpion.report.model.dto.ReportDTO;
@@ -23,29 +24,27 @@ public class ReportServiceImpl implements ReportService {
 	private final FileService fileService;
 
 	@Override
-	public void save(ReportDTO reportDTO, MultipartFile file) {
+	public void save(ReportDTO reportDTO, MultipartFile file) {		
 		
-		ReportVO requestData = null;
+		
+		ReportVO requestData = ReportVO.builder()
+									   .title(reportDTO.getTitle())
+									   .content(reportDTO.getContent())
+									   .userNo(reportDTO.getUserNo())
+									   .build();
+		reportMapper.save(requestData);
 		
 		if(file != null && !file.isEmpty()) {
 			String filePath = fileService.storage(file);
-			requestData = ReportVO
-							.builder()
-							.title(reportDTO.getTitle())
-							.content(reportDTO.getContent())
-							.userNo(reportDTO.getUserNo())
-							.fileUrl(filePath)
-							.build();
-		} else {
-			requestData = ReportVO
-							.builder()
-							.title(reportDTO.getTitle())
-							.content(reportDTO.getContent())
-							.userNo(reportDTO.getUserNo())
-							.build();
+			
+			ReportVO requestFileData = ReportVO.builder()
+											   .reportNo(requestData.getReportNo())
+											   .fileUrl(filePath)
+											   .build();
+			reportMapper.saveFile(requestFileData);
+//			log.info("saveFile: {}", requestFileData);
 		}
 //		log.info("save: {}", requestData);
-		reportMapper.save(requestData);
 	}
 
 	@Override
@@ -60,7 +59,7 @@ public class ReportServiceImpl implements ReportService {
 		ReportDTO reportDTO = reportMapper.findById(reportNo);
 		
 		if(reportNo == null) {
-			throw new RuntimeException("Not Find Report");
+			throw new NotFindException("Not Find Report");
 		}
 		return reportDTO;
 	}
