@@ -113,4 +113,12 @@
 		 WHERE	
 		 		REVIEW_NO = #{reviewNo}
 	</update>
+	
+	<delete id="deleteFileById">
+		DELETE
+		  FROM
+		  		CP_RV_FILE
+		 WHERE
+		 		REVIEW = #{reviewNo}
+	</delete>
 </mapper>

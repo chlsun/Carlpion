@@ -24,8 +24,8 @@ public class ReviewServiceImpl implements ReviewService {
 	private final FileService fileService;
 
 	@Override
-	public void save(ReviewDTO reviewDTO, MultipartFile file) {
-		
+	public void save(ReviewDTO reviewDTO, List<MultipartFile> files) {
+		/*사용자 인증 구간*/
 		
 		ReviewVO requestData = ReviewVO.builder()
 									   .title(reviewDTO.getTitle())
@@ -34,15 +34,20 @@ public class ReviewServiceImpl implements ReviewService {
 									   .build();
 		reviewMapper.save(requestData);
 		
-		if(file != null && !file.isEmpty()) {
-			String filePath = fileService.storage(file);
-			
-			ReviewVO requestFileData = ReviewVO.builder()
-											   .reviewNo(requestData.getReviewNo())
-											   .fileUrl(filePath)
-											   .build();
-			reviewMapper.saveFile(requestFileData);
-//			log.info("saveFile: {}", requestFileData);
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);
+					
+					ReviewVO requestFileData = ReviewVO.builder()
+													   .reviewNo(requestData.getReviewNo())
+													   .fileUrl(filePath)
+													   .build();
+					reviewMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}
 		}
 //		log.info("save: {}", requestData);
 	}
@@ -65,11 +70,24 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public ReviewDTO updateById(ReviewDTO reviewDTO, MultipartFile file) {
+	public ReviewDTO updateById(ReviewDTO reviewDTO, List<MultipartFile> files) {
 		
-		if(file != null && !file.isEmpty()) {
-			String filePath = fileService.storage(file);
-			reviewDTO.setFileUrl(filePath);
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);
+					reviewDTO.setFileUrl(filePath);
+					
+					ReviewVO requestFileData = ReviewVO.builder()
+													   .reviewNo(reviewDTO.getReviewNo())
+													   .fileUrl(filePath)
+													   .build();
+					reviewMapper.deleteFileById(reviewDTO.getReviewNo());
+					reviewMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}			
 		}
 		reviewMapper.updateById(reviewDTO);
 		return reviewDTO;
@@ -79,5 +97,4 @@ public class ReviewServiceImpl implements ReviewService {
 	public void deleteById(Long reviewNo) {
 		reviewMapper.deleteById(reviewNo);
 	}
-
 }

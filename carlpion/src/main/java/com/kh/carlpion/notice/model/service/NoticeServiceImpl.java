@@ -24,8 +24,8 @@ public class NoticeServiceImpl implements NoticeService {
 	private final FileService fileService;
 
 	@Override
-	public void save(NoticeDTO noticeDTO, MultipartFile file) {
-		
+	public void save(NoticeDTO noticeDTO, List<MultipartFile> files) {
+		/*사용자 인증 구간*/
 		
 		NoticeVO requestData = NoticeVO.builder()
 									   .title(noticeDTO.getTitle())
@@ -34,17 +34,22 @@ public class NoticeServiceImpl implements NoticeService {
 									   .build();
 		noticeMapper.save(requestData);
 		
-		if(file != null && !file.isEmpty()) {			
-			String filePath = fileService.storage(file);
-			
-			NoticeVO requestFileData = NoticeVO.builder()
-											   .noticeNo(requestData.getNoticeNo())
-											   .fileUrl(filePath)
-											   .build();
-			noticeMapper.saveFile(requestFileData);
-			log.info("saveFile: {}", requestFileData);
+		if(files != null && !files.isEmpty()) {		
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);
+					
+					NoticeVO requestFileData = NoticeVO.builder()
+													   .noticeNo(requestData.getNoticeNo())
+													   .fileUrl(filePath)
+													   .build();
+					noticeMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}
 		}	
-		log.info("save: {}", requestData);
+//		log.info("save: {}", requestData);
 	}
 
 	@Override
@@ -65,13 +70,25 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public NoticeDTO updateById(NoticeDTO noticeDTO, MultipartFile file) {
+	public NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files) {
 			
-		if(file != null && !file.isEmpty()) {
-			String filePath = fileService.storage(file);
-			noticeDTO.setFileUrl(filePath);			
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);
+					noticeDTO.setFileUrl(filePath);		
+					
+					NoticeVO requestFileData = NoticeVO.builder()
+													   .noticeNo(noticeDTO.getNoticeNo())
+													   .fileUrl(filePath)
+													   .build();
+					noticeMapper.deleteFileById(noticeDTO.getNoticeNo());
+					noticeMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}
 		}
-		
 		noticeMapper.updateById(noticeDTO);
 		return noticeDTO;
 	}

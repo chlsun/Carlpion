@@ -39,7 +39,7 @@ public class FileService {
 		
 		try {
 			Files.copy(file.getInputStream(), tagetLocation, StandardCopyOption.REPLACE_EXISTING);
-			return "http://localhost/uploads/" + newFileName.toString();
+			return "http://localhost/uploads/" + newFileName;
 			
 		} catch (IOException e) {
 			throw new FileSaveException("파일을 저장할 수 없습니다.");

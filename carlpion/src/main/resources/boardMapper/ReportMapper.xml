@@ -113,4 +113,12 @@
 		 WHERE	
 		 		REPORT_NO = #{reportNo}
 	</update>
+	
+	<delete id="deleteFileById">
+		DELETE
+		  FROM
+		  		CP_RP_FILE
+		 WHERE	
+		 		REPORT_NO = #{reportNo}
+	</delete>
 </mapper>
