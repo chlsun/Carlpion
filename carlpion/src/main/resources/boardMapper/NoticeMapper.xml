@@ -113,4 +113,12 @@
 		 WHERE	
 		 		NOTICE_NO = #{noticeNo}
 	</update>
+	
+	<delete id="deleteFileById">
+		DELETE
+		  FROM
+		  		CP_NT_FILE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+	</delete>
 </mapper>

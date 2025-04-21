@@ -24,8 +24,8 @@ public class ReportServiceImpl implements ReportService {
 	private final FileService fileService;
 
 	@Override
-	public void save(ReportDTO reportDTO, MultipartFile file) {		
-		
+	public void save(ReportDTO reportDTO, List<MultipartFile> files) {		
+		/*사용자 인증 구간*/
 		
 		ReportVO requestData = ReportVO.builder()
 									   .title(reportDTO.getTitle())
@@ -34,15 +34,20 @@ public class ReportServiceImpl implements ReportService {
 									   .build();
 		reportMapper.save(requestData);
 		
-		if(file != null && !file.isEmpty()) {
-			String filePath = fileService.storage(file);
-			
-			ReportVO requestFileData = ReportVO.builder()
-											   .reportNo(requestData.getReportNo())
-											   .fileUrl(filePath)
-											   .build();
-			reportMapper.saveFile(requestFileData);
-//			log.info("saveFile: {}", requestFileData);
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {	
+				
+				if( !file.isEmpty()) {					
+					String filePath = fileService.storage(file);
+					
+					ReportVO requestFileData = ReportVO.builder()
+													   .reportNo(requestData.getReportNo())
+													   .fileUrl(filePath)
+													   .build();
+					reportMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}
 		}
 //		log.info("save: {}", requestData);
 	}
@@ -65,11 +70,24 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public ReportDTO updateById(ReportDTO reportDTO, MultipartFile file) {
+	public ReportDTO updateById(ReportDTO reportDTO, List<MultipartFile> files) {
 		
-		if(file != null && !file.isEmpty()) {
-			String filePath = fileService.storage(file);
-			reportDTO.setFileUrl(filePath);
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);					
+					reportDTO.setFileUrl(filePath);
+					
+					ReportVO requestFileData = ReportVO.builder()
+													   .reportNo(reportDTO.getReportNo())
+													   .fileUrl(filePath)
+													   .build();
+					reportMapper.deleteFileById(reportDTO.getReportNo());
+					reportMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}			
 		}
 		reportMapper.updateById(reportDTO);
 		return reportDTO;
