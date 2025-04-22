@@ -23,5 +23,7 @@ public interface NoticeMapper {
 	
 	void saveFile(NoticeVO noticeVO);
 	
+	List<String> findFileByAll(Long noticeNo);
+	
 	void deleteFileById(Long noticeNo);
 }

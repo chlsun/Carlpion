@@ -108,10 +108,7 @@
 		 WHERE	
 		 		REPORT_NO = #{reportNo}
 	</update>
-	<update 
-		id="deleteById"
-		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
-	>
+	<update id="deleteById">
 		UPDATE
 				CP_REPORT
 		   SET
@@ -120,10 +117,18 @@
 		 		REPORT_NO = #{reportNo}
 	</update>
 	
-	<delete 
-		id="deleteFileById"
-		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+	<select 
+		id="findFileByAll"
+		resultType="string"
 	>
+		SELETE 
+				FILE_URL	AS	fileUrl
+		  FROM	
+		  		CP_RP_FILE
+		 WHERE	
+		 		REPORT_NO = #{reportNo}
+	</select>
+	<delete id="deleteFileById">
 		DELETE
 		  FROM
 		  		CP_RP_FILE

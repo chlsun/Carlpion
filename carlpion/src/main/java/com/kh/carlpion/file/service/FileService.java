@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -25,7 +24,7 @@ public class FileService {
 	
 	private final Path fileLocation;
 	
-	private static final String UPLOAD_URL = "http://localhost/uploads/";
+//	private static final String UPLOAD_URL = "http://localhost/uploads/";	/* URL을 사용시 삭제구문에서 오류를 가져옵니다.. */
 	private static final List<String> FILE_EXTENSIONS = Arrays.asList(
 		".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".pdf", 
         ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".txt", ".hwp"
@@ -52,7 +51,7 @@ public class FileService {
 		
 		try {
 			Files.copy(file.getInputStream(), targetLocation);
-			return UPLOAD_URL + newFileName;
+			return newFileName;
 			
 		} catch (IOException e) {
 			throw new FileSaveException("파일을 저장할 수 없습니다. :" + e.getMessage());

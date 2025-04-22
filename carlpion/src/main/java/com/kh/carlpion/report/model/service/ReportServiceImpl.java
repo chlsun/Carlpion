@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.exception.exceptions.NotFindException;
@@ -24,6 +25,7 @@ public class ReportServiceImpl implements ReportService {
 	private final FileService fileService;
 
 	@Override
+	@Transactional
 	public void save(ReportDTO reportDTO, List<MultipartFile> files) {		
 		/*사용자 인증 구간*/
 		
@@ -70,9 +72,19 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
+	@Transactional
 	public ReportDTO updateById(ReportDTO reportDTO, List<MultipartFile> files) {
 		
-		if(files != null && !files.isEmpty()) {
+		if(files != null && !files.isEmpty() && files.stream().anyMatch(file -> !file.isEmpty())) {
+			List<String> fileUrls = reportMapper.findFileByAll(reportDTO.getReportNo());
+			
+			if(fileUrls != null) {
+				for(String fileUrl : fileUrls) {
+					fileService.deleteFile(fileUrl);
+				}
+			}
+			reportMapper.deleteFileById(reportDTO.getReportNo());
+			
 			for(MultipartFile file : files) {
 				
 				if( !file.isEmpty()) {
@@ -83,7 +95,6 @@ public class ReportServiceImpl implements ReportService {
 													   .reportNo(reportDTO.getReportNo())
 													   .fileUrl(filePath)
 													   .build();
-					reportMapper.deleteFileById(reportDTO.getReportNo());
 					reportMapper.saveFile(requestFileData);
 //					log.info("saveFile: {}", requestFileData);
 				}
@@ -94,6 +105,7 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long reportNo) {
 		reportMapper.deleteById(reportNo);
 	}
