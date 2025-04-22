@@ -7,11 +7,13 @@
 			parameterType="string"
 			resultType="com.kh.carlpion.user.model.dto.UserDTO">
 		SELECT
+			USER_NO userNo,
 			USERNAME,
 			PASSWORD,
 			NICKNAME,
 			REALNAME,
-			EMAIL
+			EMAIL,
+			ROLE
 		FROM
 			CP_USER
 		WHERE
@@ -22,11 +24,13 @@
 			parameterType="string"
 			resultType="com.kh.carlpion.user.model.dto.UserDTO">
 		SELECT
+			USER_NO userNo,
 			USERNAME,
 			PASSWORD,
 			NICKNAME,
 			REALNAME,
-			EMAIL
+			EMAIL,
+			ROLE
 		FROM
 			CP_USER
 		WHERE
@@ -37,11 +41,13 @@
 			parameterType="string"
 			resultType="com.kh.carlpion.user.model.dto.UserDTO">
 		SELECT
+			USER_NO userNo,
 			USERNAME,
 			PASSWORD,
 			NICKNAME,
 			REALNAME,
-			EMAIL
+			EMAIL,
+			ROLE
 		FROM
 			CP_USER
 		WHERE
