@@ -1,5 +1,8 @@
 package com.kh.carlpion.mypage.model.dao;
 
+
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,4 +28,16 @@ public interface MypageMapper {
 	MypageDTO updateName(MypageDTO myapge);
 	
 	void deleteUser(MypageDTO mypage);
+//--------------------------------------------------------
+	List<MypageDTO> replyCheck(Long userNo);
+
+	List<MypageDTO> inquiryCheck(Long userNo);
+
+	List<MypageDTO> reviewCheck(Long userNo);
+
+
+
+
+
+
 }

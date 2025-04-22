@@ -1,6 +1,7 @@
 package com.kh.carlpion.mypage.model.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -63,13 +64,15 @@ public class MypageDTO {
 	
 	
 	
+	private String boardType; 
+	
+	
+	private long count;
+	private List<String> fileUrls;
 	
 	
 	
-	
-	
-	
-	
+
 	
 	
 	

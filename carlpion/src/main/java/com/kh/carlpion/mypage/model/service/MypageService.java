@@ -1,5 +1,8 @@
 package com.kh.carlpion.mypage.model.service;
 
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +23,13 @@ public interface MypageService {
 	
 	void deleteUser(MypageDTO mypage);
 	
+	//----------------------------------------------
+	List<MypageDTO> replyCheck(Long uesrNo);
+	
+	
+	List<MypageDTO> inquiryCheck(Long userNO);
+	
+	List<MypageDTO> reviewCheck(Long userNO);
 	
 	
 }
