@@ -29,9 +29,16 @@ public class ReviewController {
 
 	private final ReviewService reviewService;
 	
+	private static final int MAX_FILE_COUNT = 5;
+	
 	@PostMapping
-	public ResponseEntity<?> save(ReviewDTO reviewDTO, @RequestParam(name = "file", required = false) MultipartFile file) {
-		reviewService.save(reviewDTO, file);
+	public ResponseEntity<?> save(ReviewDTO reviewDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files) {
+
+		if(files != null && MAX_FILE_COUNT < files.size()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
+		}
+		
+		reviewService.save(reviewDTO, files);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
@@ -46,9 +53,14 @@ public class ReviewController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ReviewDTO> updateById(@PathVariable(name = "id") Long reviewNo, ReviewDTO reviewDTO, @RequestParam(name = "file", required = false) MultipartFile file) {
+	public ResponseEntity<?> updateById(@PathVariable(name = "id") Long reviewNo, ReviewDTO reviewDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files) {
+
+		if(files != null && MAX_FILE_COUNT < files.size()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
+		}
+		
 		reviewDTO.setReviewNo(reviewNo);
-		return ResponseEntity.ok(reviewService.updateById(reviewDTO, file));
+		return ResponseEntity.ok(reviewService.updateById(reviewDTO, files));
 	}
 	
 	@DeleteMapping("/{id}")
