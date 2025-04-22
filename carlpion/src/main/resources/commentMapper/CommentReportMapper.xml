@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.comment.model.dao.CommentReportMapper">
+	<insert 
+		id="saveReport"
+		parameterType="com.kh.carlpion.comment.model.vo.CommentReportVO"
+	>
+		INSERT 
+		  INTO	CP_RP_COMMENT
+		  	 (
+				REPORT_NO
+			 ,	USER_NO
+			 , 	CONTENT
+			 , 	CREATE_DATE
+			 )
+		VALUES 
+			 (
+			   	#{reportNo}
+			 , 	#{userNo} 	
+			 , 	#{content} 	
+			 , 	SYSDATE 	
+			 )
+	</insert>
+	
+	<select 
+		id="findAllReport" 
+		resultType="com.kh.carlpion.comment.model.dto.CommentReportDTO"
+	>
+		SELECT 
+				COMMENT_NO		AS	commentNo
+			 ,	REPORT_NO		AS	reportNo
+			 ,	USER_NO			AS	userNo
+			 ,	CONTENT
+			 ,	CREATE_DATE		AS	createDate
+		  FROM
+		  		CP_RP_COMMENT
+		 WHERE	
+		 		IS_ACTIVE = 'Y'
+		 ORDER
+		 	BY	
+		 		CREATE_DATE DESC
+	</select>
+	
+	<update 
+		id="deleteReportById"
+		parameterType="com.kh.carlpion.comment.model.vo.CommentReportVO"
+	>
+		UPDATE
+				CP_RP_COMMENT
+		   SET
+		   		IS_ACTIVE = 'N'
+		 WHERE	
+		 		COMMENT_NO = #{commentNo}
+	</update>
+</mapper>

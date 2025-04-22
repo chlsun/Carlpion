@@ -6,9 +6,11 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.notice.model.dao.NoticeMapper;
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
+import com.kh.carlpion.notice.model.vo.NoticeVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +24,32 @@ public class NoticeServiceImpl implements NoticeService {
 	private final FileService fileService;
 
 	@Override
-	public void save(NoticeDTO noticeDTO, MultipartFile file) {
+	public void save(NoticeDTO noticeDTO, List<MultipartFile> files) {
+		/*사용자 인증 구간*/
 		
+		NoticeVO requestData = NoticeVO.builder()
+									   .title(noticeDTO.getTitle())
+									   .content(noticeDTO.getContent())
+									   .userNo(noticeDTO.getUserNo())
+									   .build();
+		noticeMapper.save(requestData);
+		
+		if(files != null && !files.isEmpty()) {		
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);
+					
+					NoticeVO requestFileData = NoticeVO.builder()
+													   .noticeNo(requestData.getNoticeNo())
+													   .fileUrl(filePath)
+													   .build();
+					noticeMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}
+		}	
+//		log.info("save: {}", requestData);
 	}
 
 	@Override
@@ -35,16 +61,40 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public NoticeDTO findById(Long noticeNo) {
-		return null;
+		NoticeDTO noticeDTO = noticeMapper.findById(noticeNo);
+		
+		if(noticeNo == null) {
+			throw new NotFindException("Not Find Notice");
+		}
+		return noticeDTO;
 	}
 
 	@Override
-	public NoticeDTO updateById(NoticeDTO noticeDTO, MultipartFile file) {
-		return null;
+	public NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files) {
+			
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);
+					noticeDTO.setFileUrl(filePath);		
+					
+					NoticeVO requestFileData = NoticeVO.builder()
+													   .noticeNo(noticeDTO.getNoticeNo())
+													   .fileUrl(filePath)
+													   .build();
+					noticeMapper.deleteFileById(noticeDTO.getNoticeNo());
+					noticeMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}
+		}
+		noticeMapper.updateById(noticeDTO);
+		return noticeDTO;
 	}
 
 	@Override
 	public void deleteById(Long noticeNo) {
-		
+		noticeMapper.deleteById(noticeNo);
 	}
 }

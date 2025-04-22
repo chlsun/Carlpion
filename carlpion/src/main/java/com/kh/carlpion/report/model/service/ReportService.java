@@ -8,13 +8,13 @@ import com.kh.carlpion.report.model.dto.ReportDTO;
 
 public interface ReportService {
 	
-	void save(ReportDTO reportDTO, MultipartFile file);
+	void save(ReportDTO reportDTO, List<MultipartFile> files);
 	
 	List<ReportDTO> findAll(int pageNo);
 	
 	ReportDTO findById(Long reportNo);
 	
-	ReportDTO updateById(ReportDTO reportDTO, MultipartFile file);
+	ReportDTO updateById(ReportDTO reportDTO, List<MultipartFile> files);
 	
 	void deleteById(Long reportNo);
 }
