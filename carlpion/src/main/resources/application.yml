@@ -10,14 +10,14 @@ spring:
     include: private
   include: mail
   mvc:
-    static-path-pattern: 
+    static-path-pattern: /uploads/**
   web:
     resources:
-      static-locations:
+      static-locations: file:uploads/
 
   servlet:
     multipart:
-      max-file-size: 20MB
+      max-file-size: 30MB
       max-request-size: 200MB
 
 server:
