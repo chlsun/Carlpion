@@ -16,13 +16,15 @@ import lombok.ToString;
 @ToString
 public class UserDTO {
 	
+	private Long userNo;
+	
 	@Size(min = 8, max = 20, message = "아이디 길이는 8~20자 사이여야 합니다.")
 	@Pattern(regexp = "^[a-z][a-z0-9]{6,18}[0-9]$", message = "잘못된 아이디 형식입니다.")
 	@NotBlank(message = "아이디는 비어있거나 공백이 포함될 수 없습니다.")
 	private String username;
 	
 	@Size(min = 8, max = 30, message = "비밀번호 길이는 8~30자 사이여야 합니다.")
-	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,30}$", message = "잘못된 비밀번호 형식입니다.")
+	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).\\S{8,30}$", message = "잘못된 비밀번호 형식입니다.")
 	@NotBlank(message = "비밀번호는 비어있거나 공백이 포함될 수 없습니다.")
 	private String password;
 	
@@ -41,4 +43,5 @@ public class UserDTO {
 	@NotBlank(message = "이메일은 비어있거나 공백이 포함될 수 없습니다.")
 	private String email;
 	
+	private String role;
 }

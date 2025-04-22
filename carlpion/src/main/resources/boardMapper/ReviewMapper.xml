@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.review.model.dao.ReviewMapper">
+	<insert 
+		id="save"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+		useGeneratedKeys="true"
+		keyProperty="reviewNo"
+		keyColumn="REVIEW_NO"
+	>
+		INSERT 
+		  INTO	
+		  		CP_REVIEW
+		  	 (
+			 	USER_NO
+			 ,	TITLE
+			 , 	CONTENT
+			 , 	CREATE_DATE
+			 )
+		VALUES 
+			 (
+			   	#{userNo}
+			 , 	#{title} 	
+			 , 	#{content} 	
+			 , 	SYSDATE 	
+			 )
+	</insert>
+	<insert 
+		id="saveFile" 
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+	>
+		INSERT
+		  INTO
+		  		CP_RV_FILE
+		  	 (
+				REVIEW_NO
+			 ,	FILE_URL
+			 )
+		VALUES
+			 (
+				#{reviewNo}
+			 ,	#{fileUrl}
+			 )
+	</insert>
+	
+	<select 
+		id="findAll" 
+		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
+	>
+		SELECT 
+				REVIEW_NO		AS	reviewNo
+			 ,	r.USER_NO		AS	userNo
+			 ,	TITLE
+			 ,	CONTENT
+			 ,	r.CREATE_DATE	AS	createDate
+			 ,	COUNT
+		  FROM
+		  		CP_REVIEW r
+		  JOIN
+		  		CP_USER u 	ON 	u.USER_NO = r.USER_NO
+		  JOIN
+		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO	
+		 WHERE	
+		 		IS_ACTIVE = 'Y'
+		 ORDER
+		 	BY	
+		 		REVIEW_NO 	DESC
+		   	 , 	POINT 		DESC
+           	 ,  USER_LEVEL 	DESC
+	</select>
+	<select 
+		id="findById" 
+		parameterType="long"
+		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
+	>
+		SELECT 
+				REVIEW_NO		AS	reviewNo
+			 ,	r.USER_NO		AS	userNo
+			 ,	TITLE
+			 ,	CONTENT
+			 ,	r.CREATE_DATE	AS	createDate
+			 ,	COUNT
+			 ,	POINT
+			 ,	USER_LEVEL
+		  FROM
+		  		CP_REVIEW r
+		  JOIN
+		  		CP_USER u 	ON 	u.USER_NO = r.USER_NO
+		  JOIN
+		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO
+		 WHERE	
+		 		IS_ACTIVE = 'Y'
+		   AND	
+		   		REVIEW_NO = #{reviewNo} 
+	</select>
+	
+	<update 
+		id="updateById"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+	>
+		UPDATE
+				CP_REVIEW
+		   SET
+		   		TITLE = #{title}
+		   	 ,	CONTENT = #{content}
+		 WHERE	
+		 		REVIEW_NO = #{reviewNo}
+	</update>
+	<update 
+		id="deleteById"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+	>
+		UPDATE
+				CP_REVIEW
+		   SET
+		   		IS_ACTIVE = 'N'
+		 WHERE	
+		 		REVIEW_NO = #{reviewNo}
+	</update>
+	
+	<delete 
+		id="deleteFileById"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+	>
+		DELETE
+		  FROM
+		  		CP_RV_FILE
+		 WHERE
+		 		REVIEW_NO = #{reviewNo}
+	</delete>
+</mapper>

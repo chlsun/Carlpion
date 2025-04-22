@@ -35,5 +35,6 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+application.yml
 application-private.yml
 application-mail.yml

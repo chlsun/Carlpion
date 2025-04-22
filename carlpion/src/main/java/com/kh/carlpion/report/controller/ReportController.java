@@ -29,9 +29,16 @@ public class ReportController {
 	
 	private final ReportService reportService;
 	
+	private static final int MAX_FILE_COUNT = 5;
+	
 	@PostMapping
-	public ResponseEntity<?> save(ReportDTO reportDTO, @RequestParam(name = "file", required = false) MultipartFile file) {
-		reportService.save(reportDTO, file);
+	public ResponseEntity<?> save(ReportDTO reportDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files) {
+
+		if(files != null && MAX_FILE_COUNT < files.size()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
+		}
+		
+		reportService.save(reportDTO, files);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
@@ -46,9 +53,14 @@ public class ReportController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ReportDTO> updateById(@PathVariable(name = "id") Long reportNo, ReportDTO reportDTO, @RequestParam(name = "file", required = false) MultipartFile file) {
+	public ResponseEntity<?> updateById(@PathVariable(name = "id") Long reportNo, ReportDTO reportDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files) {
+
+		if(files != null && MAX_FILE_COUNT < files.size()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
+		}
+		
 		reportDTO.setReportNo(reportNo);
-		return ResponseEntity.ok(reportService.updateById(reportDTO, file));
+		return ResponseEntity.ok(reportService.updateById(reportDTO, files));
 	}
 	
 	@DeleteMapping("/{id}")
