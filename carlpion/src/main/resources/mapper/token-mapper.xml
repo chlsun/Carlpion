@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.token.model.dao.TokenMapper">
+	<select id="selectToken"
+			parameterType="com.kh.carlpion.token.model.vo.RefreshTokenVO"
+			resultType="com.kh.carlpion.token.model.vo.RefreshTokenVO">
+		SELECT
+			USER_NO,
+			TOKEN,
+			EXPIRATION_DATE
+		FROM
+			CP_TOKEN
+		WHERE
+			TOKEN = #{token}
+	</select>
+
+	<insert id="insertToken"
+			parameterType="com.kh.carlpion.token.model.vo.RefreshTokenVO">
+		INSERT INTO
+			CP_TOKEN
+			(
+				USER_NO,
+				TOKEN,
+				EXPIRATION_DATE
+			)
+		VALUES
+			(
+				#{userNo},
+				#{token},
+				#{expirationDate}
+			)
+	</insert>
+	
+	<delete id="deleteToken"
+			parameterType="com.kh.carlpion.token.model.vo.RefreshTokenVO">
+		DELETE
+		FROM
+			CP_TOKEN
+		WHERE
+			TOKEN = #{token}
+	</delete>
+</mapper>

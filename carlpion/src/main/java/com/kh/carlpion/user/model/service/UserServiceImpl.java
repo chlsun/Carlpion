@@ -51,8 +51,6 @@ public class UserServiceImpl implements UserService {
 								.email(email)
 								.build();
 		
-		log.info("새 계정 정보: {}", userInfo);
-		
 		if(userMapper.signUp(userInfo) != 1) {
 			throw new UnexpectSqlException("예기치 않은 데이터베이스 측 오류로 회원가입이 정상적으로 이루어지지 않았습니다.");
 		}	
