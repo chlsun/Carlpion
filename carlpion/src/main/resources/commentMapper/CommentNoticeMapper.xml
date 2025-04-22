@@ -29,17 +29,13 @@
 		resultType="com.kh.carlpion.comment.model.dto.CommentNoticeDTO"
 	>
 		SELECT 
-				COMMENT_NO	AS	commentNo
-			 ,	NOTICE_NO	AS	noticeNo
-			 ,	USER_NO		AS	userNo
-			 ,	CONTENT		AS	content
-			 ,	CREATE_DATE	AS	createDate
+				COMMENT_NO		AS	commentNo
+			 ,	NOTICE_NO		AS	noticeNo
+			 ,	USER_NO			AS	userNo
+			 ,	CONTENT
+			 ,	CREATE_DATE		AS	createDate
 		  FROM
-		  		CP_NT_COMMENT c
-		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = c.USER_NO
-		  JOIN
-		  		CP_NOTICE n	ON 	n.NOTICE_NO = c.NOTICE_NO	
+		  		CP_NT_COMMENT
 		 WHERE	
 		 		IS_ACTIVE = 'Y'
 		 ORDER
@@ -47,7 +43,10 @@
 		 		CREATE_DATE DESC
 	</select>
 	
-	<update id="deleteNoticeById">
+	<update 
+		id="deleteNoticeById"
+		parameterType="com.kh.carlpion.comment.model.vo.CommentNoticeVO"
+	>
 		UPDATE
 				CP_NT_COMMENT
 		   SET

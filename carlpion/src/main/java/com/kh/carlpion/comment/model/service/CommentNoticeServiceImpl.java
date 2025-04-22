@@ -24,7 +24,7 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
 	public void saveNotice(CommentNoticeDTO commentNoticeDTO) {
 		
 		CommentNoticeVO requestData = CommentNoticeVO.builder()
-													 .userNo(null)
+													 .userNo(commentNoticeDTO.getUserNo())
 													 .content(commentNoticeDTO.getContent())
 													 .noticeNo(commentNoticeDTO.getNoticeNo())
 													 .build();

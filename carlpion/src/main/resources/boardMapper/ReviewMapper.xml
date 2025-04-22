@@ -50,11 +50,11 @@
 		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
 	>
 		SELECT 
-				REVIEW_NO	AS	reviewNo
-			 ,	USER_NO		AS	userNo
-			 ,	TITLE		AS	title
-			 ,	CONTENT		AS	content
-			 ,	CREATE_DATE	AS	createDate
+				REVIEW_NO		AS	reviewNo
+			 ,	r.USER_NO		AS	userNo
+			 ,	TITLE
+			 ,	CONTENT
+			 ,	r.CREATE_DATE	AS	createDate
 			 ,	COUNT
 		  FROM
 		  		CP_REVIEW r
@@ -76,11 +76,11 @@
 		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
 	>
 		SELECT 
-				REVIEW_NO	AS	reviewNo
-			 ,	USER_NO		AS	userNo
-			 ,	TITLE		AS	title
-			 ,	CONTENT		AS	content
-			 ,	CREATE_DATE	AS	createDate
+				REVIEW_NO		AS	reviewNo
+			 ,	r.USER_NO		AS	userNo
+			 ,	TITLE
+			 ,	CONTENT
+			 ,	r.CREATE_DATE	AS	createDate
 			 ,	COUNT
 			 ,	POINT
 			 ,	USER_LEVEL
@@ -96,7 +96,10 @@
 		   		REVIEW_NO = #{reviewNo} 
 	</select>
 	
-	<update id="updateById">
+	<update 
+		id="updateById"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+	>
 		UPDATE
 				CP_REVIEW
 		   SET
@@ -105,7 +108,10 @@
 		 WHERE	
 		 		REVIEW_NO = #{reviewNo}
 	</update>
-	<update id="deleteById">
+	<update 
+		id="deleteById"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+	>
 		UPDATE
 				CP_REVIEW
 		   SET
@@ -114,11 +120,14 @@
 		 		REVIEW_NO = #{reviewNo}
 	</update>
 	
-	<delete id="deleteFileById">
+	<delete 
+		id="deleteFileById"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+	>
 		DELETE
 		  FROM
 		  		CP_RV_FILE
 		 WHERE
-		 		REVIEW = #{reviewNo}
+		 		REVIEW_NO = #{reviewNo}
 	</delete>
 </mapper>

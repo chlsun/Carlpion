@@ -50,11 +50,11 @@
 		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
 	>
 		SELECT 
-				NOTICE_NO	AS	noticeNo
-			 ,	USER_NO		AS	userNo
-			 ,	TITLE		AS	title
-			 ,	CONTENT		AS	content
-			 ,	CREATE_DATE	AS	createDate
+				NOTICE_NO		AS	noticeNo
+			 ,	n.USER_NO		AS	userNo
+			 ,	TITLE
+			 ,	CONTENT
+			 ,	n.CREATE_DATE	AS	createDate
 			 ,	COUNT
 		  FROM
 		  		CP_NOTICE n
@@ -76,11 +76,11 @@
 		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
 	>
 		SELECT 
-				NOTICE_NO	AS	noticeNo
-			 ,	USER_NO		AS	userNo
-			 ,	TITLE		AS	title
-			 ,	CONTENT		AS	content
-			 ,	CREATE_DATE	AS	createDate
+				NOTICE_NO		AS	noticeNo
+			 ,	n.USER_NO		AS	userNo
+			 ,	TITLE
+			 ,	CONTENT
+			 ,	n.CREATE_DATE	AS	createDate
 			 ,	COUNT
 			 ,	POINT
 			 ,	USER_LEVEL
@@ -96,7 +96,10 @@
 		   		NOTICE_NO = #{noticeNo} 
 	</select>
 	
-	<update id="updateById">
+	<update 
+		id="updateById"
+		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+	>
 		UPDATE
 				CP_NOTICE
 		   SET
@@ -105,7 +108,10 @@
 		 WHERE	
 		 		NOTICE_NO = #{noticeNo}
 	</update>
-	<update id="deleteById">
+	<update 
+		id="deleteById"
+		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+	>
 		UPDATE
 				CP_NOTICE
 		   SET
@@ -114,7 +120,10 @@
 		 		NOTICE_NO = #{noticeNo}
 	</update>
 	
-	<delete id="deleteFileById">
+	<delete 
+		id="deleteFileById"
+		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+	>
 		DELETE
 		  FROM
 		  		CP_NT_FILE

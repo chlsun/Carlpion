@@ -24,7 +24,7 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 	public void saveReview(CommentReviewDTO commentReviewDTO) {
 		
 		CommentReviewVO requestData = CommentReviewVO.builder()
-													 .userNo(null)
+													 .userNo(commentReviewDTO.getUserNo())
 													 .content(commentReviewDTO.getContent())
 													 .reviewNo(commentReviewDTO.getReviewNo())
 													 .build();
