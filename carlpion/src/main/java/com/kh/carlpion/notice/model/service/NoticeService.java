@@ -9,13 +9,13 @@ import com.kh.carlpion.notice.model.dto.NoticeDTO;
 
 public interface NoticeService {
 	
-	void save(NoticeDTO noticeDTO, MultipartFile file);
+	void save(NoticeDTO noticeDTO, List<MultipartFile> files);
 	
 	List<NoticeDTO> findAll(int pageNo);
 	
 	NoticeDTO findById(Long noticeNo);
 	
-	NoticeDTO updateById(NoticeDTO noticeDTO, MultipartFile file);
+	NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files);
 	
 	void deleteById(Long noticeNo);
 }
