@@ -23,5 +23,7 @@ public interface ReportMapper {
 	
 	void saveFile(ReportVO reportVO);
 	
+	List<String> findFileByAll(Long reportNo);
+	
 	void deleteFileById(Long reportNo);
 }
