@@ -24,7 +24,7 @@ public class UserDTO {
 	private String username;
 	
 	@Size(min = 8, max = 30, message = "비밀번호 길이는 8~30자 사이여야 합니다.")
-	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,30}$", message = "잘못된 비밀번호 형식입니다.")
+	@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).\\S{8,30}$", message = "잘못된 비밀번호 형식입니다.")
 	@NotBlank(message = "비밀번호는 비어있거나 공백이 포함될 수 없습니다.")
 	private String password;
 	

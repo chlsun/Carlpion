@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
@@ -22,6 +23,16 @@ public class AuthServiceImpl implements AuthService {
 	
 	private final AuthenticationManager authenticationManager;
 	private final TokenService tokenService;
+	
+	@Override
+	public CarlpionUserDetails getUserDetails() {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		CarlpionUserDetails user = (CarlpionUserDetails)authentication.getPrincipal();
+		
+		return user;
+	}
 	
 	@Override
 	public Map<String, String> login(LoginDTO loginInfo) {
@@ -56,4 +67,9 @@ public class AuthServiceImpl implements AuthService {
 		return loginResponse;
 	}
 
+	@Override
+	public void sendAuthenticateEmail(String email) {
+		
+		
+	}
 }
