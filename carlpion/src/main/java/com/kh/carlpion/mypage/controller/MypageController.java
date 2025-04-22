@@ -1,8 +1,12 @@
 package com.kh.carlpion.mypage.controller;
 
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,6 +73,61 @@ public class MypageController {
 		
 		return ResponseEntity.ok("탈퇴에 성공하셨습니다.");
 	} 
+	
+	
+	//------------------------------------------------------------
+	
+	@GetMapping({"/notice/comments","/reports/comments","/reviews/comments"})
+	public ResponseEntity<List<MypageDTO>> replyCheck(@RequestParam("userNo") Long userNo){
+		
+		
+		List<MypageDTO> result = mypageService.replyCheck(userNo);
+		
+		
+		return ResponseEntity.ok(result);
+	}
+	
+
+	@GetMapping("/mypage/reports")
+	public ResponseEntity<List<MypageDTO>> inquiryCheck(@RequestParam("userNo") Long userNo){
+		
+		List<MypageDTO> result = mypageService.inquiryCheck(userNo);
+		
+		return ResponseEntity.ok(result);
+	
+	}
+
+	@GetMapping("/mypage/reviews")
+	public ResponseEntity<List<MypageDTO>> reviewCheck(@RequestParam("userNo") Long userNo){
+		
+		
+		List<MypageDTO> result = mypageService.reviewCheck(userNo);
+		
+		return ResponseEntity.ok(result);
+		
+	} 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

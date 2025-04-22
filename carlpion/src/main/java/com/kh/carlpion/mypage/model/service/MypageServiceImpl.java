@@ -1,5 +1,8 @@
 package com.kh.carlpion.mypage.model.service;
 
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class MypageServiceImpl implements MypageService {
 
 	private final MypageMapper mapper;
-	
 	
 	@Override
 	public 	MypageDTO updateNickName(MypageDTO mypage) {
@@ -69,7 +71,32 @@ public class MypageServiceImpl implements MypageService {
 		mapper.deleteUser(mypage);
 	}
 
+	//--------------------------------------------------------
+	public List<MypageDTO> replyCheck(Long userNo){
+		
+		List<MypageDTO> result = mapper.replyCheck(userNo);
+		
+		return result;
+		
+	}
 	
+	@Override
+	public List<MypageDTO> inquiryCheck(Long userNO) {
+	
+		List<MypageDTO> result = mapper.inquiryCheck(userNO);
+		
+		return result;
+	}
+	
+	@Override
+	public List<MypageDTO> reviewCheck(Long userNo) {
+		
+		
+		List<MypageDTO> result =mapper.reviewCheck(userNo);
+		
+		
+		return result;
+	}
 
 
 
