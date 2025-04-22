@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.kh.carlpion.exception.exceptions.CreateDirectoriesException;
 import com.kh.carlpion.exception.exceptions.DuplicateValueException;
+import com.kh.carlpion.exception.exceptions.FileDeleteException;
 import com.kh.carlpion.exception.exceptions.FileSaveException;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
@@ -55,6 +57,16 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(FileSaveException.class)
 	public ResponseEntity<?> handleFileSave(FileSaveException e) {
+		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(FileDeleteException.class)
+	public ResponseEntity<?> handleFileDelete(FileDeleteException e) {
+		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(CreateDirectoriesException.class)
+	public ResponseEntity<?> handleCreateDirectories(CreateDirectoriesException e) {
 		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
 	}
 	
