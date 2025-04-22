@@ -6,11 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.carlpion.report.model.dto.ReportDTO;
+import com.kh.carlpion.report.model.vo.ReportVO;
 
 @Mapper
 public interface ReportMapper {
 	
-	void save(ReportDTO reportDTO);
+	void save(ReportVO reportVO);
 	
 	List<ReportDTO> findAll(RowBounds rowBounds);
 	
@@ -19,4 +20,8 @@ public interface ReportMapper {
 	void updateById(ReportDTO reportDTO);
 			
 	void deleteById(Long reportNo);
+	
+	void saveFile(ReportVO reportVO);
+	
+	void deleteFileById(Long reportNo);
 }

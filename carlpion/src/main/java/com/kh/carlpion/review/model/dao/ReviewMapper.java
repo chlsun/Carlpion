@@ -6,11 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.carlpion.review.model.dto.ReviewDTO;
+import com.kh.carlpion.review.model.vo.ReviewVO;
 
 @Mapper
 public interface ReviewMapper {
 	
-	void save(ReviewDTO reviewDTO);
+	void save(ReviewVO reviewVO);
 	
 	List<ReviewDTO> findAll(RowBounds rowBounds);
 	
@@ -19,4 +20,8 @@ public interface ReviewMapper {
 	void updateById(ReviewDTO reviewDTO);
 			
 	void deleteById(Long reviewNo);
+	
+	void saveFile(ReviewVO reviewVO);
+	
+	void deleteFileById(Long reviewNo);
 }

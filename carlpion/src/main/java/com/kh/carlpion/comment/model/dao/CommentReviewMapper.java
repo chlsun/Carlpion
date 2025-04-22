@@ -5,11 +5,12 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.kh.carlpion.comment.model.dto.CommentReviewDTO;
+import com.kh.carlpion.comment.model.vo.CommentReviewVO;
 
 @Mapper
 public interface CommentReviewMapper {
 
-	void saveReview(CommentReviewDTO commentReviewDTO);
+	void saveReview(CommentReviewVO commentReviewVO);
 	
 	List<CommentReviewDTO> findAllReview(Long reviewNo); 
 	
