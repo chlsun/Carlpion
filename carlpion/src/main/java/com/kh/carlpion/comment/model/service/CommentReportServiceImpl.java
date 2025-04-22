@@ -24,7 +24,7 @@ public class CommentReportServiceImpl implements CommentReportService {
 	public void saveReport(CommentReportDTO commentReportDTO) {
 		
 		CommentReportVO requestData = CommentReportVO.builder()
-													 .userNo(null)
+													 .userNo(commentReportDTO.getUserNo())
 													 .content(commentReportDTO.getContent())
 													 .reportNo(commentReportDTO.getReportNo())
 													 .build();

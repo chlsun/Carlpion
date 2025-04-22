@@ -50,11 +50,11 @@
 		resultType="com.kh.carlpion.report.model.dto.ReportDTO"
 	>
 		SELECT 
-				REPORT_NO	AS	reportNo
-			 ,	USER_NO		AS	userNo
-			 ,	TITLE		AS	title
-			 ,	CONTENT		AS	content
-			 ,	CREATE_DATE	AS	createDate
+				REPORT_NO		AS	reportNo
+			 ,	r.USER_NO		AS	userNo
+			 ,	TITLE
+			 ,	CONTENT
+			 ,	r.CREATE_DATE	AS	createDate
 			 ,	COUNT
 		  FROM
 		  		CP_REPORT r
@@ -76,11 +76,11 @@
 		resultType="com.kh.carlpion.report.model.dto.ReportDTO"
 	>
 		SELECT 
-				REPORT_NO	AS	reportNo
-			 ,	USER_NO		AS	userNo
-			 ,	TITLE		AS	title
-			 ,	CONTENT		AS	content
-			 ,	CREATE_DATE	AS	createDate
+				REPORT_NO		AS	reportNo
+			 ,	r.USER_NO		AS	userNo
+			 ,	TITLE
+			 ,	CONTENT
+			 ,	r.CREATE_DATE	AS	createDate
 			 ,	COUNT
 			 ,	POINT
 			 ,	USER_LEVEL
@@ -96,7 +96,10 @@
 		   		REPORT_NO = #{reportNo} 
 	</select>
 	
-	<update id="updateById">
+	<update 
+		id="updateById"
+		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+	>
 		UPDATE
 				CP_REPORT
 		   SET
@@ -105,7 +108,10 @@
 		 WHERE	
 		 		REPORT_NO = #{reportNo}
 	</update>
-	<update id="deleteById">
+	<update 
+		id="deleteById"
+		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+	>
 		UPDATE
 				CP_REPORT
 		   SET
@@ -114,7 +120,10 @@
 		 		REPORT_NO = #{reportNo}
 	</update>
 	
-	<delete id="deleteFileById">
+	<delete 
+		id="deleteFileById"
+		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+	>
 		DELETE
 		  FROM
 		  		CP_RP_FILE
