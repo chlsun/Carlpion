@@ -10,9 +10,11 @@ import com.kh.carlpion.comment.model.vo.CommentNoticeVO;
 @Mapper
 public interface CommentNoticeMapper {
 
-	void saveNotice(CommentNoticeVO commentNoticeVO);
+	void saveComment(CommentNoticeVO commentNoticeVO);
 	
-	List<CommentNoticeDTO> findAllNotice(Long noticeNo);
+	List<CommentNoticeDTO> findAllComment(Long noticeNo);
 	
-	void deleteNoticeById(Long commentNo);
+	void softDeleteCommentById(Long commentNo);
+	
+	Long findByUserNo(Long commentNo);
 }

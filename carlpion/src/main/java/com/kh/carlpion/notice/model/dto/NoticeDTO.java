@@ -18,6 +18,7 @@ public class NoticeDTO {
 	private Long userNo;
 	private String title;
 	private String content;
+	private String nickName;
 	private String fileUrl;
 	private Date createDate;
 	private Long count;
