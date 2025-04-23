@@ -49,6 +49,10 @@ public class SecurityConfigure {
 							   request.requestMatchers(HttpMethod.PUT, "/notice/**").hasRole("ADMIN");
 							   request.requestMatchers(HttpMethod.DELETE, "/users", "/notice/**", "/reports/**", "/reviews/**").authenticated();
 							   request.requestMatchers(HttpMethod.DELETE, "/notice/**", "/reports/comments").hasRole("ADMIN");
+							   request.requestMatchers(HttpMethod.GET, "/mypage/**").authenticated();
+							   request.requestMatchers(HttpMethod.PUT, "/users/update-pw","/users/update-nickname","/users/update-email").authenticated();
+							   request.requestMatchers(HttpMethod.PUT, "/users/update-profile","/users/update-realname").authenticated();
+							   
 						   })
 						   .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 						   .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

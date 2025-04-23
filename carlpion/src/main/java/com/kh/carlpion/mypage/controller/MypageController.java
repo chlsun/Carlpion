@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
 import com.kh.carlpion.mypage.model.dto.MypageDTO;
 import com.kh.carlpion.mypage.model.service.MypageService;
 
@@ -77,54 +79,46 @@ public class MypageController {
 	
 	//------------------------------------------------------------
 	
-	@GetMapping({"/notice/comments","/reports/comments","/reviews/comments"})
-	public ResponseEntity<List<MypageDTO>> replyCheck(@RequestParam("userNo") Long userNo){
+	@GetMapping("/mypage/comments")
+	public ResponseEntity<List<MypageDTO>> replyCheck(@AuthenticationPrincipal CarlpionUserDetails user){
+		String userName = user.getUsername();
 		
-		
-		List<MypageDTO> result = mypageService.replyCheck(userNo);
-		
+		List<MypageDTO> result = mypageService.replyCheck(userName);
 		
 		return ResponseEntity.ok(result);
 	}
 	
 
 	@GetMapping("/mypage/reports")
-	public ResponseEntity<List<MypageDTO>> inquiryCheck(@RequestParam("userNo") Long userNo){
+	public ResponseEntity<List<MypageDTO>> inquiryCheck(@AuthenticationPrincipal CarlpionUserDetails user){
+		String userName = user.getUsername();
 		
-		List<MypageDTO> result = mypageService.inquiryCheck(userNo);
+	List<MypageDTO> result	= mypageService.inquiryCheck(userName);
 		
 		return ResponseEntity.ok(result);
 	
 	}
 
 	@GetMapping("/mypage/reviews")
-	public ResponseEntity<List<MypageDTO>> reviewCheck(@RequestParam("userNo") Long userNo){
-		
-		
-		List<MypageDTO> result = mypageService.reviewCheck(userNo);
+	public ResponseEntity<List<MypageDTO>> reviewCheck(@AuthenticationPrincipal CarlpionUserDetails user){
+		String userName = user.getUsername();
+		//System.out.println("요청한 유저네임: " + userName); 
+		List<MypageDTO> result = mypageService.reviewCheck(userName);
 		
 		return ResponseEntity.ok(result);
 		
 	} 
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@GetMapping("/mypage/points")
+	public ResponseEntity<List<MypageDTO>> pointCheck(@AuthenticationPrincipal CarlpionUserDetails user ){
+		String userName= user.getUsername();
+		
+		List<MypageDTO> result = mypageService.pointCheck(userName);
+		
+		return ResponseEntity.ok(result);
+		
+	}
+
 	
 	
 	
