@@ -108,10 +108,7 @@
 		 WHERE	
 		 		REVIEW_NO = #{reviewNo}
 	</update>
-	<update 
-		id="deleteById"
-		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
-	>
+	<update id="deleteById">
 		UPDATE
 				CP_REVIEW
 		   SET
@@ -120,10 +117,18 @@
 		 		REVIEW_NO = #{reviewNo}
 	</update>
 	
-	<delete 
-		id="deleteFileById"
-		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
+	<select 
+		id="findFileByAll"
+		resultType="string"
 	>
+		SLELCT
+				FILE_URL	AS	fileUrl
+		  FROM	
+		  		CP_RV_FILE
+		 WHERE
+		 		REVIEW_NO = #{reviewNo}
+	</select>
+	<delete id="deleteFileById">
 		DELETE
 		  FROM
 		  		CP_RV_FILE

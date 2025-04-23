@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.exception.exceptions.NotFindException;
@@ -24,6 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
 	private final FileService fileService;
 
 	@Override
+	@Transactional
 	public void save(ReviewDTO reviewDTO, List<MultipartFile> files) {
 		/*사용자 인증 구간*/
 		
@@ -70,9 +72,19 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
+	@Transactional
 	public ReviewDTO updateById(ReviewDTO reviewDTO, List<MultipartFile> files) {
 		
-		if(files != null && !files.isEmpty()) {
+		if(files != null && !files.isEmpty() && files.stream().anyMatch(file -> !file.isEmpty())) {
+			List<String> fileUrls = reviewMapper.findFileByAll(reviewDTO.getReviewNo());
+			
+			if(fileUrls != null) {
+				for(String fileUrl : fileUrls) {
+					fileService.deleteFile(fileUrl);
+				}
+			}
+			reviewMapper.deleteFileById(reviewDTO.getReviewNo());
+			
 			for(MultipartFile file : files) {
 				
 				if( !file.isEmpty()) {
@@ -83,7 +95,6 @@ public class ReviewServiceImpl implements ReviewService {
 													   .reviewNo(reviewDTO.getReviewNo())
 													   .fileUrl(filePath)
 													   .build();
-					reviewMapper.deleteFileById(reviewDTO.getReviewNo());
 					reviewMapper.saveFile(requestFileData);
 //					log.info("saveFile: {}", requestFileData);
 				}
@@ -94,6 +105,7 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long reviewNo) {
 		reviewMapper.deleteById(reviewNo);
 	}

@@ -23,5 +23,7 @@ public interface ReviewMapper {
 	
 	void saveFile(ReviewVO reviewVO);
 	
+	List<String> findFileByAll(Long reviewNo);
+	
 	void deleteFileById(Long reviewNo);
 }

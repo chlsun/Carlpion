@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.exception.exceptions.NotFindException;
@@ -24,6 +25,7 @@ public class NoticeServiceImpl implements NoticeService {
 	private final FileService fileService;
 
 	@Override
+	@Transactional
 	public void save(NoticeDTO noticeDTO, List<MultipartFile> files) {
 		/*사용자 인증 구간*/
 		
@@ -34,8 +36,8 @@ public class NoticeServiceImpl implements NoticeService {
 									   .build();
 		noticeMapper.save(requestData);
 		
-		if(files != null && !files.isEmpty()) {		
-			for(MultipartFile file : files) {
+		if(files != null && !files.isEmpty()) {					
+			for(MultipartFile file : files) {	
 				
 				if( !file.isEmpty()) {
 					String filePath = fileService.storage(file);
@@ -70,9 +72,19 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
+	@Transactional
 	public NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files) {
 			
-		if(files != null && !files.isEmpty()) {
+		if(files != null && !files.isEmpty() && files.stream().anyMatch(file -> !file.isEmpty())) {
+			List<String> fileUrls = noticeMapper.findFileByAll(noticeDTO.getNoticeNo());
+			
+			if(fileUrls != null) {
+				for(String fileUrl : fileUrls) {
+					fileService.deleteFile(fileUrl);
+				}
+			}
+			noticeMapper.deleteFileById(noticeDTO.getNoticeNo());
+			
 			for(MultipartFile file : files) {
 				
 				if( !file.isEmpty()) {
@@ -83,7 +95,6 @@ public class NoticeServiceImpl implements NoticeService {
 													   .noticeNo(noticeDTO.getNoticeNo())
 													   .fileUrl(filePath)
 													   .build();
-					noticeMapper.deleteFileById(noticeDTO.getNoticeNo());
 					noticeMapper.saveFile(requestFileData);
 //					log.info("saveFile: {}", requestFileData);
 				}
@@ -94,6 +105,7 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long noticeNo) {
 		noticeMapper.deleteById(noticeNo);
 	}

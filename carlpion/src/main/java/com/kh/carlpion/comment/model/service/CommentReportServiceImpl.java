@@ -3,6 +3,7 @@ package com.kh.carlpion.comment.model.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.carlpion.comment.model.dao.CommentReportMapper;
 import com.kh.carlpion.comment.model.dto.CommentReportDTO;
@@ -21,6 +22,7 @@ public class CommentReportServiceImpl implements CommentReportService {
 	private final ReportService reportService;
 	
 	@Override
+	@Transactional
 	public void saveReport(CommentReportDTO commentReportDTO) {
 		
 		CommentReportVO requestData = CommentReportVO.builder()
@@ -38,6 +40,7 @@ public class CommentReportServiceImpl implements CommentReportService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteReportById(Long commentNo) {
 		commentReportMapper.deleteReportById(commentNo);
 	}

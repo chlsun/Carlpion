@@ -108,10 +108,7 @@
 		 WHERE	
 		 		NOTICE_NO = #{noticeNo}
 	</update>
-	<update 
-		id="deleteById"
-		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
-	>
+	<update id="deleteById">
 		UPDATE
 				CP_NOTICE
 		   SET
@@ -120,10 +117,18 @@
 		 		NOTICE_NO = #{noticeNo}
 	</update>
 	
-	<delete 
-		id="deleteFileById"
-		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+	<select 
+		id="findFileByAll"
+		resultType="string"
 	>
+		SLELCT
+				FILE_URL	AS	fileUrl
+		  FROM
+		  		CP_NT_FILE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+	</select>
+	<delete id="deleteFileById">
 		DELETE
 		  FROM
 		  		CP_NT_FILE
