@@ -64,8 +64,8 @@ public class NoticeController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteById(@PathVariable(name = "id") Long noticeNo) {
-		noticeService.deleteById(noticeNo);
+	public ResponseEntity<?> softDeleteById(@PathVariable(name = "id") Long noticeNo) {
+		noticeService.softDeleteById(noticeNo);
 		return ResponseEntity.noContent().build();
 	}	
 }

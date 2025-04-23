@@ -50,12 +50,13 @@
 		resultType="com.kh.carlpion.report.model.dto.ReportDTO"
 	>
 		SELECT 
-				REPORT_NO		AS	reportNo
+				r.REPORT_NO		AS	reportNo
 			 ,	r.USER_NO		AS	userNo
-			 ,	TITLE
-			 ,	CONTENT
+			 ,	r.TITLE
+			 ,	r.CONTENT
+			 ,	u.NICKNAME		AS	nickName
 			 ,	r.CREATE_DATE	AS	createDate
-			 ,	COUNT
+			 ,	r.COUNT
 		  FROM
 		  		CP_REPORT r
 		  JOIN
@@ -63,27 +64,37 @@
 		  JOIN
 		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO	
 		 WHERE	
-		 		IS_ACTIVE = 'Y'
+		 		r.IS_ACTIVE = 'Y'
 		 ORDER
 		 	BY	
-		 		REPORT_NO 	DESC
-		   	 , 	POINT 		DESC
-           	 ,  USER_LEVEL 	DESC
+		 		r.REPORT_NO 	DESC
+		   	 , 	p.POINT 		DESC
+           	 ,  p.USER_LEVEL 	DESC
 	</select>
+	
+	<update id="updateCount">
+		UPDATE
+				CP_REPORT
+		   SET
+		   		COUNT = COUNT + 1
+		 WHERE
+		 		REPORT_NO = #{reportNo}
+	</update>	
 	<select 
 		id="findById" 
 		parameterType="long"
 		resultType="com.kh.carlpion.report.model.dto.ReportDTO"
 	>
 		SELECT 
-				REPORT_NO		AS	reportNo
+				r.REPORT_NO		AS	reportNo
 			 ,	r.USER_NO		AS	userNo
-			 ,	TITLE
-			 ,	CONTENT
+			 ,	r.TITLE
+			 ,	r.CONTENT
+			 ,	u.NICKNAME		AS	nickName
 			 ,	r.CREATE_DATE	AS	createDate
-			 ,	COUNT
-			 ,	POINT
-			 ,	USER_LEVEL
+			 ,	r.COUNT
+			 ,	p.POINT
+			 ,	p.USER_LEVEL
 		  FROM
 		  		CP_REPORT r
 		  JOIN
@@ -91,11 +102,23 @@
 		  JOIN
 		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO
 		 WHERE	
-		 		IS_ACTIVE = 'Y'
+		 		r.IS_ACTIVE = 'Y'
 		   AND	
-		   		REPORT_NO = #{reportNo} 
+		   		r.REPORT_NO = #{reportNo} 
 	</select>
 	
+	<select 
+		id="findByUserNo"
+		parameterType="long"
+		resultType="long"
+	>
+		SELECT
+				USER_NO		AS	userNo
+		  FROM	
+		  		CP_REPORT
+		 WHERE
+		 		REPORT_NO = #{reportNo}		  		
+	</select>
 	<update 
 		id="updateById"
 		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
@@ -108,7 +131,7 @@
 		 WHERE	
 		 		REPORT_NO = #{reportNo}
 	</update>
-	<update id="deleteById">
+	<update id="softDeleteById">
 		UPDATE
 				CP_REPORT
 		   SET
