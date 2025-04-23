@@ -1,11 +1,15 @@
 package com.kh.carlpion.mypage.model.service;
 
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.exception.exceptions.EmailDuplicateException;
+import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.mypage.model.dao.MypageMapper;
 import com.kh.carlpion.mypage.model.dto.MypageDTO;
 
@@ -17,14 +21,18 @@ public class MypageServiceImpl implements MypageService {
 
 	private final MypageMapper mapper;
 	
-	
 	@Override
-	public ResponseEntity<String> updateNickName(MypageDTO mypage) {
-		int result =  mapper.updateNickName(mypage);
+	public 	MypageDTO updateNickName(MypageDTO mypage) {
 		
+			int checkNickName =	mapper.checkNickName(mypage);
+			
+			if(checkNickName > 0) {
+				throw new NickNameDuplicateException("이미 존재하는 닉네임 입니다.");
+			}
+			
+		MypageDTO result =  mapper.updateNickName(mypage);
 		
-		 
-		 return ResponseEntity.status(HttpStatus.OK).body("닉네임 변경 성공");
+		 return result;
 	}
 	
 	@Override
@@ -33,27 +41,63 @@ public class MypageServiceImpl implements MypageService {
 	}
 
 	@Override
-	public ResponseEntity<String> updateEmail(MypageDTO mypage) {
-		 mapper.updateEmail(mypage);
-		return ResponseEntity.status(HttpStatus.OK).body("이메일 변경 성공");
+	public 	MypageDTO updateEmail(MypageDTO mypage) {
+		int checkEmail = mapper.checkEmail(mypage);
+		
+		if(checkEmail > 0 ) {
+			throw new EmailDuplicateException("이미 존재하는 이메일 입니다.");
+			
+		}	
+		
+		MypageDTO result = mapper.updateEmail(mypage);
+		return result;
 	}
 
 	@Override
-	public ResponseEntity<String> updateProfile(MultipartFile file, Long userNo) {
-		 mapper.updateProfile(file,userNo);
-	
-		
-		return ResponseEntity.status(HttpStatus.OK).body("프로필 수정 성공"); 
+	public 	MypageDTO updateProfile(MultipartFile file, Long userNo) {
+		MypageDTO result = mapper.updateProfile(file,userNo);
+		return result;
 	}
 
 	@Override
-	public ResponseEntity<String> updateName(MypageDTO mypage) {
-		mapper.updateName(mypage);
-		
-		return ResponseEntity.status(HttpStatus.OK).body("이름 수정 성공");
+	public 	MypageDTO updateName(MypageDTO mypage) {
+		MypageDTO result = mapper.updateName(mypage);
+		return result;
 	}
 
 	
+	@Override
+	public void deleteUser(MypageDTO mypage) {
+		mapper.deleteUser(mypage);
+	}
+
+	//--------------------------------------------------------
+	public List<MypageDTO> replyCheck(Long userNo){
+		
+		List<MypageDTO> result = mapper.replyCheck(userNo);
+		
+		return result;
+		
+	}
+	
+	@Override
+	public List<MypageDTO> inquiryCheck(Long userNO) {
+	
+		List<MypageDTO> result = mapper.inquiryCheck(userNO);
+		
+		return result;
+	}
+	
+	@Override
+	public List<MypageDTO> reviewCheck(Long userNo) {
+		
+		
+		List<MypageDTO> result =mapper.reviewCheck(userNo);
+		
+		
+		return result;
+	}
+
 
 
 }
