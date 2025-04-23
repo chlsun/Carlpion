@@ -40,8 +40,7 @@ public class SecurityConfigure {
 						   .cors(Customizer.withDefaults())
 						   .authorizeHttpRequests(request -> {
 							   request.requestMatchers("/admin/**").hasRole("ADMIN");
-							   request.requestMatchers(HttpMethod.GET, "/notice", "/notice/**", "/reports", "/reports/**", "/reviews", "/reviews/**").permitAll();
-							   request.requestMatchers(HttpMethod.GET, "/uploads/**").permitAll();
+							   request.requestMatchers(HttpMethod.GET, "/notice", "/notice/**", "/reports", "/reports/**", "/reviews", "/reviews/**", "/uploads/**").permitAll();
 							   request.requestMatchers(HttpMethod.POST, "/users", "/auth/**").permitAll();
 							   request.requestMatchers(HttpMethod.POST, "/rents", "/notice/**", "/reviews", "/reviews/**").authenticated();
 							   request.requestMatchers(HttpMethod.POST, "/notice", "/reports/**").hasRole("ADMIN");
