@@ -16,5 +16,5 @@ public interface ReviewService {
 	
 	ReviewDTO updateById(ReviewDTO reviewDTO, List<MultipartFile> files);
 	
-	void deleteById(Long reviewNo);
+	void softDeleteById(Long reviewNo);
 }

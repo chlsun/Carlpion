@@ -19,11 +19,15 @@ public interface ReportMapper {
 	
 	void updateById(ReportDTO reportDTO);
 			
-	void deleteById(Long reportNo);
+	void softDeleteById(Long reportNo);
 	
 	void saveFile(ReportVO reportVO);
 	
 	List<String> findFileByAll(Long reportNo);
 	
 	void deleteFileById(Long reportNo);
+	
+	Long findByUserNo(Long reportNo);
+	
+	void updateCount(Long reportNo);
 }

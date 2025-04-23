@@ -50,12 +50,13 @@
 		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
 	>
 		SELECT 
-				REVIEW_NO		AS	reviewNo
+				r.REVIEW_NO		AS	reviewNo
 			 ,	r.USER_NO		AS	userNo
-			 ,	TITLE
-			 ,	CONTENT
+			 ,	r.TITLE
+			 ,	r.CONTENT
+ 			 ,	u.NICKNAME		AS	nickName
 			 ,	r.CREATE_DATE	AS	createDate
-			 ,	COUNT
+			 ,	r.COUNT
 		  FROM
 		  		CP_REVIEW r
 		  JOIN
@@ -63,27 +64,37 @@
 		  JOIN
 		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO	
 		 WHERE	
-		 		IS_ACTIVE = 'Y'
+		 		r.IS_ACTIVE = 'Y'
 		 ORDER
 		 	BY	
-		 		REVIEW_NO 	DESC
-		   	 , 	POINT 		DESC
-           	 ,  USER_LEVEL 	DESC
+		 		r.REVIEW_NO 	DESC
+		   	 , 	p.POINT 		DESC
+           	 ,  p.USER_LEVEL 	DESC
 	</select>
+	
+	<update id="updateCount">
+		UPDATE
+				CP_REVIEW
+		   SET
+		   		COUNT = COUNT + 1
+		 WHERE
+		 		REVIEW_NO = #{reviewNo}
+	</update>
 	<select 
 		id="findById" 
 		parameterType="long"
 		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
 	>
 		SELECT 
-				REVIEW_NO		AS	reviewNo
+				r.REVIEW_NO		AS	reviewNo
 			 ,	r.USER_NO		AS	userNo
-			 ,	TITLE
-			 ,	CONTENT
+			 ,	r.TITLE
+			 ,	r.CONTENT
+			 ,	u.NICKNAME		AS	nickName
 			 ,	r.CREATE_DATE	AS	createDate
-			 ,	COUNT
-			 ,	POINT
-			 ,	USER_LEVEL
+			 ,	r.COUNT
+			 ,	p.POINT
+			 ,	p.USER_LEVEL
 		  FROM
 		  		CP_REVIEW r
 		  JOIN
@@ -91,11 +102,23 @@
 		  JOIN
 		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO
 		 WHERE	
-		 		IS_ACTIVE = 'Y'
+		 		r.IS_ACTIVE = 'Y'
 		   AND	
-		   		REVIEW_NO = #{reviewNo} 
+		   		r.REVIEW_NO = #{reviewNo} 
 	</select>
-	
+		
+	<select 
+		id="findByUserNo"
+		parameterType="long"
+		resultType="long"
+	>
+		SELECT
+				USER_NO		AS	userNo
+		  FROM	
+		  		CP_REVIEW
+		 WHERE
+		 		REVIEW_NO = #{reviewNo}	  		
+	</select>
 	<update 
 		id="updateById"
 		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
@@ -108,7 +131,7 @@
 		 WHERE	
 		 		REVIEW_NO = #{reviewNo}
 	</update>
-	<update id="deleteById">
+	<update id="softDeleteById">
 		UPDATE
 				CP_REVIEW
 		   SET

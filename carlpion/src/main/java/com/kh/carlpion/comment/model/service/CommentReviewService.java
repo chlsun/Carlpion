@@ -7,9 +7,9 @@ import com.kh.carlpion.comment.model.vo.CommentReviewVO;
 
 public interface CommentReviewService {
 	
-	void saveReview(CommentReviewDTO commentReviewDTO);
+	void saveComment(CommentReviewDTO commentReviewDTO);
 	
-	List<CommentReviewDTO> findAllReview(Long reviewNo);
+	List<CommentReviewDTO> findAllComment(Long reviewNo);
 	
-	void deleteReviewById(Long commentNo);
+	void softDeleteCommentById(Long commentNo);
 }
