@@ -10,9 +10,11 @@ import com.kh.carlpion.comment.model.vo.CommentReviewVO;
 @Mapper
 public interface CommentReviewMapper {
 
-	void saveReview(CommentReviewVO commentReviewVO);
+	void saveComment(CommentReviewVO commentReviewVO);
 	
-	List<CommentReviewDTO> findAllReview(Long reviewNo); 
+	List<CommentReviewDTO> findAllComment(Long reviewNo); 
 	
-	void deleteReviewById(Long commentNo);
+	void softDeleteCommentById(Long commentNo);
+	
+	Long findByUserNo(Long commentNo);
 }

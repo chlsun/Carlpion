@@ -7,9 +7,9 @@ import com.kh.carlpion.comment.model.vo.CommentNoticeVO;
 
 public interface CommentNoticeService {
 	
-	void saveNotice(CommentNoticeDTO commentNoticeDTO);
+	void saveComment(CommentNoticeDTO commentNoticeDTO);
 	
-	List<CommentNoticeDTO> findAllNotice(Long noticeNo);
+	List<CommentNoticeDTO> findAllComment(Long noticeNo);
 	
-	void deleteNoticeById(Long commentNo);
+	void softDeleteCommentById(Long commentNo);
 }

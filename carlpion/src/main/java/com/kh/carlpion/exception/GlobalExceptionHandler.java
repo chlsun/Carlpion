@@ -18,6 +18,7 @@ import com.kh.carlpion.exception.exceptions.EmailVerifyFailException;
 import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.exception.exceptions.FileSaveException;
 import com.kh.carlpion.exception.exceptions.NotFindException;
+import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
 
 @RestControllerAdvice
@@ -118,6 +119,11 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(CreateDirectoriesException.class)
 	public ResponseEntity<?> handleCreateDirectories(CreateDirectoriesException e) {
+		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<?> handleUnauthorized(UnauthorizedException e) {
 		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
 	}
 
