@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.kh.carlpion.exception.exceptions.CustomAuthenticationException;
 import com.kh.carlpion.exception.exceptions.DuplicateValueException;
+import com.kh.carlpion.exception.exceptions.EmailDuplicateException;
+import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.exception.exceptions.FileSaveException;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
@@ -50,6 +52,18 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 	}
 	
+	@ExceptionHandler(NickNameDuplicateException.class)
+	public ResponseEntity<?> handleNickNameDuplicate(NickNameDuplicateException e){
+		
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+	}
+
+	@ExceptionHandler(EmailDuplicateException.class)
+	public ResponseEntity<?> handleEmailDuplicate(EmailDuplicateException e){
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+	}
+	
+
 	// AuthenticationManager가 사용자 인증을 실패했을 경우 발생
 	@ExceptionHandler(CustomAuthenticationException.class)
 	public ResponseEntity<Map<String, String>> handleCustomAuthentication(CustomAuthenticationException e) {
