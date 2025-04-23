@@ -1,7 +1,12 @@
 package com.kh.carlpion.mypage.controller;
 
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +30,10 @@ public class MypageController {
 	
 	
 	@PutMapping("/users/update-nickname")
-	public ResponseEntity<?> updateNickName(@RequestBody MypageDTO mypage) {
-	
-		return mypageService.updateNickName(mypage);
+	public ResponseEntity<MypageDTO> updateNickName(@RequestBody MypageDTO mypage) {
+		MypageDTO result = mypageService.updateNickName(mypage);
+		
+		return ResponseEntity.ok(result);
 		
 	}
 	
@@ -39,26 +45,87 @@ public class MypageController {
 	}
 	
 	@PutMapping("/users/update-email")
-	public ResponseEntity<?> updateEmail(@RequestBody MypageDTO mypage) {
-		
-		return mypageService.updateEmail(mypage);
+	public ResponseEntity<MypageDTO> updateEmail(@RequestBody MypageDTO mypage) {
+		MypageDTO result = mypageService.updateEmail(mypage);
+		return ResponseEntity.ok(result);
 		
 	}
 	
 	@PutMapping("/users/update-profile")
-	public ResponseEntity<String> updateProfile(@RequestParam("file") MultipartFile file,
+	public ResponseEntity<MypageDTO> updateProfile(@RequestParam("file") MultipartFile file,
 											        @RequestParam("userNo") Long userNo){
-			
-		return mypageService.updateProfile(file,userNo);
+		MypageDTO result = mypageService.updateProfile(file, userNo);
+		return ResponseEntity.ok(result);
 		
 	}
 	@PutMapping("/users/update-relname")
-	public ResponseEntity<String> updateName(@RequestBody MypageDTO mypage){
+	public ResponseEntity<MypageDTO> updateName(@RequestBody MypageDTO mypage){
 		
-			return mypageService.updateName(mypage);
+		MypageDTO result = mypageService.updateName(mypage);
+		return ResponseEntity.ok(result);
 			
 	}
 		
+	@DeleteMapping("/users")
+	public ResponseEntity<String> deleteUser(@RequestBody MypageDTO mypage){
+		
+		mypageService.deleteUser(mypage);
+		
+		return ResponseEntity.ok("탈퇴에 성공하셨습니다.");
+	} 
+	
+	
+	//------------------------------------------------------------
+	
+	@GetMapping({"/notice/comments","/reports/comments","/reviews/comments"})
+	public ResponseEntity<List<MypageDTO>> replyCheck(@RequestParam("userNo") Long userNo){
+		
+		
+		List<MypageDTO> result = mypageService.replyCheck(userNo);
+		
+		
+		return ResponseEntity.ok(result);
+	}
+	
+
+	@GetMapping("/mypage/reports")
+	public ResponseEntity<List<MypageDTO>> inquiryCheck(@RequestParam("userNo") Long userNo){
+		
+		List<MypageDTO> result = mypageService.inquiryCheck(userNo);
+		
+		return ResponseEntity.ok(result);
+	
+	}
+
+	@GetMapping("/mypage/reviews")
+	public ResponseEntity<List<MypageDTO>> reviewCheck(@RequestParam("userNo") Long userNo){
+		
+		
+		List<MypageDTO> result = mypageService.reviewCheck(userNo);
+		
+		return ResponseEntity.ok(result);
+		
+	} 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
