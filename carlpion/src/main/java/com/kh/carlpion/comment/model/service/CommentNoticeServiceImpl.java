@@ -3,6 +3,7 @@ package com.kh.carlpion.comment.model.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.carlpion.comment.model.dao.CommentNoticeMapper;
 import com.kh.carlpion.comment.model.dto.CommentNoticeDTO;
@@ -21,6 +22,7 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
 	private final NoticeService noticeService;
 
 	@Override
+	@Transactional
 	public void saveNotice(CommentNoticeDTO commentNoticeDTO) {
 		
 		CommentNoticeVO requestData = CommentNoticeVO.builder()
@@ -38,6 +40,7 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteNoticeById(Long commentNo) {
 		commentNoticeMapper.deleteNoticeById(commentNo);
 	}

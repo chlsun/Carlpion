@@ -43,10 +43,7 @@
 		 		CREATE_DATE DESC
 	</select>
 	
-	<update 
-		id="deleteNoticeById"
-		parameterType="com.kh.carlpion.comment.model.vo.CommentNoticeVO"
-	>
+	<update id="deleteNoticeById">
 		UPDATE
 				CP_NT_COMMENT
 		   SET

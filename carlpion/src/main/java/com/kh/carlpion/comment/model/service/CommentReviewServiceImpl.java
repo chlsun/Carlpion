@@ -3,6 +3,7 @@ package com.kh.carlpion.comment.model.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.carlpion.comment.model.dao.CommentReviewMapper;
 import com.kh.carlpion.comment.model.dto.CommentReviewDTO;
@@ -21,6 +22,7 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 	private final ReviewService reviewService;
 
 	@Override
+	@Transactional
 	public void saveReview(CommentReviewDTO commentReviewDTO) {
 		
 		CommentReviewVO requestData = CommentReviewVO.builder()
@@ -38,6 +40,7 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteReviewById(Long commentNo) {
 		commentReviewMapper.deleteReviewById(commentNo);
 	}
