@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.kh.carlpion.exception.exceptions.AlreadyExistsException;
 import com.kh.carlpion.exception.exceptions.DuplicateValueException;
+import com.kh.carlpion.exception.exceptions.EmptyInputException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
 
 @RestControllerAdvice
@@ -43,5 +45,11 @@ public class GlobalExceptionHandler {
 		error.put("cause", e.getMessage());
 		
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+	}
+	
+	@ExceptionHandler(AlreadyExistsException.class)
+	public ResponseEntity<?> alreadyExistsError(AlreadyExistsException e){
+		
+		return exceptionHandler(e, HttpStatus.CONFLICT);
 	}
 }
