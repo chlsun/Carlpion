@@ -3,53 +3,71 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-   <mapper namespace="com.kh.calpion.replyCheck.model.dao.ReplyCheckMapper">
+   <mapper namespace="com.kh.carlpion.mypage.model.dao.MypageMapper">
   
   <!-- 댓글 조회  -->
  	<select id="replyCheck"
- 			parameterType="com.kh.calpion.replyCheck.model.dao.ReplyCheckDTO"	
- 			resultType="com.kh.calpion.replyCheck.model.dao.ReplyCheckDTO">
+ 			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
+ 	
+ 			SELECT * FROM (
  	
  			SELECT
- 					'공지사항' AS board_type,
+ 					'공지사항' boardType,
+ 					B.NOTICE_NO boardNo,
  					B.TITLE,
+ 					B.COUNT,
  					C.CREATE_DATE,
  					C.COMMENT
  			 FROM
  			 		CP_NT_COMMENT C
  			 JOIN
  			 	    CP_NOTICE B ON C.NOTICE_NO = B.NOTICE_NO
+ 			 JOIN
+ 			 		CP_USER U ON C.USER_NO = U.USER_NO
  		    WHERE
- 		    		C.USER_NO = #{userNo}
- 					
+ 		    		U.USERNAME = #{userName}
+ 		   	
  			UNION	
  					
  			SELECT
- 					'문의 게시판' AS board_type,
+ 					'문의 게시판' boardType,
+ 					B.REPORT_NO boardNo,
  					B.TITLE,
+ 					B.COUNT,
  					C.CREATE_DATE,
  					C.COMMENT
  			 FROM			
  					CP_RP_COMMENT C 
  			 JOIN
  			 		CP_REPORT B ON C.REPORT_NO = B.REPORT_NO 
+ 			 JOIN
+ 			 		CP_USER U ON C.USER_NO = U.USER_NO	
+ 			 	
  			WHERE
- 					C.USER_NO = #{userNo}
- 							
+ 					U.USERNAME = #{userName}
+ 					
  					
  			UNION	
  					
  			SELECT
- 					'리뷰 게시판' AS board_type,
+ 					'리뷰 게시판' boardType ,
+ 					B.REVIEW_NO boardNo,
  					B.TITLE,
+ 					B.COUNT,
  					C.CREATE_DATE,
  					C.COMMENT
  			 FROM			
  					CP_RV_COMMENT C 
  			 JOIN
  			 		CP_REVIEW B ON C.REVIEW_NO = B.REVIEW_NO 
+ 			  JOIN
+ 			 		CP_USER U ON C.USER_NO = U.USER_NO
  			WHERE
- 					C.USER_NO = #{userNo}
+ 					U.USERNAME = #{userName}
+ 			)
+ 			 ORDER
+ 		       BY
+ 					CREATE_DATE DESC;
  						
  	
  	</select>
@@ -58,49 +76,85 @@
  	
  	
  	 <select id="inquiryCheck"
-  		   parameterType="long"
-  		   resultType="com.kh.carlpion.inquiryCheck.model.dto.InquiryCheckDTO">
+  		   resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
   		   
-  		   
-  		   SELECT
-  		   			USER_NO,
-  		   			REPORT_NO,
-  		   			TITLE,
-  		   			CONTENT,
-  		   			CREATE_DATE,
-  		   			COUNT,
-  		   			FILE_URL
-  
-  		    FROM
-  		    		CP_REPORT
-  		    
-  		    WHERE 
-  		    		USER_NO = #{userNo}
+		  SELECT
+		        U.USER_NO,
+		        R.REPORT_NO,
+		        R.TITLE,
+		        R.CONTENT,
+		        R.CREATE_DATE,
+		        R.COUNT,
+		        F.FILE_URL
+		  FROM
+		        CP_USER U
+		  JOIN
+		        CP_REPORT R ON R.USER_NO = U.USER_NO
+		  JOIN
+		        CP_RP_FILE F ON F.REPORT_NO = R.REPORT_NO 
+		  WHERE 
+		        U.USERNAME = #{userName}
+		  ORDER BY
+		        R.CREATE_DATE DESC
   
  	</select>
  	
  	<!-- 리뷰 게시판 조회  -->
  	
  	<select id="reviewCheck"
-			parameterType="long"
-			resultType="com.kh.carlpion.reviewCheck.model.dto.ReviewCheckDTO">
+			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 	
 		SELECT
-				USER_NO,
-				REVIEW_NO,
-				TITLE,
-				CONTENT,
-				CREATE_DATE,
-				COUNT,
-				FILE_URL
+				U.USER_NO,
+				R.REVIEW_NO,
+				R.TITLE,
+				R.CONTENT,
+				R.CREATE_DATE,
+				R.COUNT,
+				R.FILE_URL
 	 	 FROM
-	 			CP_REVIEW
+	 	 		CP_REVIEW R
+	 	 JOIN
+	 	 		CP_USER U ON R.USER_NO = U.USER_NO
+			 	 	 	
 	 	WHERE
-	 			USER_NO = #{userNO}
+	 			USERNAME = #{userName}
+	 	 ORDER
+ 		     BY
+ 					CREATE_DATE DESC;
 	 		
-	
 	</select>
  	 
+	<!-- 포인트 조회  -->
+	
+	<select id="pointCheck"
+			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
+			
+		SELECT
+			    P.USER_NO,
+			    H.REVIEW_NO,
+			    U.USERNAME,
+			    U.REALNAME,
+			    P.USER_LEVEL,
+			    H.REASON,
+			    H.POINT_CHANGE,
+			    P.POINT,
+			    H.CREATE_DATE
+		FROM
+		    	CP_POINT_HISTORY H
+		JOIN
+		    	CP_POINT P ON H.USER_NO = P.USER_NO
+		JOIN
+		   		CP_USER U ON P.USER_NO = U.USER_NO
+		WHERE
+		    	U.USERNAME = #{userName}
+		ORDER 
+		BY
+		    	CREATE_DATE DESC
+			
+			
+			</select>
+
 
  	
    </mapper>

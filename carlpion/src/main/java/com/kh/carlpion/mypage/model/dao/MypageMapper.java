@@ -29,11 +29,13 @@ public interface MypageMapper {
 	
 	void deleteUser(MypageDTO mypage);
 //--------------------------------------------------------
-	List<MypageDTO> replyCheck(Long userNo);
+	List<MypageDTO> replyCheck(String userName);
 
-	List<MypageDTO> inquiryCheck(Long userNo);
+	List<MypageDTO> inquiryCheck(String userName);
 
-	List<MypageDTO> reviewCheck(Long userNo);
+	List<MypageDTO> reviewCheck(String userName);
+	
+	List<MypageDTO> pointCheck(String userName);
 
 
 
