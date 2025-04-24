@@ -2,21 +2,21 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kh.carlpion.comment.model.dao.CommentNoticeMapper">
+<mapper namespace="com.kh.carlpion.comment.model.dao.CommentReportMapper">
 	<insert 
 		id="saveComment"
-		parameterType="com.kh.carlpion.comment.model.vo.CommentNoticeVO"
+		parameterType="com.kh.carlpion.comment.model.vo.CommentReportVO"
 	>
 		INSERT 
-		  INTO	CP_NT_COMMENT
+		  INTO	CP_RP_COMMENT
 		  	 (
-				NOTICE_NO
+				REPORT_NO
 			 ,	USER_NO
 			 , 	CONTENT
 			 )
 		VALUES 
 			 (
-			   	#{noticeNo}
+			   	#{reportNo}
 			 , 	#{userNo} 	
 			 , 	#{content} 	
 			 )
@@ -24,17 +24,16 @@
 	
 	<select 
 		id="findAllComment" 
-		resultType="com.kh.carlpion.comment.model.dto.CommentNoticeDTO"
+		resultType="com.kh.carlpion.comment.model.dto.CommentReportDTO"
 	>
 		SELECT 
 				c.COMMENT_NO	AS	commentNo
-			 ,	c.NOTICE_NO		AS	noticeNo
-			 ,	c.USER_NO		AS	userNo
+			 ,	c.REPORT_NO		AS	reportNo
 			 ,	c.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	c.CREATE_DATE	AS	createDate
 		  FROM
-		  		CP_NT_COMMENT c
+		  		CP_RP_COMMENT c
 		  JOIN
 		  		CP_USER u 	ON 	u.USER_NO = c.USER_NO
 		 WHERE	
@@ -42,7 +41,7 @@
 		 ORDER
 		 	BY	
 		 		c.CREATE_DATE DESC
-	</select>	
+	</select>
 	
 	<select 
 		id="findByUserNo"
@@ -52,13 +51,13 @@
 		SELECT
 				USER_NO		AS	userNo
 		  FROM	
-		  		CP_NT_COMMENT
+		  		CP_RP_COMMENT
 		 WHERE
 		 		COMMENT_NO = #{commentNo}	  		
 	</select>
 	<update id="softDeleteCommentById">
 		UPDATE
-				CP_NT_COMMENT
+				CP_RP_COMMENT
 		   SET
 		   		IS_ACTIVE = 'N'
 		 WHERE	

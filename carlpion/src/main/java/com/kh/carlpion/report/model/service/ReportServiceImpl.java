@@ -58,7 +58,7 @@ public class ReportServiceImpl implements ReportService {
 				}
 			}
 		}
-//		log.info("save: {}", requestData);
+//		log.info("save: {}", requestData);		
 	}
 
 	@Override
@@ -128,5 +128,5 @@ public class ReportServiceImpl implements ReportService {
 		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
 			throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
 		}
-	}
+	}	
 }

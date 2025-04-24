@@ -2,17 +2,17 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kh.carlpion.report.model.dao.ReportMapper">
+<mapper namespace="com.kh.carlpion.review.model.dao.ReviewMapper">
 	<insert 
 		id="save"
-		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
 		useGeneratedKeys="true"
-		keyProperty="reportNo"
-		keyColumn="REPORT_NO"
+		keyProperty="reviewNo"
+		keyColumn="REVIEW_NO"
 	>
 		INSERT 
 		  INTO	
-		  		CP_REPORT
+		  		CP_REVIEW
 		  	 (
 			 	USER_NO
 			 ,	TITLE
@@ -22,89 +22,90 @@
 			 (
 			   	#{userNo}
 			 , 	#{title} 	
-			 , 	#{content} 	
+			 , 	#{content} 		
 			 )
 	</insert>
 	<insert 
-		id="saveFile"
-		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+		id="saveFile" 
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
 	>
 		INSERT
-		  INTO	
-		  		CP_RP_FILE
+		  INTO
+		  		CP_RV_FILE
 		  	 (
-				REPORT_NO
+				REVIEW_NO
 			 ,	FILE_URL
 			 )
 		VALUES
 			 (
-				#{reportNo}
+				#{reviewNo}
 			 ,	#{fileUrl}
 			 )
 	</insert>
 	
 	<select 
 		id="findAll" 
-		resultType="com.kh.carlpion.report.model.dto.ReportDTO"
+		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
 	>
 		SELECT 
-				r.REPORT_NO		AS	reportNo
-			 ,	r.USER_NO		AS	userNo
+				r.REVIEW_NO		AS	reviewNo
 			 ,	r.TITLE
 			 ,	r.CONTENT
-			 ,	u.NICKNAME		AS	nickName
+ 			 ,	u.NICKNAME		AS	nickName
 			 ,	r.CREATE_DATE	AS	createDate
 			 ,	r.COUNT
 		  FROM
-		  		CP_REPORT r
+		  		CP_REVIEW r
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = r.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = r.USER_NO
 		  JOIN
-		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO	
+		  		CP_POINT p 		ON 	p.USER_NO = r.USER_NO	
 		 WHERE	
 		 		r.IS_ACTIVE = 'Y'
 		 ORDER
 		 	BY	
-		 		r.REPORT_NO 	DESC
+		 		r.REVIEW_NO 	DESC
 		   	 , 	p.POINT 		DESC
            	 ,  p.USER_LEVEL 	DESC
 	</select>
 	
 	<update id="updateCount">
 		UPDATE
-				CP_REPORT
+				CP_REVIEW
 		   SET
 		   		COUNT = COUNT + 1
 		 WHERE
-		 		REPORT_NO = #{reportNo}
-	</update>	
+		 		REVIEW_NO = #{reviewNo}
+	</update>
 	<select 
 		id="findById" 
 		parameterType="long"
-		resultType="com.kh.carlpion.report.model.dto.ReportDTO"
+		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
 	>
 		SELECT 
-				r.REPORT_NO		AS	reportNo
-			 ,	r.USER_NO		AS	userNo
+				r.REVIEW_NO		AS	reviewNo
 			 ,	r.TITLE
 			 ,	r.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	r.CREATE_DATE	AS	createDate
 			 ,	r.COUNT
+			 ,	f.FILE_URL		AS	fileUrl
 			 ,	p.POINT
-			 ,	p.USER_LEVEL
+			 ,	p.USER_LEVEL	AS	userLevel
 		  FROM
-		  		CP_REPORT r
+		  		CP_REVIEW r
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = r.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = r.USER_NO
 		  JOIN
-		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO
+		  		CP_POINT p 		ON 	p.USER_NO = r.USER_NO
+		  JOIN
+		  		CP_RV_FILE f 	ON 	f.REVIEW_NO = r.REVIEW_NO
 		 WHERE	
 		 		r.IS_ACTIVE = 'Y'
 		   AND	
-		   		r.REPORT_NO = #{reportNo} 
+		   		r.REVIEW_NO = #{reviewNo} 
 	</select>
-	
+		
 	<select 
 		id="findByUserNo"
 		parameterType="long"
@@ -113,47 +114,47 @@
 		SELECT
 				USER_NO		AS	userNo
 		  FROM	
-		  		CP_REPORT
+		  		CP_REVIEW
 		 WHERE
-		 		REPORT_NO = #{reportNo}		  		
+		 		REVIEW_NO = #{reviewNo}	  		
 	</select>
 	<update 
 		id="updateById"
-		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
+		parameterType="com.kh.carlpion.review.model.vo.ReviewVO"
 	>
 		UPDATE
-				CP_REPORT
+				CP_REVIEW
 		   SET
 		   		TITLE = #{title}
 		   	 ,	CONTENT = #{content}
 		 WHERE	
-		 		REPORT_NO = #{reportNo}
+		 		REVIEW_NO = #{reviewNo}
 	</update>
 	<update id="softDeleteById">
 		UPDATE
-				CP_REPORT
+				CP_REVIEW
 		   SET
 		   		IS_ACTIVE = 'N'
 		 WHERE	
-		 		REPORT_NO = #{reportNo}
+		 		REVIEW_NO = #{reviewNo}
 	</update>
 	
 	<select 
 		id="findFileByAll"
 		resultType="string"
 	>
-		SELETE 
+		SELECT
 				FILE_URL	AS	fileUrl
 		  FROM	
-		  		CP_RP_FILE
-		 WHERE	
-		 		REPORT_NO = #{reportNo}
+		  		CP_RV_FILE
+		 WHERE
+		 		REVIEW_NO = #{reviewNo}
 	</select>
 	<delete id="deleteFileById">
 		DELETE
 		  FROM
-		  		CP_RP_FILE
-		 WHERE	
-		 		REPORT_NO = #{reportNo}
+		  		CP_RV_FILE
+		 WHERE
+		 		REVIEW_NO = #{reviewNo}
 	</delete>
 </mapper>
