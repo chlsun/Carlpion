@@ -13,14 +13,12 @@
 				NOTICE_NO
 			 ,	USER_NO
 			 , 	CONTENT
-			 , 	CREATE_DATE
 			 )
 		VALUES 
 			 (
 			   	#{noticeNo}
 			 , 	#{userNo} 	
 			 , 	#{content} 	
-			 , 	SYSDATE 	
 			 )
 	</insert>
 	

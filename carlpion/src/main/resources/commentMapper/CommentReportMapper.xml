@@ -13,14 +13,12 @@
 				REPORT_NO
 			 ,	USER_NO
 			 , 	CONTENT
-			 , 	CREATE_DATE
 			 )
 		VALUES 
 			 (
 			   	#{reportNo}
 			 , 	#{userNo} 	
 			 , 	#{content} 	
-			 , 	SYSDATE 	
 			 )
 	</insert>
 	
