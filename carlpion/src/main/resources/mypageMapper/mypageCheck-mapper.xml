@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+   <mapper namespace="com.kh.calpion.replyCheck.model.dao.ReplyCheckMapper">
+  
+  <!-- 댓글 조회  -->
+ 	<select id="replyCheck"
+ 			parameterType="com.kh.calpion.replyCheck.model.dao.ReplyCheckDTO"	
+ 			resultType="com.kh.calpion.replyCheck.model.dao.ReplyCheckDTO">
+ 	
+ 			SELECT
+ 					'공지사항' AS board_type,
+ 					B.TITLE,
+ 					C.CREATE_DATE,
+ 					C.COMMENT
+ 			 FROM
+ 			 		CP_NT_COMMENT C
+ 			 JOIN
+ 			 	    CP_NOTICE B ON C.NOTICE_NO = B.NOTICE_NO
+ 		    WHERE
+ 		    		C.USER_NO = #{userNo}
+ 					
+ 			UNION	
+ 					
+ 			SELECT
+ 					'문의 게시판' AS board_type,
+ 					B.TITLE,
+ 					C.CREATE_DATE,
+ 					C.COMMENT
+ 			 FROM			
+ 					CP_RP_COMMENT C 
+ 			 JOIN
+ 			 		CP_REPORT B ON C.REPORT_NO = B.REPORT_NO 
+ 			WHERE
+ 					C.USER_NO = #{userNo}
+ 							
+ 					
+ 			UNION	
+ 					
+ 			SELECT
+ 					'리뷰 게시판' AS board_type,
+ 					B.TITLE,
+ 					C.CREATE_DATE,
+ 					C.COMMENT
+ 			 FROM			
+ 					CP_RV_COMMENT C 
+ 			 JOIN
+ 			 		CP_REVIEW B ON C.REVIEW_NO = B.REVIEW_NO 
+ 			WHERE
+ 					C.USER_NO = #{userNo}
+ 						
+ 	
+ 	</select>
+ 	
+ 	 <!-- 신고/문의 게시판 조회  -->
+ 	
+ 	
+ 	 <select id="inquiryCheck"
+  		   parameterType="long"
+  		   resultType="com.kh.carlpion.inquiryCheck.model.dto.InquiryCheckDTO">
+  		   
+  		   
+  		   SELECT
+  		   			USER_NO,
+  		   			REPORT_NO,
+  		   			TITLE,
+  		   			CONTENT,
+  		   			CREATE_DATE,
+  		   			COUNT,
+  		   			FILE_URL
+  
+  		    FROM
+  		    		CP_REPORT
+  		    
+  		    WHERE 
+  		    		USER_NO = #{userNo}
+  
+ 	</select>
+ 	
+ 	<!-- 리뷰 게시판 조회  -->
+ 	
+ 	<select id="reviewCheck"
+			parameterType="long"
+			resultType="com.kh.carlpion.reviewCheck.model.dto.ReviewCheckDTO">
+	
+		SELECT
+				USER_NO,
+				REVIEW_NO,
+				TITLE,
+				CONTENT,
+				CREATE_DATE,
+				COUNT,
+				FILE_URL
+	 	 FROM
+	 			CP_REVIEW
+	 	WHERE
+	 			USER_NO = #{userNO}
+	 		
+	
+	</select>
+ 	 
+
+ 	
+   </mapper>
+  
+  

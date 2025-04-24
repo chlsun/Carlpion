@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.review.model.dao.ReviewMapper;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
+import com.kh.carlpion.review.model.vo.ReviewVO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +25,33 @@ public class ReviewServiceImpl implements ReviewService {
 	private final FileService fileService;
 
 	@Override
-	public void save(ReviewDTO reviewDTO, MultipartFile file) {
-
+	@Transactional
+	public void save(ReviewDTO reviewDTO, List<MultipartFile> files) {
+		/*사용자 인증 구간*/
+		
+		ReviewVO requestData = ReviewVO.builder()
+									   .title(reviewDTO.getTitle())
+									   .content(reviewDTO.getContent())
+									   .userNo(reviewDTO.getUserNo())
+									   .build();
+		reviewMapper.save(requestData);
+		
+		if(files != null && !files.isEmpty()) {
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);
+					
+					ReviewVO requestFileData = ReviewVO.builder()
+													   .reviewNo(requestData.getReviewNo())
+													   .fileUrl(filePath)
+													   .build();
+					reviewMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}
+		}
+//		log.info("save: {}", requestData);
 	}
 
 	@Override
@@ -35,17 +63,50 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public ReviewDTO findById(Long reviewNo) {
-		return null;
+		ReviewDTO reviewDTO = reviewMapper.findById(reviewNo);
+		
+		if(reviewNo == null) {
+			throw new NotFindException("Not Find Notice");
+		}
+		return reviewDTO;
 	}
 
 	@Override
-	public ReviewDTO updateById(ReviewDTO reviewDTO, MultipartFile file) {
-		return null;
+	@Transactional
+	public ReviewDTO updateById(ReviewDTO reviewDTO, List<MultipartFile> files) {
+		
+		if(files != null && !files.isEmpty() && files.stream().anyMatch(file -> !file.isEmpty())) {
+			List<String> fileUrls = reviewMapper.findFileByAll(reviewDTO.getReviewNo());
+			
+			if(fileUrls != null) {
+				for(String fileUrl : fileUrls) {
+					fileService.deleteFile(fileUrl);
+				}
+			}
+			reviewMapper.deleteFileById(reviewDTO.getReviewNo());
+			
+			for(MultipartFile file : files) {
+				
+				if( !file.isEmpty()) {
+					String filePath = fileService.storage(file);
+					reviewDTO.setFileUrl(filePath);
+					
+					ReviewVO requestFileData = ReviewVO.builder()
+													   .reviewNo(reviewDTO.getReviewNo())
+													   .fileUrl(filePath)
+													   .build();
+					reviewMapper.saveFile(requestFileData);
+//					log.info("saveFile: {}", requestFileData);
+				}
+			}			
+		}
+		reviewMapper.updateById(reviewDTO);
+		return reviewDTO;
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long reviewNo) {
-
+		reviewMapper.deleteById(reviewNo);
 	}
-
 }
