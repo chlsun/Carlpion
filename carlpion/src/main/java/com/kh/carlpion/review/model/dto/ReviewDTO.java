@@ -18,6 +18,7 @@ public class ReviewDTO {
 	private Long userNo;
 	private String title;
 	private String content;
+	private String fileUrl;
 	private Date createDate;
 	private Long count;
 	private String isActive;	

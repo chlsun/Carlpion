@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+<mapper namespace="com.kh.carlpion.mypage.model.dao.MypageMapper">
+
+	<update id="updateNickName"
+			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			UPDATE 
+					 CP_USER 
+			   SET
+					 NICKNAME = #{nickName}
+					 
+			  WHERE  USER_NO = #{userNo}
+	</update>
+	
+	<select id="checkNickName"
+			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO"
+			resultType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			SELECT *
+			  FROM CP_USER
+			 WHERE NICKNAME = #{nickname}
+	
+	</select>
+	
+	<update id="updatePassword"
+			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+		
+			UPDATE
+					CP_USER
+			   SET
+					PASSWORD = #{passWord}
+			 WHERE 
+					USER_NO = #{userNo}
+			   AND
+			   		PASSOWRD = #{currentPassword}
+	</update>
+	
+	<update id="updateEmail"
+			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+		
+			UPDATE
+					CP_USER
+			   SET
+					EMAIL = #{email}
+			 WHERE 
+					USER_NO = #{userNo}
+			   AND
+			   		PASSWORD = #{password}
+	</update>
+	
+	<select id="checkEmail"
+			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO"
+			resultType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			SELECT *
+			  FROM CP_USER
+			 WHERE EMAIL = #{email}
+	
+	</select>
+	
+	<update id="updateProfile"
+			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+		
+			UPDATE
+					CP_USER_IMG
+			   SET
+			   		IMG_URL = #{fileUrl}
+			 WHERE 
+			 		USER_NO = #{userNo}
+			
+	</update>
+	<update id="updateName"
+			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+		
+			UPDATE
+					CP_USER
+			   SET
+			  		USERNAME = #{userName}
+			 WHERE
+			 		USER_NO = #{userNo}
+			   AND
+			   		PASSWORD = #{password}
+	
+	</update>
+
+	<delete id="deleteUser"
+			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+	
+			DELETE
+			  FROM
+					CP_USER
+			 WHERE
+			 		USER_NO = #{userNo}
+			  AND
+			 		PASSWORD = #{password}
+					
+	</delete>
+
+
+</mapper>

@@ -4,7 +4,7 @@ spring:
 
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@192.168.130.17:1521:XE
+    url: jdbc:oracle:thin:@112.221.156.34:12345:XE
     username: C##PROJECTCP
     password: 1234
 
@@ -13,15 +13,15 @@ spring:
   include: mail
 
   mvc:
-    static-path-pattern: 
+    static-path-pattern: /uploads/**
 
   web:
     resources:
-      static-locations:
+      static-locations: file:uploads/
 
   servlet:
     multipart:
-      max-file-size: 20MB
+      max-file-size: 30MB
       max-request-size: 200MB
 
 server:
