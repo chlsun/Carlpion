@@ -9,9 +9,7 @@ import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.comment.model.dao.CommentNoticeMapper;
 import com.kh.carlpion.comment.model.dto.CommentNoticeDTO;
 import com.kh.carlpion.comment.model.vo.CommentNoticeVO;
-import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.notice.model.service.NoticeService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +21,11 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
 	
 	private final CommentNoticeMapper commentNoticeMapper;
 	private final AuthService authService;
-	private final NoticeService noticeService;
 
 	@Override
 	@Transactional
 	public void saveComment(CommentNoticeDTO commentNoticeDTO) {
 		Long userNo = authService.getUserDetails().getUserNo();
-		
-		if( !userNo.equals(commentNoticeDTO.getUserNo())) {
-			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
-		}
 		
 		CommentNoticeVO requestData = CommentNoticeVO.builder()
 													 .userNo(userNo)
@@ -44,7 +37,6 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
 
 	@Override
 	public List<CommentNoticeDTO> findAllComment(Long noticeNo) {
-		noticeService.findById(noticeNo);
 		return commentNoticeMapper.findAllComment(noticeNo);
 	}
 

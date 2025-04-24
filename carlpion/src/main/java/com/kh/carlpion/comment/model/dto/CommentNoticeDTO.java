@@ -20,5 +20,4 @@ public class CommentNoticeDTO {
 	private String content;
 	private String nickName;
 	private Date createDate;
-	private String isActive;
 }
