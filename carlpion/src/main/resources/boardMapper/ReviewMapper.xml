@@ -17,14 +17,12 @@
 			 	USER_NO
 			 ,	TITLE
 			 , 	CONTENT
-			 , 	CREATE_DATE
 			 )
 		VALUES 
 			 (
 			   	#{userNo}
 			 , 	#{title} 	
-			 , 	#{content} 	
-			 , 	SYSDATE 	
+			 , 	#{content} 		
 			 )
 	</insert>
 	<insert 

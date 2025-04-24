@@ -13,14 +13,12 @@
 				REVIEW_NO
 			 ,	USER_NO
 			 , 	CONTENT
-			 , 	CREATE_DATE
 			 )
 		VALUES 
 			 (
 			   	#{reviewNo}
 			 , 	#{userNo} 	
 			 , 	#{content} 	
-			 , 	SYSDATE 	
 			 )
 	</insert>
 	
