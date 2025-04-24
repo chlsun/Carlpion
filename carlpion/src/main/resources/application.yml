@@ -7,8 +7,9 @@ spring:
     username: C##PROJECTCP
     password: 1234
   profiles:
-    include: private
-  include: mail
+    include: 
+      - private
+      - mail
 
   mvc:
     static-path-pattern: /uploads/**
