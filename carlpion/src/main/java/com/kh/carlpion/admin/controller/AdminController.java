@@ -91,9 +91,18 @@ public class AdminController {
 	
 	@GetMapping("/car/{page}")
 	public ResponseEntity<?> getRentCarList(@PathVariable(name="page") int page){
+		log.info("222222222222" );
 		
 		Map<String, Object> viewInfo = rentCarService.getRentCarList(page);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(viewInfo);
+	}
+	
+	@PutMapping("/car")
+	public ResponseEntity<?> updateRentCar(@RequestBody RentCarDTO rentCar){
+		
+		rentCarService.updateRentCar(rentCar);
+		
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }
