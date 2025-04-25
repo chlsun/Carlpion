@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.carlpion.auth.model.service.AuthService;
-import com.kh.carlpion.comment.model.dao.CommentReviewMapper;
-import com.kh.carlpion.comment.model.dto.CommentReviewDTO;
-import com.kh.carlpion.comment.model.vo.CommentReviewVO;
+import com.kh.carlpion.comment.model.dao.CommentMapper;
+import com.kh.carlpion.comment.model.dto.CommentDTO;
+import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
+import com.kh.carlpion.comment.model.vo.CommentVO;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 
 import lombok.RequiredArgsConstructor;
@@ -19,41 +20,55 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CommentReviewServiceImpl implements CommentReviewService {
 
-	private final CommentReviewMapper commentReviewMapper;
+	private final CommentMapper commentMapper;
 	private final AuthService authService;
+	
+	private static final String COMMENT_TYPE = "review";
 
 	@Override
 	@Transactional
-	public void saveComment(CommentReviewDTO commentReviewDTO) {
+	public void saveComment(CommentDynamicDTO commentDynamicDTO) {
 		Long userNo = authService.getUserDetails().getUserNo();
 		
-		CommentReviewVO requestData = CommentReviewVO.builder()
-													 .userNo(userNo)
-													 .content(commentReviewDTO.getContent())
-													 .reviewNo(commentReviewDTO.getReviewNo())
-													 .build();
-		commentReviewMapper.saveComment(requestData);
+		CommentVO requestData = CommentVO.builder()
+										 .commentType(COMMENT_TYPE)
+										 .userNo(userNo)
+										 .content(commentDynamicDTO.getContent())
+										 .reviewNo(commentDynamicDTO.getReviewNo())
+										 .build();
+		commentMapper.saveComment(requestData);
 	}
 
 	@Override
-	public List<CommentReviewDTO> findAllComment(Long reviewNo) {
-		return commentReviewMapper.findAllComment(reviewNo);
+	public List<CommentDTO> findAllComment(Long reviewNo) {
+		CommentVO requestData = CommentVO.builder()
+										 .commentType(COMMENT_TYPE)
+										 .reviewNo(reviewNo)
+										 .build();										
+		return commentMapper.findAllComment(requestData);
 	}
 
 	@Override
 	@Transactional
 	public void softDeleteCommentById(Long commentNo) {
-		checkedOwnerByUser(commentNo);
-		commentReviewMapper.softDeleteCommentById(commentNo);
+		CommentVO requestData = checkedOwnerByUser(commentNo);
+		commentMapper.softDeleteCommentById(requestData);
 	}
 
 	/** 사용자 인증 */
-	private void checkedOwnerByUser(Long commentNo) {
-		Long authUserNo = authService.getUserDetails().getUserNo();
-		Long findUserNo = commentReviewMapper.findByUserNo(commentNo);
+	private CommentVO checkedOwnerByUser(Long commentNo) {
+		Long authUserNo = authService.getUserDetails().getUserNo();		
+		
+		CommentVO requestData = CommentVO.builder()
+										 .commentType(COMMENT_TYPE)
+										 .commentNo(commentNo)
+										 .build();
+		Long findUserNo = commentMapper.findByUserNo(requestData);
 		
 		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
 			throw new UnauthorizedException("삭제할 권한이 없습니다.");
 		}
+		
+		return requestData;
 	}
 }
