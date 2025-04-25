@@ -30,4 +30,6 @@ public interface ReportMapper {
 	Long findByUserNo(Long reportNo);
 	
 	void updateCount(Long reportNo);
+	
+	int findTotalCount(int pageNo);
 }

@@ -30,4 +30,6 @@ public interface NoticeMapper {
 	Long findByUserNo(Long noticeNo);
 	
 	void updateCount(Long noticeNo);
+	
+	int findTotalCount(int pageNo);
 }

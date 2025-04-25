@@ -1,6 +1,7 @@
 package com.kh.carlpion.review.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,7 @@ public class ReviewController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<ReviewDTO>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {
+	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {
 		return ResponseEntity.ok(reviewService.findAll(pageNo));
 	}
 	

@@ -83,9 +83,9 @@ public class MypageController {
 	
 	@GetMapping("/mypage/comments")
 	public ResponseEntity<List<MypageDTO>> replyCheck(@AuthenticationPrincipal CarlpionUserDetails user){
-		String userName = user.getUsername();
+		Long userNo = user.getUserNo();
 		
-		List<MypageDTO> result = mypageService.replyCheck(userName);
+		List<MypageDTO> result = mypageService.replyCheck(userNo);
 		System.out.println("댓글 컨트롤러 나오나");
 		return ResponseEntity.ok(result);
 	}
@@ -93,9 +93,9 @@ public class MypageController {
 
 	@GetMapping("/mypage/reports")
 	public ResponseEntity<List<MypageDTO>> inquiryCheck(@AuthenticationPrincipal CarlpionUserDetails user){
-		String userName = user.getUsername();
+		Long userNo = user.getUserNo();
 		System.out.println("문의 컨트롤러 나오나");
-	List<MypageDTO> result	= mypageService.inquiryCheck(userName);
+	List<MypageDTO> result	= mypageService.inquiryCheck(userNo);
 		
 		return ResponseEntity.ok(result);
 	
@@ -103,8 +103,8 @@ public class MypageController {
 
 	@GetMapping("/mypage/reviews")
 	public ResponseEntity<List<MypageDTO>> reviewCheck(@AuthenticationPrincipal CarlpionUserDetails user){
-		String userName = user.getUsername();
-		List<MypageDTO> result = mypageService.reviewCheck(userName);
+		Long userNo = user.getUserNo();
+		List<MypageDTO> result = mypageService.reviewCheck(userNo);
 		System.out.println(result);
 		return ResponseEntity.ok(result);
 		
@@ -112,9 +112,9 @@ public class MypageController {
 	
 	@GetMapping("/mypage/points")
 	public ResponseEntity<List<MypageDTO>> pointCheck(@AuthenticationPrincipal CarlpionUserDetails user ){
-		String userName= user.getUsername();
+		Long userNo= user.getUserNo();
 		
-		List<MypageDTO> result = mypageService.pointCheck(userName);
+		List<MypageDTO> result = mypageService.pointCheck(userNo);
 		
 		return ResponseEntity.ok(result);
 		
@@ -122,15 +122,15 @@ public class MypageController {
 
 	@GetMapping("/mypage/reservations")
 	public ResponseEntity<List<MypageDTO>> reservations(@AuthenticationPrincipal CarlpionUserDetails user){
-		String userNo = user.getUsername();
-			
+		Long userNo = user.getUserNo();
+		System.out.println("값오나");
 		List<MypageDTO> result = mypageService.reservations(userNo);
 		return ResponseEntity.ok(result);
 	}
 	
 	@GetMapping("/mypage/usedCars")
 	public ResponseEntity<List<MypageDTO>> usedCars(@AuthenticationPrincipal CarlpionUserDetails user){
-			String userNo = user.getUsername();
+		Long userNo = user.getUserNo();
 		
 			List<MypageDTO> result = mypageService.usedCars(userNo);
 		return ResponseEntity.ok(result);
