@@ -7,9 +7,9 @@ import com.kh.carlpion.comment.model.vo.CommentReportVO;
 
 public interface CommentReportService {
 	
-	void saveReport(CommentReportDTO commentReportDTO);
+	void saveComment(CommentReportDTO commentReportDTO);
 	
-	List<CommentReportDTO> findAllReport(Long reportNo);
+	List<CommentReportDTO> findAllComment(Long reportNo);
 	
-	void deleteReportById(Long commentNo);
+	void softDeleteCommentById(Long commentNo);
 }
