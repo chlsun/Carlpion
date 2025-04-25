@@ -18,18 +18,17 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardDTO {
 
 	
-	private String boardType;
 	private Long boardNo;
 	private String title;
 	private Long count;
 	private Date createDate;
-	private String comment;
+	private String commentNo;
+	private String content;
 	private String fileUrl;
 	private Long userNo;
-	private Long reportNo;
 	private Long reviewNo;
-	private Long noticeNo;
-	private Long postNo;
+	private Long reportNo;
+	
 				
       
 }

@@ -9,7 +9,8 @@ spring:
     password: 1234
 
   profiles:
-    include: mail, private
+    include: private,mail
+
 
   mvc:
     static-path-pattern: /uploads/**

@@ -9,65 +9,42 @@
  	<select id="replyCheck"
  			resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
  	
- 			SELECT * FROM (
- 	
- 			SELECT
- 					'공지사항' AS boardType,
- 					B.NOTICE_NO AS postNo,
- 					B.TITLE,
- 					B.COUNT,
- 					C.CREATE_DATE AS createDate,
- 					C.COMMENT
+ 			
+ 		SELECT * FROM (
+ 			SELECT	
+ 					N.TITLE AS title,
+ 					N.COUNT AS count,
+ 					N.CREATE_DATE AS createDate,
+ 					C.COMMENT_NO AS commentNo,
+ 					C.CONTENT AS content
+ 					
  			 FROM
- 			 		CP_NT_COMMENT C
- 			 JOIN
- 			 	    CP_NOTICE B ON C.NOTICE_NO = B.NOTICE_NO
- 			 JOIN
- 			 		CP_USER U ON C.USER_NO = U.USER_NO
+ 			 		CP_NOTICE N
+ 		 	JOIN
+ 		 			CP_NT_COMMENT C	ON N.NOTICE_NO = C.NOTICE_NO
+ 		 	
  		    WHERE
- 		    		U.USERNAME = #{userName}
- 		   	
- 			UNION ALL	
- 					
- 			SELECT
- 					'문의 게시판' AS boardType,
- 					B.REPORT_NO AS postNo,
- 					B.TITLE,
- 					B.COUNT,
- 					C.CREATE_DATE AS createDate,
- 					C.COMMENT
- 			 FROM			
- 					CP_RP_COMMENT C 
- 			 JOIN
- 			 		CP_REPORT B ON C.REPORT_NO = B.REPORT_NO 
- 			 JOIN
- 			 		CP_USER U ON C.USER_NO = U.USER_NO	
- 			 	
+ 		    		N.USER_NO = #{userNo}
+ 		    
+ 		    UNION
+ 		    
+ 		    SELECT	
+ 					R.TITLE AS title,
+ 					R.COUNT AS count,
+ 					R.CREATE_DATE AS createDate,
+ 					V.COMMENT_NO AS commentNo,
+ 					V.CONTENT AS content
+ 			FROM
+ 					CP_REVIEW R
+ 			JOIN
+ 					CP_RV_COMMENT V ON R.REVIEW_NO = V.REVIEW_NO
  			WHERE
- 					U.USERNAME = #{userName}
- 					
- 					
- 			UNION ALL	
- 					
- 			SELECT
- 					'리뷰 게시판' AS boardType,
- 					B.REVIEW_NO AS postNo,
- 					B.TITLE,
- 					B.COUNT,
- 					C.CREATE_DATE AS createDate,
- 					C.COMMENT
- 			 FROM			
- 					CP_RV_COMMENT C 
- 			 JOIN
- 			 		CP_REVIEW B ON C.REVIEW_NO = B.REVIEW_NO 
- 			  JOIN
- 			 		CP_USER U ON C.USER_NO = U.USER_NO
- 			WHERE
- 					U.USERNAME = #{userName}
- 			)
+ 					R.USER_NO = #{userNo}		
+ 		    )		
+ 		    		
  			 ORDER
  		       BY
- 					createDate DESC;
+ 					createDate DESC
  						
  	
  	</select>
@@ -79,21 +56,18 @@
   		   resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
   		   
 		  SELECT
-		        U.USER_NO userNo,
 		        R.REPORT_NO reportNo,
-		        R.TITLE,
-		        R.CONTENT,
+		        R.TITLE title,
 		        R.CREATE_DATE createDate,
-		        R.COUNT,
-		        F.FILE_URL
+		        R.COUNT count,
+		        F.FILE_URL fileUrl
 		  FROM
-		        CP_USER U
+		        CP_REPORT R
 		  JOIN
-		        CP_REPORT R ON R.USER_NO = U.USER_NO
-		  JOIN
-		        CP_RP_FILE F ON F.REPORT_NO = R.REPORT_NO 
+		        CP_RP_FILE F ON R.REPORT_NO = F.REPORT_NO
+		
 		  WHERE 
-		        U.USERNAME = #{userName}
+		        USER_NO = #{userNo}
 		  ORDER BY
 		        R.CREATE_DATE DESC
   
@@ -105,24 +79,20 @@
 			resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
 	
 		 SELECT
-		        U.USER_NO userNo,
 		        R.REVIEW_NO reviewNo,
-		        R.TITLE,
-		        R.CONTENT,
+		        R.TITLE title,
 		        R.CREATE_DATE createDate,
-		        R.COUNT,
-		        F.FILE_URL
+		        R.COUNT count,
+		        F.FILE_URL fileUrl
 		  FROM
-		        CP_USER U
+		       	CP_REVIEW R
 		  JOIN
-		        CP_REVIEW R ON R.USER_NO = U.USER_NO
-		  JOIN
-		        CP_RV_FILE F ON F.REVIEW_NO = R.REVIEW_NO 
+		        CP_RV_FILE F ON R.REVIEW_NO = F.REVIEW_NO
 		  WHERE 
-		        U.USERNAME = #{userName}
-		  ORDER BY
+		        R.USER_NO = #{userNo}
+		 ORDER 
+		 	BY
 		        R.CREATE_DATE DESC
-  
 	 	
 	</select>
  	 
@@ -132,15 +102,15 @@
 			resultType="com.kh.carlpion.mypage.model.dto.PointDTO">
 			
 		SELECT
-			    P.USER_NO,
-			    H.REVIEW_NO,
-			    U.USERNAME,
-			    U.REALNAME,
-			    P.USER_LEVEL,
-			    H.REASON,
-			    H.POINT_CHANGE,
-			    P.POINT,
-			    H.CREATE_DATE
+			    USER_NO,
+			    REVIEW_NO,
+			    USERNAME,
+			    REALNAME,
+			    USER_LEVEL,
+			    REASON,
+			    POINT_CHANGE,
+			    POINT,
+			    CREATE_DATE
 		FROM
 		    	CP_POINT_HISTORY H
 		JOIN
@@ -161,28 +131,29 @@
 			resultType="com.kh.carlpion.mypage.model.dto.ReservationsDTO">
 			
  	SELECT
- 			R.CAR_ID,
- 			C.MODEL_NO,
- 			I.PARKING_ID,
- 			R.RESERVATION_NO,
- 			R.RENTAL_DATE,
- 			R.RETURN_DATE,
- 			R.TOTAL_PRICE,
- 			R.STATUS,
- 			R.PAYMENT_COMPLETED_AT,
- 			I.PARKING_TITLE,
- 			I.PARKING_ADDR
+ 			R.CAR_ID carId,
+ 			R.RENTAL_DATE rentalDate,
+ 			R.RETURN_DATE returnDate,
+ 			R.PAYMENT_COMPLETED_AT paymentCompletedAt,
+ 			R.TOTAL_PRICE totalPrice,
+ 			R.STATUS status,
+ 			R.RESERVATION_NO reservationNo,
+ 			C.MODEL_NO modelNo,
+ 			D.CAR_MODEL carModel,
+ 			I.PARKING_ID parkingId,
+ 			I.PARKING_TITLE title,
+ 			I.PARKING_ADDR parkingAddr
  	FROM
  			CP_RENTAL_RESERVATION R
  	JOIN
- 			CP_USER U ON U.USER_NO = R.USER_NO
- 	JOIN
  			CP_RENTAL_CAR C ON R.CAR_ID = C.CAR_ID
+ 	JOIN
+ 			CP_RENTAL_CAR_MODEL D ON C.MODEL_NO = D.MODEL_NO
  	JOIN
  			CP_PARKING_INFO I ON C.PARKING_ID = I.PARKING_ID
  	
  	WHERE
- 			U.USER_NO = #{userNo}
+ 			R.USER_NO = #{userNo}
  	ORDER
  		BY
  			RENTAL_DATE DESC
@@ -193,21 +164,22 @@
 			resultType="com.kh.carlpion.mypage.model.dto.ReservationsDTO">
 			
  	SELECT
- 			R.CAR_ID,
- 			C.MODEL_NO,
- 			I.PARKING_ID,
- 			R.RENTAL_DATE,
- 			R.RETURN_DATE,
- 			R.TOTAL_PRICE,
- 			R.PAYMENT_COMPLETED_AT,
- 			I.PARKING_TITLE,
- 			I.PARKING_ADDR
+ 			R.CAR_ID carId,
+ 			R.RENTAL_DATE rentalDate,
+ 			R.RETURN_DATE returnDate,
+ 			R.TOTAL_PRICE totalPrice,
+ 			R.PAYMENT_COMPLETED_AT paymentCompletedAt,
+ 			C.MODEL_NO modelNo,
+ 			D.CAR_MODEL carModel,
+ 			I.PARKING_ID parkingId,
+ 			I.PARKING_TITLE title,
+ 			I.PARKING_ADDR parkingAddr
  	FROM
  			CP_RENTAL_RESERVATION R
  	JOIN
- 			CP_USER U ON U.USER_NO = R.USER_NO
- 	JOIN
  			CP_RENTAL_CAR C ON R.CAR_ID = C.CAR_ID
+ 	JOIN
+ 			CP_RENTAL_CAR_MODEL D ON C.MODEL_NO = D.MODEL_NO
  	JOIN
  			CP_PARKING_INFO I ON C.PARKING_ID = I.PARKING_ID
  	
