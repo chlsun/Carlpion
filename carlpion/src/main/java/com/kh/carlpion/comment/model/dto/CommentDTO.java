@@ -13,11 +13,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CommentReviewDTO {
+public class CommentDTO {
 	private Long commentNo;
-	private Long reviewNo;
-	private Long userNo;
 	private String content;
 	private String nickName;
 	private Date createDate;
+	
+	private Long noticeNo;
+	private Long reportNo;
+	private Long reviewNo;
 }
