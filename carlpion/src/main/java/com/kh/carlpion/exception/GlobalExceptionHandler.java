@@ -10,16 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.kh.carlpion.exception.exceptions.AlreadyExistsException;
 import com.kh.carlpion.exception.exceptions.CarModelNotFoundException;
+import com.kh.carlpion.exception.exceptions.CarNotFoundException;
 import com.kh.carlpion.exception.exceptions.CreateDirectoriesException;
 import com.kh.carlpion.exception.exceptions.CustomAuthenticationException;
 import com.kh.carlpion.exception.exceptions.CustomMessagingException;
 import com.kh.carlpion.exception.exceptions.DuplicateValueException;
 import com.kh.carlpion.exception.exceptions.EmailDuplicateException;
+import com.kh.carlpion.exception.exceptions.EmailVerifyFailException;
 import com.kh.carlpion.exception.exceptions.EmptyInputException;
 import com.kh.carlpion.exception.exceptions.FileDeleteException;
-import com.kh.carlpion.exception.exceptions.EmailVerifyFailException;
-import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
-
 import com.kh.carlpion.exception.exceptions.FileSaveException;
 import com.kh.carlpion.exception.exceptions.ImgFileNotFoundException;
 import com.kh.carlpion.exception.exceptions.ModelNotFoundException;
@@ -143,6 +142,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> modelNotFoundError(ModelNotFoundException e){
 		return exceptionHandler(e, HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(CarNotFoundException.class)
+	public ResponseEntity<?> carNotFoundError(CarNotFoundException e){
+		return exceptionHandler(e, HttpStatus.NOT_FOUND);
+	}
+	
 	
 	// 이미지 파일이 null로 넘어왔을 경우 발생
 	@ExceptionHandler(ImgFileNotFoundException.class)

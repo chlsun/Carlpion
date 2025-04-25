@@ -10,6 +10,8 @@ import com.kh.carlpion.admin.model.dto.RentCarDTO;
 @Mapper
 public interface RentCarMapper {
 	
+	int checkCarNo(int carNo);
+	
 	int checkCarId(String carId);
 	
 	int rentCarCount();
@@ -17,4 +19,6 @@ public interface RentCarMapper {
 	List<RentCarDTO> getRentCarList(RowBounds rowBounds);
 	
 	void setRentCar(RentCarDTO rentCar);
+	
+	void updateRentCar(RentCarDTO rentCar);
 }

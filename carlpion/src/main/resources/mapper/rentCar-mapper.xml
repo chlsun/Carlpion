@@ -5,6 +5,17 @@
   
 <mapper namespace="com.kh.carlpion.admin.model.dao.RentCarMapper">
 
+	<select id="checkCarNo"
+			parameterType="_int"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			CP_RENTAL_CAR
+		WHERE 
+			CAR_NO = #{carNo}
+	</select>
+
 	<select id="checkCarId"
 			parameterType="string"
 			resultType="_int">
@@ -16,9 +27,15 @@
 			CAR_ID = #{carId}
 	</select>
 	
-	<insert id="setRentCar">
+	<insert id="setRentCar"
+			parameterType="com.kh.carlpion.admin.model.dto.RentCarDTO">
 		INSERT INTO
-			CP_RENTAL_CAR
+			CP_RENTAL_CAR(
+				CAR_ID,
+				MODEL_NO,
+				PARKING_ID,
+				ENROLL_DATE
+			)
 		VALUES(
 			#{carId}
 			, #{modelNo}
@@ -26,6 +43,19 @@
 			, SYSDATE
 		)
 	</insert>
+	
+	<update id="updateRentCar"
+			parameterType="com.kh.carlpion.admin.model.dto.RentCarDTO">
+		UPDATE
+			CP_RENTAL_CAR
+		SET
+			CAR_ID = #{carId}
+			, MODEL_NO = #{modelNo}
+			, PARKING_ID = #{parkingId}
+			, ENROLL_DATE = SYSDATE
+		WHERE
+			CAR_NO = #{carNo}
+	</update>
 
 	<select id="rentCarCount"
 			resultType="_int">
@@ -38,6 +68,7 @@
 
 	<resultMap id="rentCarResultMap" type="com.kh.carlpion.admin.model.dto.RentCarDTO">
 	
+		<id column="CAR_NO" property="carNo"/>
 		<id column="CAR_ID" property="carId"/>
 		<id column="MODEL_NO" property="modelNo"/>
 		<id column="PARKING_ID" property="parkingId"/>
@@ -64,7 +95,8 @@
 	<select id="getRentCarList"
 			resultMap="rentCarResultMap">
 		SELECT
-			C.CAR_ID CAR_ID
+			C.CAR_NO CAR_NO
+			, C.CAR_ID CAR_ID
 			, C.MODEL_NO MODEL_NO
 			, C.PARKING_ID PARKING_ID
 			, C.ENROLL_DATE ENROLL_DATE
@@ -84,6 +116,9 @@
 			CP_RENTAL_CAR_MODEL M ON (C.MODEL_NO = M.MODEL_NO)
 		JOIN
 			CP_PARKING_INFO P ON (C.PARKING_ID = P.PARKING_ID)
+		ORDER BY 
+			C.ENROLL_DATE DESC
+			
 	</select>
 
 </mapper>
