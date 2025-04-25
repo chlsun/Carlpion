@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.carlpion.auth.model.dto.EmailDTO;
 import com.kh.carlpion.auth.model.dto.LoginDTO;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.token.model.service.TokenService;
@@ -26,6 +27,7 @@ public class AuthController {
 	private final AuthService authService;
 	private final TokenService tokenService;
 	
+	// 로그인
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDTO loginInfo){
 		
@@ -34,6 +36,7 @@ public class AuthController {
 		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 	}
 	
+	// 자동 로그인
 	@PostMapping("/auto-login")
 	public ResponseEntity<?> autoLogin(@RequestBody Map<String, String> refreshToken) {
 		
@@ -44,6 +47,7 @@ public class AuthController {
 		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 	}
 	
+	// 로그아웃
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(@RequestBody Map<String, String> refreshToken) {
 		
@@ -54,14 +58,15 @@ public class AuthController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
-	@PostMapping("/mail")
-	public ResponseEntity<?> sendAuthenticateEmail(@RequestBody Map<String, String> email) {
+	// 회원가입 시, 인증 이메일 전송
+	@PostMapping("/send-email")
+	public ResponseEntity<?> sendVerifyEmailWhileSignUp(@RequestBody @Valid EmailDTO emailInfo) {
 		
-		String emailValue = email.get("email");
+		emailInfo.setType("회원가입");
 		
-		authService.sendAuthenticateEmail(emailValue);
+		authService.sendVerifyEmailWhileSignUp(emailInfo);
 		
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 //	@PostMapping("/find-id")

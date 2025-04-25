@@ -50,12 +50,13 @@
 		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
 	>
 		SELECT 
-				NOTICE_NO		AS	noticeNo
+				n.NOTICE_NO		AS	noticeNo
 			 ,	n.USER_NO		AS	userNo
-			 ,	TITLE
-			 ,	CONTENT
+			 ,	n.TITLE
+			 ,	n.CONTENT
+			 ,	u.NICKNAME		AS	nickName
 			 ,	n.CREATE_DATE	AS	createDate
-			 ,	COUNT
+			 ,	n.COUNT
 		  FROM
 		  		CP_NOTICE n
 		  JOIN
@@ -63,27 +64,37 @@
 		  JOIN
 		  		CP_POINT p 	ON 	p.USER_NO = n.USER_NO	
 		 WHERE	
-		 		IS_ACTIVE = 'Y'
+		 		n.IS_ACTIVE = 'Y'
 		 ORDER
 		 	BY	
-		 		NOTICE_NO 	DESC
-		   	 , 	POINT 		DESC
-           	 ,  USER_LEVEL 	DESC
+		 		n.NOTICE_NO 	DESC
+		   	 , 	u.POINT 		DESC
+           	 ,  u.USER_LEVEL 	DESC
 	</select>
+	
+	<update id="updateCount">
+		UPDATE
+				CP_NOTICE
+		   SET
+		   		COUNT = COUNT + 1
+		 WHERE
+		 		NOTICE_NO = #{noticeNo} 
+	</update>
 	<select 
 		id="findById" 
 		parameterType="long"
 		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
 	>
 		SELECT 
-				NOTICE_NO		AS	noticeNo
+				n.NOTICE_NO		AS	noticeNo
 			 ,	n.USER_NO		AS	userNo
-			 ,	TITLE
-			 ,	CONTENT
+			 ,	n.TITLE
+			 ,	n.CONTENT
+			 ,	u.NICKNAME		AS	nickName
 			 ,	n.CREATE_DATE	AS	createDate
-			 ,	COUNT
-			 ,	POINT
-			 ,	USER_LEVEL
+			 ,	n.COUNT
+			 ,	p.POINT
+			 ,	p.USER_LEVEL
 		  FROM
 		  		CP_NOTICE n
 		  JOIN
@@ -91,11 +102,23 @@
 		  JOIN
 		  		CP_POINT p 	ON 	p.USER_NO = n.USER_NO
 		 WHERE	
-		 		IS_ACTIVE = 'Y'
+		 		n.IS_ACTIVE = 'Y'
 		   AND	
-		   		NOTICE_NO = #{noticeNo} 
+		   		n.NOTICE_NO = #{noticeNo} 
 	</select>
-	
+		
+	<select 
+		id="findByUserNo"
+		parameterType="long"
+		resultType="long"
+	>
+		SELECT
+				USER_NO		AS	userNo
+		  FROM	
+		  		CP_NOTICE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}	  		
+	</select>
 	<update 
 		id="updateById"
 		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
@@ -108,7 +131,7 @@
 		 WHERE	
 		 		NOTICE_NO = #{noticeNo}
 	</update>
-	<update id="deleteById">
+	<update id="softDeleteById">
 		UPDATE
 				CP_NOTICE
 		   SET

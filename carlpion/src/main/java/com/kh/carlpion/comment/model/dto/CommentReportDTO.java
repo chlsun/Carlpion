@@ -18,6 +18,7 @@ public class CommentReportDTO {
 	private Long reportNo;
 	private Long userNo;
 	private String content;
+	private String nickName;
 	private Date createDate;
 	private String isActive;
 }

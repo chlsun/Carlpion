@@ -27,19 +27,19 @@ public class CommentReportController {
 	private final CommentReportService commentReportService;
 	
 	@PostMapping
-	public ResponseEntity<?> saveReport(CommentReportDTO commentReportDTO) {
-		commentReportService.saveReport(commentReportDTO);
+	public ResponseEntity<?> saveComment(CommentReportDTO commentReportDTO) {
+		commentReportService.saveComment(commentReportDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<CommentReportDTO>> findAllReport(@RequestParam(name = "reportNo") Long reportNo) {
-		return ResponseEntity.ok(commentReportService.findAllReport(reportNo));
+	public ResponseEntity<List<CommentReportDTO>> findAllComment(@RequestParam(name = "reportNo") Long reportNo) {
+		return ResponseEntity.ok(commentReportService.findAllComment(reportNo));
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteReportById(@PathVariable(name = "id") Long commentNo) {
-		commentReportService.deleteReportById(commentNo);
+	public ResponseEntity<?> softDeleteCommentById(@PathVariable(name = "id") Long commentNo) {
+		commentReportService.softDeleteCommentById(commentNo);
 		return ResponseEntity.noContent().build();
 	}
 }

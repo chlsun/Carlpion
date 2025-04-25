@@ -19,11 +19,15 @@ public interface NoticeMapper {
 	
 	void updateById(NoticeDTO noticeDTO);	
 	
-	void deleteById(Long noticeNo);
+	void softDeleteById(Long noticeNo);
 	
 	void saveFile(NoticeVO noticeVO);
 	
 	List<String> findFileByAll(Long noticeNo);
 	
 	void deleteFileById(Long noticeNo);
+	
+	Long findByUserNo(Long noticeNo);
+	
+	void updateCount(Long noticeNo);
 }
