@@ -12,5 +12,5 @@ public interface AuthService {
 	
 	Map<String, String> login(LoginDTO loginInfo);
 	
-	void sendVerifyEmailWhileSignUp(EmailDTO emailInfo);
+//	void sendVerifyEmailWhileSignUp(EmailDTO emailInfo);
 }

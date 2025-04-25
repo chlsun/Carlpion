@@ -23,21 +23,24 @@ public interface MypageMapper {
 	
 	int checkEmail(MypageDTO mypage);
 	
-	MypageDTO updateProfile (MultipartFile file, long userNo);
+	MypageDTO updateProfile (MultipartFile file, Long userNo);
 	
 	MypageDTO updateName(MypageDTO myapge);
 	
 	void deleteUser(MypageDTO mypage);
 //--------------------------------------------------------
-	List<MypageDTO> replyCheck(Long userNo);
+	List<MypageDTO> replyCheck(String userName);
 
-	List<MypageDTO> inquiryCheck(Long userNo);
+	List<MypageDTO> inquiryCheck(String userName);
 
-	List<MypageDTO> reviewCheck(Long userNo);
+	List<MypageDTO> reviewCheck(String userName);
+	
+	List<MypageDTO> pointCheck(String userName);
 
+//--------------------------------------------------------
 
-
-
+	List<MypageDTO> reservations(String userNo);
+	List<MypageDTO> usedCars(String userNo);
 
 
 }

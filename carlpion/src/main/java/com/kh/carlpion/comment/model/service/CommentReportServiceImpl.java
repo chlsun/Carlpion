@@ -9,9 +9,7 @@ import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.comment.model.dao.CommentReportMapper;
 import com.kh.carlpion.comment.model.dto.CommentReportDTO;
 import com.kh.carlpion.comment.model.vo.CommentReportVO;
-import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.report.model.service.ReportService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +21,11 @@ public class CommentReportServiceImpl implements CommentReportService {
 
 	private final CommentReportMapper commentReportMapper;
 	private final AuthService authService;
-	private final ReportService reportService;
 	
 	@Override
 	@Transactional
 	public void saveComment(CommentReportDTO commentReportDTO) {
 		Long userNo = authService.getUserDetails().getUserNo();
-		
-		if( !userNo.equals(commentReportDTO.getUserNo())) {
-			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
-		}
 		
 		CommentReportVO requestData = CommentReportVO.builder()
 													 .userNo(userNo)
@@ -44,7 +37,6 @@ public class CommentReportServiceImpl implements CommentReportService {
 
 	@Override
 	public List<CommentReportDTO> findAllComment(Long reportNo) {
-		reportService.findById(reportNo);
 		return commentReportMapper.findAllComment(reportNo);
 	}
 

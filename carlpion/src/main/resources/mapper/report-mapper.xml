@@ -17,14 +17,12 @@
 			 	USER_NO
 			 ,	TITLE
 			 , 	CONTENT
-			 , 	CREATE_DATE
 			 )
 		VALUES 
 			 (
 			   	#{userNo}
 			 , 	#{title} 	
 			 , 	#{content} 	
-			 , 	SYSDATE 	
 			 )
 	</insert>
 	<insert 
@@ -51,7 +49,6 @@
 	>
 		SELECT 
 				r.REPORT_NO		AS	reportNo
-			 ,	r.USER_NO		AS	userNo
 			 ,	r.TITLE
 			 ,	r.CONTENT
 			 ,	u.NICKNAME		AS	nickName
@@ -60,16 +57,17 @@
 		  FROM
 		  		CP_REPORT r
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = r.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = r.USER_NO
 		  JOIN
-		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO	
+		  		CP_POINT p 		ON 	p.USER_NO = r.USER_NO
 		 WHERE	
 		 		r.IS_ACTIVE = 'Y'
 		 ORDER
 		 	BY	
 		 		r.REPORT_NO 	DESC
-		   	 , 	p.POINT 		DESC
+		 	 , 	p.POINT 		DESC
            	 ,  p.USER_LEVEL 	DESC
+
 	</select>
 	
 	<update id="updateCount">
@@ -87,20 +85,22 @@
 	>
 		SELECT 
 				r.REPORT_NO		AS	reportNo
-			 ,	r.USER_NO		AS	userNo
 			 ,	r.TITLE
 			 ,	r.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	r.CREATE_DATE	AS	createDate
 			 ,	r.COUNT
+			 ,	f.FILE_URL		AS	fileUrl
 			 ,	p.POINT
-			 ,	p.USER_LEVEL
+			 ,	p.USER_LEVEL	AS	userLevel
 		  FROM
 		  		CP_REPORT r
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = r.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = r.USER_NO
 		  JOIN
-		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO
+		  		CP_POINT p 		ON 	p.USER_NO = r.USER_NO
+		  JOIN
+		  		CP_RP_FILE f 	ON 	f.REPORT_NO = r.REPORT_NO
 		 WHERE	
 		 		r.IS_ACTIVE = 'Y'
 		   AND	
@@ -144,7 +144,7 @@
 		id="findFileByAll"
 		resultType="string"
 	>
-		SELETE 
+		SELECT 
 				FILE_URL	AS	fileUrl
 		  FROM	
 		  		CP_RP_FILE
