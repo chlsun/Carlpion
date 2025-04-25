@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.carlpion.comment.model.dto.CommentNoticeDTO;
+import com.kh.carlpion.comment.model.dto.CommentDTO;
+import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
 import com.kh.carlpion.comment.model.service.CommentNoticeService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class CommentNoticeController {
 	private final CommentNoticeService commentNoticeService;
 	
 	@PostMapping
-	public ResponseEntity<?> saveComment(CommentNoticeDTO commentNoticeDTO) {
-		commentNoticeService.saveComment(commentNoticeDTO);
+	public ResponseEntity<?> saveComment(CommentDynamicDTO commentDynamicDTO) {
+		commentNoticeService.saveComment(commentDynamicDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<CommentNoticeDTO>> findAllComment(@RequestParam(name = "noticeNo") Long noticeNo) {
+	public ResponseEntity<List<CommentDTO>> findAllComment(@RequestParam(name = "noticeNo") Long noticeNo) {
 		return ResponseEntity.ok(commentNoticeService.findAllComment(noticeNo));
 	}
 	
