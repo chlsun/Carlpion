@@ -57,13 +57,17 @@ public class JwtFilter extends OncePerRequestFilter {
 			
 		} catch (ExpiredJwtException e) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.setContentType("text/plain;charset=UTF-8");
 			response.getWriter().write("토큰이 만료 되었습니다.");
+			 response.getWriter().flush();
 			
 			return;
 			
 		} catch (JwtException e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.setContentType("text/plain;charset=UTF-8");
 			response.getWriter().write("유효하지 않은 토큰입니다.");
+			response.getWriter().flush();
 			
 			return;
 		}

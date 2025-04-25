@@ -59,15 +59,15 @@ public class AuthController {
 	}
 	
 	// 회원가입 시, 인증 이메일 전송
-	@PostMapping("/send-email")
-	public ResponseEntity<?> sendVerifyEmailWhileSignUp(@RequestBody @Valid EmailDTO emailInfo) {
-		
-		emailInfo.setType("회원가입");
-		
-		authService.sendVerifyEmailWhileSignUp(emailInfo);
-		
-		return ResponseEntity.status(HttpStatus.CREATED).build();
-	}
+//	@PostMapping("/send-email")
+//	public ResponseEntity<?> sendVerifyEmailWhileSignUp(@RequestBody @Valid EmailDTO emailInfo) {
+//		
+//		emailInfo.setType("회원가입");
+//		
+//		authService.sendVerifyEmailWhileSignUp(emailInfo);
+//		
+//		return ResponseEntity.status(HttpStatus.CREATED).build();
+//	}
 	
 //	@PostMapping("/find-id")
 //	@PostMapping("/find-pw")

@@ -17,14 +17,12 @@
 			 	USER_NO
 			 ,	TITLE
 			 , 	CONTENT
-			 , 	CREATE_DATE
 			 )
 		VALUES 
 			 (
 			   	#{userNo}
 			 , 	#{title} 	
 			 , 	#{content} 	
-			 , 	SYSDATE	
 			 )
 	</insert>
 	<insert 
@@ -51,7 +49,6 @@
 	>
 		SELECT 
 				n.NOTICE_NO		AS	noticeNo
-			 ,	n.USER_NO		AS	userNo
 			 ,	n.TITLE
 			 ,	n.CONTENT
 			 ,	u.NICKNAME		AS	nickName
@@ -60,9 +57,9 @@
 		  FROM
 		  		CP_NOTICE n
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = n.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = n.USER_NO
 		  JOIN
-		  		CP_POINT p 	ON 	p.USER_NO = n.USER_NO	
+		  		CP_POINT p 		ON 	p.USER_NO = n.USER_NO	
 		 WHERE	
 		 		n.IS_ACTIVE = 'Y'
 		 ORDER
@@ -87,20 +84,22 @@
 	>
 		SELECT 
 				n.NOTICE_NO		AS	noticeNo
-			 ,	n.USER_NO		AS	userNo
 			 ,	n.TITLE
 			 ,	n.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	n.CREATE_DATE	AS	createDate
 			 ,	n.COUNT
+			 ,	f.FILE_URL		AS	fileUrl
 			 ,	p.POINT
-			 ,	p.USER_LEVEL
+			 ,	p.USER_LEVEL	AS	userLevel	
 		  FROM
 		  		CP_NOTICE n
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = n.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = n.USER_NO
 		  JOIN
-		  		CP_POINT p 	ON 	p.USER_NO = n.USER_NO
+		  		CP_POINT p 		ON 	p.USER_NO = n.USER_NO
+		  JOIN
+		  		CP_NT_FILE f 	ON 	f.NOTICE_NO = r.NOTICE_NO
 		 WHERE	
 		 		n.IS_ACTIVE = 'Y'
 		   AND	
@@ -144,7 +143,7 @@
 		id="findFileByAll"
 		resultType="string"
 	>
-		SLELCT
+		SELECT
 				FILE_URL	AS	fileUrl
 		  FROM
 		  		CP_NT_FILE
