@@ -15,7 +15,6 @@ import lombok.ToString;
 @ToString
 public class CommentDTO {
 	private Long commentNo;
-	private Long userNo;
 	private String content;
 	private String nickName;
 	private Date createDate;
