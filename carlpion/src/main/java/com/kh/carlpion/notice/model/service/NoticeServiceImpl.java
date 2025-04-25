@@ -1,6 +1,8 @@
 package com.kh.carlpion.notice.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
@@ -58,10 +60,39 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public List<NoticeDTO> findAll(int pageNo) {
-		int pageSize = 10;
-		RowBounds rowBounds = new RowBounds(pageNo * pageSize, pageSize);
-		return noticeMapper.findAll(rowBounds);
+	public Map<String, Object> findAll(int pageNo) {
+		int pageLimit = 10;
+		int btnLimit = 10;	
+		int totalCount = noticeMapper.findTotalCount(pageNo);
+		int maxPage = (int)Math.ceil((double) totalCount / pageLimit);	
+		int startBtn = (pageNo - 1) / btnLimit * btnLimit + 1;
+		int endBtn = startBtn + btnLimit - 1;
+		
+		if(pageNo > maxPage && maxPage > 0) {
+			pageNo = maxPage;
+		}
+		
+		if(maxPage == 0) {
+			pageNo = 1;
+		}
+
+		if(endBtn > maxPage) {
+			endBtn = maxPage;
+		}
+
+		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);		
+		List<NoticeDTO> list = noticeMapper.findAll(rowBounds);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("totalCount", totalCount);
+		map.put("pageNo", pageNo);
+		map.put("pageLimit", pageLimit);
+		map.put("btnLimit", btnLimit);
+		map.put("maxPage", maxPage);
+		map.put("startBtn", startBtn);
+		map.put("endBtn", endBtn);
+		return map;		
 	}
 
 	@Override

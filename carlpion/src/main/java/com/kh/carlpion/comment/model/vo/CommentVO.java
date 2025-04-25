@@ -7,8 +7,13 @@ import lombok.Value;
 @Value
 @Builder
 @Getter
-public class CommentReviewVO {
-	private Long reviewNo;
+public class CommentVO {	
+	private String commentType;	
+	private Long commentNo;
 	private Long userNo;
 	private String content;
+	
+	private Long noticeNo;
+	private Long reportNo;
+	private Long reviewNo;
 }

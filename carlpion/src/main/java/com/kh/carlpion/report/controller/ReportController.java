@@ -1,6 +1,7 @@
 package com.kh.carlpion.report.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class ReportController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<ReportDTO>> findAll(@RequestParam(name = "page", defaultValue = "1") int pageNo) {
+	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {
 		return ResponseEntity.ok(reportService.findAll(pageNo));
 	}
 	
