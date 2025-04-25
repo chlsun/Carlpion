@@ -18,7 +18,7 @@ public interface PointService {
 	
 	void saveReviewLike(LikeDTO likeDTO);
 	
-	List<LikeDTO> findAll();
+	List<LikeDTO> findAllLike();
 	
 	void deleteReviewLike(LikeDTO likeDTO);
 }

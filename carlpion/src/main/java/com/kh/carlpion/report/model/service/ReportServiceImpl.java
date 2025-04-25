@@ -33,10 +33,6 @@ public class ReportServiceImpl implements ReportService {
 		/*사용자 인증 구간*/
 		Long userNo = authService.getUserDetails().getUserNo();
 		
-		if( !userNo.equals(reportDTO.getUserNo())) {
-			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
-		}
-		
 		ReportVO requestData = ReportVO.builder()
 									   .userNo(userNo)
 									   .title(reportDTO.getTitle())

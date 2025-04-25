@@ -34,11 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
 	@Transactional
 	public void save(ReviewDTO reviewDTO, List<MultipartFile> files) {
 		/*사용자 인증 구간*/
-		Long userNo = authService.getUserDetails().getUserNo();
-		
-		if( !userNo.equals(reviewDTO.getUserNo())) {
-			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
-		}
+		Long userNo = authService.getUserDetails().getUserNo();		
 		
 		ReviewVO requestData = ReviewVO.builder()
 									   .userNo(userNo)

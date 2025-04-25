@@ -73,8 +73,8 @@ public class PointServiceImpl implements PointService {
 	}
 
 	@Override
-	public List<LikeDTO> findAll() {
-		return pointMapper.findAll();
+	public List<LikeDTO> findAllLike() {
+		return pointMapper.findAllLike();
 	}
 
 	@Override

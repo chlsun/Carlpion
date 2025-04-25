@@ -80,7 +80,7 @@
 	</insert>
 	
 	<select 
-		id="findAll" 
+		id="findAllLike" 
 		resultType="com.kh.carlpion.point.model.dto.LikeDTO"
 	>
 		SELECT 
