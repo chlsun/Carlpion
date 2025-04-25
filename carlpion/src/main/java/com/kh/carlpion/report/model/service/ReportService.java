@@ -16,5 +16,5 @@ public interface ReportService {
 	
 	ReportDTO updateById(ReportDTO reportDTO, List<MultipartFile> files);
 	
-	void deleteById(Long reportNo);
+	void softDeleteById(Long reportNo);
 }

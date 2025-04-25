@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
+import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.notice.model.dao.NoticeMapper;
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
@@ -22,17 +24,23 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeServiceImpl implements NoticeService {
 	
 	private final NoticeMapper noticeMapper;
+	private final AuthService authService;
 	private final FileService fileService;
 
 	@Override
 	@Transactional
 	public void save(NoticeDTO noticeDTO, List<MultipartFile> files) {
 		/*사용자 인증 구간*/
+		Long userNo = authService.getUserDetails().getUserNo();
+		
+		if( !userNo.equals(noticeDTO.getUserNo())) {
+			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
+		}
 		
 		NoticeVO requestData = NoticeVO.builder()
+									   .userNo(userNo)
 									   .title(noticeDTO.getTitle())
 									   .content(noticeDTO.getContent())
-									   .userNo(noticeDTO.getUserNo())
 									   .build();
 		noticeMapper.save(requestData);
 		
@@ -47,7 +55,6 @@ public class NoticeServiceImpl implements NoticeService {
 													   .fileUrl(filePath)
 													   .build();
 					noticeMapper.saveFile(requestFileData);
-//					log.info("saveFile: {}", requestFileData);
 				}
 			}
 		}	
@@ -65,38 +72,40 @@ public class NoticeServiceImpl implements NoticeService {
 	public NoticeDTO findById(Long noticeNo) {
 		NoticeDTO noticeDTO = noticeMapper.findById(noticeNo);
 		
-		if(noticeNo == null) {
-			throw new NotFindException("Not Find Notice");
+		if(noticeDTO == null) {
+			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
+		
+		noticeMapper.updateCount(noticeNo);
 		return noticeDTO;
 	}
 
 	@Override
 	@Transactional
 	public NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files) {
-			
+		Long noticeNo = noticeDTO.getNoticeNo();
+		checkedOwnerByUser(noticeNo);
+		
 		if(files != null && !files.isEmpty() && files.stream().anyMatch(file -> !file.isEmpty())) {
-			List<String> fileUrls = noticeMapper.findFileByAll(noticeDTO.getNoticeNo());
+			List<String> fileUrls = noticeMapper.findFileByAll(noticeNo);
 			
 			if(fileUrls != null) {
 				for(String fileUrl : fileUrls) {
 					fileService.deleteFile(fileUrl);
 				}
 			}
-			noticeMapper.deleteFileById(noticeDTO.getNoticeNo());
+			noticeMapper.deleteFileById(noticeNo);
 			
 			for(MultipartFile file : files) {
 				
 				if( !file.isEmpty()) {
 					String filePath = fileService.storage(file);
-					noticeDTO.setFileUrl(filePath);		
 					
 					NoticeVO requestFileData = NoticeVO.builder()
-													   .noticeNo(noticeDTO.getNoticeNo())
+													   .noticeNo(noticeNo)
 													   .fileUrl(filePath)
 													   .build();
 					noticeMapper.saveFile(requestFileData);
-//					log.info("saveFile: {}", requestFileData);
 				}
 			}
 		}
@@ -106,7 +115,18 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	@Transactional
-	public void deleteById(Long noticeNo) {
-		noticeMapper.deleteById(noticeNo);
+	public void softDeleteById(Long noticeNo) {
+		checkedOwnerByUser(noticeNo);
+		noticeMapper.softDeleteById(noticeNo);
+	}
+	
+	/** 사용자 인증 */
+	private void checkedOwnerByUser(Long noticeNo) {
+		Long authUserNo = authService.getUserDetails().getUserNo();
+		Long findUserNo = noticeMapper.findByUserNo(noticeNo);
+		
+		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
+			throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
+		}
 	}
 }

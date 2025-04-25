@@ -17,5 +17,5 @@ public interface NoticeService {
 	
 	NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files);
 	
-	void deleteById(Long noticeNo);
+	void softDeleteById(Long noticeNo);
 }

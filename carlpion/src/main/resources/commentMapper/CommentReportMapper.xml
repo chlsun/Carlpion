@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.carlpion.comment.model.dao.CommentReportMapper">
 	<insert 
-		id="saveReport"
+		id="saveComment"
 		parameterType="com.kh.carlpion.comment.model.vo.CommentReportVO"
 	>
 		INSERT 
@@ -25,25 +25,40 @@
 	</insert>
 	
 	<select 
-		id="findAllReport" 
+		id="findAllComment" 
 		resultType="com.kh.carlpion.comment.model.dto.CommentReportDTO"
 	>
 		SELECT 
-				COMMENT_NO		AS	commentNo
-			 ,	REPORT_NO		AS	reportNo
-			 ,	USER_NO			AS	userNo
-			 ,	CONTENT
-			 ,	CREATE_DATE		AS	createDate
+				c.COMMENT_NO	AS	commentNo
+			 ,	c.REPORT_NO		AS	reportNo
+			 ,	c.USER_NO		AS	userNo
+			 ,	c.CONTENT
+			 ,	u.NICKNAME		AS	nickName
+			 ,	c.CREATE_DATE	AS	createDate
 		  FROM
-		  		CP_RP_COMMENT
+		  		CP_RP_COMMENT c
+		  JOIN
+		  		CP_USER u 	ON 	u.USER_NO = c.USER_NO
 		 WHERE	
-		 		IS_ACTIVE = 'Y'
+		 		c.IS_ACTIVE = 'Y'
 		 ORDER
 		 	BY	
-		 		CREATE_DATE DESC
+		 		c.CREATE_DATE DESC
 	</select>
 	
-	<update id="deleteReportById">
+	<select 
+		id="findByUserNo"
+		parameterType="long"
+		resultType="long"
+	>
+		SELECT
+				USER_NO		AS	userNo
+		  FROM	
+		  		CP_RP_COMMENT
+		 WHERE
+		 		COMMENT_NO = #{commentNo}	  		
+	</select>
+	<update id="softDeleteCommentById">
 		UPDATE
 				CP_RP_COMMENT
 		   SET

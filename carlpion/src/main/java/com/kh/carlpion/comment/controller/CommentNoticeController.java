@@ -27,19 +27,19 @@ public class CommentNoticeController {
 	private final CommentNoticeService commentNoticeService;
 	
 	@PostMapping
-	public ResponseEntity<?> saveNotice(CommentNoticeDTO commentNoticeDTO) {
-		commentNoticeService.saveNotice(commentNoticeDTO);
+	public ResponseEntity<?> saveComment(CommentNoticeDTO commentNoticeDTO) {
+		commentNoticeService.saveComment(commentNoticeDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<CommentNoticeDTO>> findAllNotice(@RequestParam(name = "noticeNo") Long noticeNo) {
-		return ResponseEntity.ok(commentNoticeService.findAllNotice(noticeNo));
+	public ResponseEntity<List<CommentNoticeDTO>> findAllComment(@RequestParam(name = "noticeNo") Long noticeNo) {
+		return ResponseEntity.ok(commentNoticeService.findAllComment(noticeNo));
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteNoticeById(@PathVariable(name = "id") Long commentNo) {
-		commentNoticeService.deleteNoticeById(commentNo);
+	public ResponseEntity<?> softDeleteCommentById(@PathVariable(name = "id") Long commentNo) {
+		commentNoticeService.softDeleteCommentById(commentNo);
 		return ResponseEntity.noContent().build();
 	}
 }
