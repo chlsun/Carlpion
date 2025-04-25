@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.carlpion.comment.model.dto.CommentNoticeDTO;
+import com.kh.carlpion.comment.model.dto.CommentDTO;
+import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
 import com.kh.carlpion.comment.model.service.CommentNoticeService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,19 +28,19 @@ public class CommentNoticeController {
 	private final CommentNoticeService commentNoticeService;
 	
 	@PostMapping
-	public ResponseEntity<?> saveNotice(CommentNoticeDTO commentNoticeDTO) {
-		commentNoticeService.saveNotice(commentNoticeDTO);
+	public ResponseEntity<?> saveComment(CommentDynamicDTO commentDynamicDTO) {
+		commentNoticeService.saveComment(commentDynamicDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<CommentNoticeDTO>> findAllNotice(@RequestParam(name = "noticeNo") Long noticeNo) {
-		return ResponseEntity.ok(commentNoticeService.findAllNotice(noticeNo));
+	public ResponseEntity<List<CommentDTO>> findAllComment(@RequestParam(name = "noticeNo") Long noticeNo) {
+		return ResponseEntity.ok(commentNoticeService.findAllComment(noticeNo));
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteNoticeById(@PathVariable(name = "id") Long commentNo) {
-		commentNoticeService.deleteNoticeById(commentNo);
+	public ResponseEntity<?> softDeleteCommentById(@PathVariable(name = "id") Long commentNo) {
+		commentNoticeService.softDeleteCommentById(commentNo);
 		return ResponseEntity.noContent().build();
 	}
 }

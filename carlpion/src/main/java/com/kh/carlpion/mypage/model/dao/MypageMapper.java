@@ -23,7 +23,7 @@ public interface MypageMapper {
 	
 	int checkEmail(MypageDTO mypage);
 	
-	MypageDTO updateProfile (MultipartFile file, long userNo);
+	MypageDTO updateProfile (MultipartFile file, Long userNo);
 	
 	MypageDTO updateName(MypageDTO myapge);
 	
@@ -34,10 +34,13 @@ public interface MypageMapper {
 	List<MypageDTO> inquiryCheck(Long userNo);
 
 	List<MypageDTO> reviewCheck(Long userNo);
+	
+	List<MypageDTO> pointCheck(Long userNo);
 
+//--------------------------------------------------------
 
-
-
+	List<MypageDTO> reservations(Long userNo);
+	List<MypageDTO> usedCars(Long userNo);
 
 
 }

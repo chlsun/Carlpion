@@ -1,6 +1,7 @@
 package com.kh.carlpion.notice.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class NoticeController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<NoticeDTO>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {		
+	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {		
 		return ResponseEntity.ok(noticeService.findAll(pageNo));
 	}
 	
@@ -64,8 +65,8 @@ public class NoticeController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteById(@PathVariable(name = "id") Long noticeNo) {
-		noticeService.deleteById(noticeNo);
+	public ResponseEntity<?> softDeleteById(@PathVariable(name = "id") Long noticeNo) {
+		noticeService.softDeleteById(noticeNo);
 		return ResponseEntity.noContent().build();
 	}	
 }

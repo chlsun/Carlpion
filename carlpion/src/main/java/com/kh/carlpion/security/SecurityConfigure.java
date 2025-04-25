@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
+
 public class SecurityConfigure {
 	
 	private final JwtFilter filter;
@@ -40,15 +41,18 @@ public class SecurityConfigure {
 						   .cors(Customizer.withDefaults())
 						   .authorizeHttpRequests(request -> {
 							   request.requestMatchers("/admin/**").hasRole("ADMIN");
-							   request.requestMatchers(HttpMethod.GET, "/notice", "/notice/**", "/reports", "/reviews", "/uploads/**").permitAll();
-							   request.requestMatchers(HttpMethod.GET, "/reports/**", "/reviews/**").authenticated();
-							   request.requestMatchers(HttpMethod.POST, "/users", "/auth/**").permitAll();
-							   request.requestMatchers(HttpMethod.POST, "/rents", "/notice/**", "/reviews", "/reviews/**").authenticated();
+							   request.requestMatchers(HttpMethod.POST, "/users", "/auth/**", "/parking/setting").permitAll();
+							   request.requestMatchers(HttpMethod.GET, "/notice", "/notice/**", "/reports", "/reports/**", "/reviews", "/reviews/**", "/uploads/**", "/parking/**").permitAll();
+							   request.requestMatchers(HttpMethod.POST, "/rents", "/notice/**", "/reviews", "/reviews/**", "/admin/**").authenticated();
 							   request.requestMatchers(HttpMethod.POST, "/notice", "/reports/**").hasRole("ADMIN");
-							   request.requestMatchers(HttpMethod.PUT, "/users/**", "/reports/**", "/reviews/**").authenticated();
+							   request.requestMatchers(HttpMethod.PUT, "/users/**", "/reports/**", "/reviews/**", "/admin/**" ).authenticated();
 							   request.requestMatchers(HttpMethod.PUT, "/notice/**").hasRole("ADMIN");
 							   request.requestMatchers(HttpMethod.DELETE, "/users", "/notice/**", "/reports/**", "/reviews/**").authenticated();
 							   request.requestMatchers(HttpMethod.DELETE, "/notice/**", "/reports/comments").hasRole("ADMIN");
+							   request.requestMatchers(HttpMethod.GET, "/mypage/**").authenticated();
+							   request.requestMatchers(HttpMethod.PUT, "/users/update-pw","/users/update-nickname","/users/update-email").authenticated();
+							   request.requestMatchers(HttpMethod.PUT, "/users/update-profile","/users/update-realname").authenticated();
+							   
 						   })
 						   .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 						   .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)

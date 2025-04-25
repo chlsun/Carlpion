@@ -75,29 +75,54 @@ public class MypageServiceImpl implements MypageService {
 	public List<MypageDTO> replyCheck(Long userNo){
 		
 		List<MypageDTO> result = mapper.replyCheck(userNo);
-		
+		System.out.println("댓글 서비스 나오나");
 		return result;
 		
 	}
 	
 	@Override
-	public List<MypageDTO> inquiryCheck(Long userNO) {
-	
-		List<MypageDTO> result = mapper.inquiryCheck(userNO);
+	public List<MypageDTO> inquiryCheck(Long userNo) {
 		
+		List<MypageDTO> result = mapper.inquiryCheck(userNo);
+		System.out.println("서비스나오나");
 		return result;
 	}
 	
 	@Override
 	public List<MypageDTO> reviewCheck(Long userNo) {
 		
-		
 		List<MypageDTO> result =mapper.reviewCheck(userNo);
+		System.out.println(userNo);
+		System.out.println(result);
+		return result;
+	}
+
+	@Override
+	public List<MypageDTO> pointCheck(Long userNo) {
 		
+		List<MypageDTO> result =mapper.pointCheck(userNo);
+		return result;
+	}
+	//--------------------------------------------------------
+	@Override
+	public List<MypageDTO> reservations(Long userNo) {
+		
+		List<MypageDTO> result = mapper.reservations(userNo);
 		
 		return result;
 	}
 
+	@Override
+	public List<MypageDTO> usedCars(Long userNo) {
+		
+		List<MypageDTO> result = mapper.usedCars(userNo);
+		
+		return result;
+	}
+	
+	
+	
+	
 
 
 }

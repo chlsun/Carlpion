@@ -1,6 +1,7 @@
 package com.kh.carlpion.review.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,11 +11,11 @@ public interface ReviewService {
 	
 	void save(ReviewDTO reviewDTO, List<MultipartFile> files);
 	
-	List<ReviewDTO> findAll(int pageNo);
+	Map<String, Object> findAll(int pageNo);
 	
 	ReviewDTO findById(Long reviewNo);
 	
 	ReviewDTO updateById(ReviewDTO reviewDTO, List<MultipartFile> files);
 	
-	void deleteById(Long reviewNo);
+	void softDeleteById(Long reviewNo);
 }
