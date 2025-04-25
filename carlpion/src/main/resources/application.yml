@@ -1,29 +1,23 @@
 spring:
   application:
     name: carlpion
-
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-
   profiles:
-    include: private,mail
-
-
+    include: 
+      - private
+      - mail
   mvc:
     static-path-pattern: /uploads/**
-
   web:
     resources:
       static-locations: file:uploads/
-
   servlet:
     multipart:
       max-file-size: 30MB
       max-request-size: 200MB
-
 server:
   port: 80
-
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
