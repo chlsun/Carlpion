@@ -13,14 +13,12 @@
 				REVIEW_NO
 			 ,	USER_NO
 			 , 	CONTENT
-			 , 	CREATE_DATE
 			 )
 		VALUES 
 			 (
 			   	#{reviewNo}
 			 , 	#{userNo} 	
 			 , 	#{content} 	
-			 , 	SYSDATE 	
 			 )
 	</insert>
 	
@@ -31,7 +29,6 @@
 		SELECT 
 				c.COMMENT_NO	AS	commentNo
 			 ,	c.REVIEW_NO		AS	reviewNo
-			 ,	c.USER_NO		AS	userNo
 			 ,	c.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	c.CREATE_DATE	AS	createDate
