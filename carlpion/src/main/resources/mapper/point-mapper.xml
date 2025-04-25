@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.point.model.dao.PointMapper">
+	<insert 
+		id="saveHistoryPoint"
+		parameterType="com.kh.carlpion.point.model.vo.PointHistoryVO"
+	>
+		INSERT
+		  INTO
+		  		CP_POINT_HISTORY
+		  	 (
+				USER_NO
+			 ,	REVIEW_NO
+			 ,	POINT_CHANGE
+			 ,	REASON
+			 )
+		VALUES
+			 (
+				#{userNo}
+			 ,	#{reviewNo}
+			 ,	#{pointChange}
+			 ,	#{reason}
+			 )
+	</insert>
+	
+	<select 
+		id="findAll"
+		resultType="com.kh.carlpion.point.model.dto.PointHistoryDTO"
+	>
+		SELECT
+				HISTORY_NO
+			 ,	REVIEW_NO
+			 ,	POINT_CHANGE
+			 ,	REASON
+			 ,	CREATE_DATE
+		  FROM
+		  		CP_POINT_HISTORY
+		 WHERE
+		 		USER_NO = #{userNo}
+	</select>
+
+	<update 
+		id="updateUserPoint"
+		parameterType="com.kh.carlpion.point.model.vo.PointVO"
+	>
+		UPDATE 
+				CP_POINT
+		   SET	
+		  		POINT = #{point}
+		 WHERE
+		 		USER_NO = #{userNo}
+	</update>
+	<update 
+		id="updateUserLevel"
+		parameterType="com.kh.carlpion.point.model.vo.PointVO"
+	>
+		UPDATE 
+				CP_POINT
+		   SET	
+		  		USER_LEVEL = #{userLevel}
+		 WHERE
+		 		USER_NO = #{userNo}
+	</update>
+	
+	
+	<insert 
+		id="saveReviewLike"
+		parameterType="com.kh.carlpion.point.model.vo.LikeVO"
+	>
+		INSERT 
+		  INTO	
+		  		CP_LIKE
+		VALUES 
+			 (
+			   	#{userNo}
+			 , 	#{reviewNo} 		
+			 )
+	</insert>
+	
+	<select 
+		id="findAllLike" 
+		resultType="com.kh.carlpion.point.model.dto.LikeDTO"
+	>
+		SELECT 
+			 	USER_NO		AS	userNo
+			 ,	REVIEW_NO	AS	reviewNo
+		  FROM
+		  		CP_LIKE
+	</select>
+
+	<delete 
+		id="deleteReviewLike"
+		parameterType="com.kh.carlpion.point.model.vo.LikeVO"
+	>
+		DELETE
+		  FROM
+		  		CP_LIKE
+		 WHERE	
+		 		USER_NO = #{userNo}
+		   AND
+		 		REVIEW_NO = #{reviewNo}
+	</delete>	
+</mapper>

@@ -7,7 +7,7 @@
 <mapper namespace="com.kh.carlpion.mypage.model.dao.MypageMapper">
 
 	<update id="updateNickName"
-			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 			UPDATE 
 					 CP_USER 
 			   SET
@@ -17,8 +17,8 @@
 	</update>
 	
 	<select id="checkNickName"
-			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO"
-			resultType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO"
+			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 			SELECT *
 			  FROM CP_USER
 			 WHERE NICKNAME = #{nickname}
@@ -26,7 +26,7 @@
 	</select>
 	
 	<update id="updatePassword"
-			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 		
 			UPDATE
 					CP_USER
@@ -39,7 +39,7 @@
 	</update>
 	
 	<update id="updateEmail"
-			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 		
 			UPDATE
 					CP_USER
@@ -52,8 +52,8 @@
 	</update>
 	
 	<select id="checkEmail"
-			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO"
-			resultType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO"
+			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 			SELECT *
 			  FROM CP_USER
 			 WHERE EMAIL = #{email}
@@ -61,7 +61,7 @@
 	</select>
 	
 	<update id="updateProfile"
-			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 		
 			UPDATE
 					CP_USER_IMG
@@ -72,7 +72,7 @@
 			
 	</update>
 	<update id="updateName"
-			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 		
 			UPDATE
 					CP_USER
@@ -86,7 +86,7 @@
 	</update>
 
 	<delete id="deleteUser"
-			parameterType="com.kh.carlpion.mypage.model.dao.MypageDTO">
+			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 	
 			DELETE
 			  FROM

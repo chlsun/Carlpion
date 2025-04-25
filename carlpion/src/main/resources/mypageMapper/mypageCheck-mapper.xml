@@ -3,53 +3,48 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-   <mapper namespace="com.kh.calpion.replyCheck.model.dao.ReplyCheckMapper">
+   <mapper namespace="com.kh.carlpion.mypage.model.dao.MypageMapper">
   
   <!-- 댓글 조회  -->
  	<select id="replyCheck"
- 			parameterType="com.kh.calpion.replyCheck.model.dao.ReplyCheckDTO"	
- 			resultType="com.kh.calpion.replyCheck.model.dao.ReplyCheckDTO">
+ 			resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
  	
- 			SELECT
- 					'공지사항' AS board_type,
- 					B.TITLE,
- 					C.CREATE_DATE,
- 					C.COMMENT
+ 			
+ 		SELECT * FROM (
+ 			SELECT	
+ 					N.TITLE AS title,
+ 					N.COUNT AS count,
+ 					N.CREATE_DATE AS createDate,
+ 					C.COMMENT_NO AS commentNo,
+ 					C.CONTENT AS content
+ 					
  			 FROM
- 			 		CP_NT_COMMENT C
- 			 JOIN
- 			 	    CP_NOTICE B ON C.NOTICE_NO = B.NOTICE_NO
+ 			 		CP_NOTICE N
+ 		 	JOIN
+ 		 			CP_NT_COMMENT C	ON N.NOTICE_NO = C.NOTICE_NO
+ 		 	
  		    WHERE
- 		    		C.USER_NO = #{userNo}
- 					
- 			UNION	
- 					
- 			SELECT
- 					'문의 게시판' AS board_type,
- 					B.TITLE,
- 					C.CREATE_DATE,
- 					C.COMMENT
- 			 FROM			
- 					CP_RP_COMMENT C 
- 			 JOIN
- 			 		CP_REPORT B ON C.REPORT_NO = B.REPORT_NO 
+ 		    		N.USER_NO = #{userNo}
+ 		    
+ 		    UNION
+ 		    
+ 		    SELECT	
+ 					R.TITLE AS title,
+ 					R.COUNT AS count,
+ 					R.CREATE_DATE AS createDate,
+ 					V.COMMENT_NO AS commentNo,
+ 					V.CONTENT AS content
+ 			FROM
+ 					CP_REVIEW R
+ 			JOIN
+ 					CP_RV_COMMENT V ON R.REVIEW_NO = V.REVIEW_NO
  			WHERE
- 					C.USER_NO = #{userNo}
- 							
- 					
- 			UNION	
- 					
- 			SELECT
- 					'리뷰 게시판' AS board_type,
- 					B.TITLE,
- 					C.CREATE_DATE,
- 					C.COMMENT
- 			 FROM			
- 					CP_RV_COMMENT C 
- 			 JOIN
- 			 		CP_REVIEW B ON C.REVIEW_NO = B.REVIEW_NO 
- 			WHERE
- 					C.USER_NO = #{userNo}
+ 					R.USER_NO = #{userNo}		
+ 		    )		
+ 		    		
+ 			 ORDER
+ 		       BY
+ 					createDate DESC
  						
  	
  	</select>
@@ -58,50 +53,145 @@
  	
  	
  	 <select id="inquiryCheck"
-  		   parameterType="long"
-  		   resultType="com.kh.carlpion.inquiryCheck.model.dto.InquiryCheckDTO">
+  		   resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
   		   
-  		   
-  		   SELECT
-  		   			USER_NO,
-  		   			REPORT_NO,
-  		   			TITLE,
-  		   			CONTENT,
-  		   			CREATE_DATE,
-  		   			COUNT,
-  		   			FILE_URL
-  
-  		    FROM
-  		    		CP_REPORT
-  		    
-  		    WHERE 
-  		    		USER_NO = #{userNo}
+		  SELECT
+		        R.REPORT_NO reportNo,
+		        R.TITLE title,
+		        R.CREATE_DATE createDate,
+		        R.COUNT count,
+		        F.FILE_URL fileUrl
+		  FROM
+		        CP_REPORT R
+		  JOIN
+		        CP_RP_FILE F ON R.REPORT_NO = F.REPORT_NO
+		
+		  WHERE 
+		        USER_NO = #{userNo}
+		  ORDER BY
+		        R.CREATE_DATE DESC
   
  	</select>
  	
  	<!-- 리뷰 게시판 조회  -->
  	
  	<select id="reviewCheck"
-			parameterType="long"
-			resultType="com.kh.carlpion.reviewCheck.model.dto.ReviewCheckDTO">
+			resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
 	
-		SELECT
-				USER_NO,
-				REVIEW_NO,
-				TITLE,
-				CONTENT,
-				CREATE_DATE,
-				COUNT,
-				FILE_URL
-	 	 FROM
-	 			CP_REVIEW
-	 	WHERE
-	 			USER_NO = #{userNO}
-	 		
-	
+		 SELECT
+		        R.REVIEW_NO reviewNo,
+		        R.TITLE title,
+		        R.CREATE_DATE createDate,
+		        R.COUNT count,
+		        F.FILE_URL fileUrl
+		  FROM
+		       	CP_REVIEW R
+		  JOIN
+		        CP_RV_FILE F ON R.REVIEW_NO = F.REVIEW_NO
+		  WHERE 
+		        R.USER_NO = #{userNo}
+		 ORDER 
+		 	BY
+		        R.CREATE_DATE DESC
+	 	
 	</select>
  	 
+	<!-- 포인트 조회  -->
+	
+	<select id="pointCheck"
+			resultType="com.kh.carlpion.mypage.model.dto.PointDTO">
+			
+		SELECT
+			    USER_NO,
+			    REVIEW_NO,
+			    USERNAME,
+			    REALNAME,
+			    USER_LEVEL,
+			    REASON,
+			    POINT_CHANGE,
+			    POINT,
+			    CREATE_DATE
+		FROM
+		    	CP_POINT_HISTORY H
+		JOIN
+		    	CP_POINT P ON H.USER_NO = P.USER_NO
+		JOIN
+		   		CP_USER U ON P.USER_NO = U.USER_NO
+		WHERE
+		    	U.USERNAME = #{userName}
+		ORDER 
+		BY
+		    	CREATE_DATE DESC
+			
+			
+			</select>
 
+
+	<select id="reservations"
+			resultType="com.kh.carlpion.mypage.model.dto.ReservationsDTO">
+			
+ 	SELECT
+ 			R.CAR_ID carId,
+ 			R.RENTAL_DATE rentalDate,
+ 			R.RETURN_DATE returnDate,
+ 			R.PAYMENT_COMPLETED_AT paymentCompletedAt,
+ 			R.TOTAL_PRICE totalPrice,
+ 			R.STATUS status,
+ 			R.RESERVATION_NO reservationNo,
+ 			C.MODEL_NO modelNo,
+ 			D.CAR_MODEL carModel,
+ 			I.PARKING_ID parkingId,
+ 			I.PARKING_TITLE title,
+ 			I.PARKING_ADDR parkingAddr
+ 	FROM
+ 			CP_RENTAL_RESERVATION R
+ 	JOIN
+ 			CP_RENTAL_CAR C ON R.CAR_ID = C.CAR_ID
+ 	JOIN
+ 			CP_RENTAL_CAR_MODEL D ON C.MODEL_NO = D.MODEL_NO
+ 	JOIN
+ 			CP_PARKING_INFO I ON C.PARKING_ID = I.PARKING_ID
+ 	
+ 	WHERE
+ 			R.USER_NO = #{userNo}
+ 	ORDER
+ 		BY
+ 			RENTAL_DATE DESC
+ 			
+ 	</select>
+ 	
+ 	<select id="usedCars"
+			resultType="com.kh.carlpion.mypage.model.dto.ReservationsDTO">
+			
+ 	SELECT
+ 			R.CAR_ID carId,
+ 			R.RENTAL_DATE rentalDate,
+ 			R.RETURN_DATE returnDate,
+ 			R.TOTAL_PRICE totalPrice,
+ 			R.PAYMENT_COMPLETED_AT paymentCompletedAt,
+ 			C.MODEL_NO modelNo,
+ 			D.CAR_MODEL carModel,
+ 			I.PARKING_ID parkingId,
+ 			I.PARKING_TITLE title,
+ 			I.PARKING_ADDR parkingAddr
+ 	FROM
+ 			CP_RENTAL_RESERVATION R
+ 	JOIN
+ 			CP_RENTAL_CAR C ON R.CAR_ID = C.CAR_ID
+ 	JOIN
+ 			CP_RENTAL_CAR_MODEL D ON C.MODEL_NO = D.MODEL_NO
+ 	JOIN
+ 			CP_PARKING_INFO I ON C.PARKING_ID = I.PARKING_ID
+ 	
+ 	WHERE
+			U.USER_NO = #{userNo} 	
+ 	ORDER
+ 		BY
+ 			RENTAL_DATE DESC
+ 		
+ 	
+ 	</select>
+ 	
  	
    </mapper>
   

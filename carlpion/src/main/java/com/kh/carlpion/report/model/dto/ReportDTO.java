@@ -18,8 +18,10 @@ public class ReportDTO {
 	private Long userNo;
 	private String title;
 	private String content;
-	private String fileUrl;
+	private String nickName;
 	private Date createDate;
 	private Long count;
-	private String isActive;	
+	private String fileUrl;
+	private Long point;
+	private String userLevel;
 }

@@ -1,6 +1,7 @@
 package com.kh.carlpion.notice.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,11 +12,11 @@ public interface NoticeService {
 	
 	void save(NoticeDTO noticeDTO, List<MultipartFile> files);
 	
-	List<NoticeDTO> findAll(int pageNo);
+	Map<String, Object> findAll(int pageNo);
 	
 	NoticeDTO findById(Long noticeNo);
 	
 	NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files);
 	
-	void deleteById(Long noticeNo);
+	void softDeleteById(Long noticeNo);
 }

@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.carlpion.comment.model.dto.CommentReviewDTO;
+import com.kh.carlpion.comment.model.dto.CommentDTO;
+import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
 import com.kh.carlpion.comment.model.service.CommentReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,19 +28,19 @@ public class CommentReviewController {
 	private final CommentReviewService commentReviewService;
 	
 	@PostMapping
-	public ResponseEntity<?> saveReview(CommentReviewDTO commentReviewDTO) {
-		commentReviewService.saveReview(commentReviewDTO);
+	public ResponseEntity<?> saveComment(CommentDynamicDTO commentDynamicDTO) {
+		commentReviewService.saveComment(commentDynamicDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<CommentReviewDTO>> findAllReview(@RequestParam(name = "reviewNo") Long reviewNo) {
-		return ResponseEntity.ok(commentReviewService.findAllReview(reviewNo));
+	public ResponseEntity<List<CommentDTO>> findAllComment(@RequestParam(name = "reviewNo") Long reviewNo) {
+		return ResponseEntity.ok(commentReviewService.findAllComment(reviewNo));
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteReviewById(@PathVariable(name = "id") Long commentNo) {
-		commentReviewService.deleteReviewById(commentNo);
+	public ResponseEntity<?> softDeleteCommentById(@PathVariable(name = "id") Long commentNo) {
+		commentReviewService.softDeleteCommentById(commentNo);
 		return ResponseEntity.noContent().build();
 	}
 }

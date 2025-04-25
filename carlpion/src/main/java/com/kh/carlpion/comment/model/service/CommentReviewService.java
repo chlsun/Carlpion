@@ -2,14 +2,14 @@ package com.kh.carlpion.comment.model.service;
 
 import java.util.List;
 
-import com.kh.carlpion.comment.model.dto.CommentReviewDTO;
-import com.kh.carlpion.comment.model.vo.CommentReviewVO;
+import com.kh.carlpion.comment.model.dto.CommentDTO;
+import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
 
 public interface CommentReviewService {
 	
-	void saveReview(CommentReviewDTO commentReviewDTO);
+	void saveComment(CommentDynamicDTO commentDynamicDTO);
 	
-	List<CommentReviewDTO> findAllReview(Long reviewNo);
+	List<CommentDTO> findAllComment(Long reviewNo);
 	
-	void deleteReviewById(Long commentNo);
+	void softDeleteCommentById(Long commentNo);
 }

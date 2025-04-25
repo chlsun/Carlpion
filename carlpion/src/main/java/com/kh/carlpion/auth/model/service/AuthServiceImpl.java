@@ -45,7 +45,6 @@ public class AuthServiceImpl implements AuthService {
 	private final UserMapper userMapper;
 	private final JavaMailSender mailSender;
 	private final PasswordEncoder passwordEncoder;
-
 	
 	// 요청 시, 액세스 토큰으로 인증했을 때, 유저 정보를 반환하는 메서드
 	@Override

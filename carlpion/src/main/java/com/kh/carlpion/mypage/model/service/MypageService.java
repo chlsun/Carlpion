@@ -24,12 +24,20 @@ public interface MypageService {
 	void deleteUser(MypageDTO mypage);
 	
 	//----------------------------------------------
-	List<MypageDTO> replyCheck(Long uesrNo);
+	List<MypageDTO> replyCheck(Long userNo);
 	
+	List<MypageDTO> inquiryCheck(Long userNo);
 	
-	List<MypageDTO> inquiryCheck(Long userNO);
+	List<MypageDTO> reviewCheck(Long userNo);
 	
-	List<MypageDTO> reviewCheck(Long userNO);
+	List<MypageDTO> pointCheck(Long userNo);
+	
+	//----------------------------------------------
+	
+	List<MypageDTO> reservations(Long userNo);
+	
+	List<MypageDTO> usedCars(Long userNo);
+	
 	
 	
 }

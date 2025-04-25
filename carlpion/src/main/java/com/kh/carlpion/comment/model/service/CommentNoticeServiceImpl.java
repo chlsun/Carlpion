@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kh.carlpion.comment.model.dao.CommentNoticeMapper;
-import com.kh.carlpion.comment.model.dto.CommentNoticeDTO;
-import com.kh.carlpion.comment.model.vo.CommentNoticeVO;
-import com.kh.carlpion.notice.model.service.NoticeService;
+import com.kh.carlpion.auth.model.service.AuthService;
+import com.kh.carlpion.comment.model.dao.CommentMapper;
+import com.kh.carlpion.comment.model.dto.CommentDTO;
+import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
+import com.kh.carlpion.comment.model.vo.CommentVO;
+import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,31 +20,54 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class CommentNoticeServiceImpl implements CommentNoticeService {
 	
-	private final CommentNoticeMapper commentNoticeMapper;
-	private final NoticeService noticeService;
+	private final CommentMapper commentMapper;
+	private final AuthService authService;
+	
+	private static final String COMMENT_TYPE = "notice";
 
 	@Override
 	@Transactional
-	public void saveNotice(CommentNoticeDTO commentNoticeDTO) {
+	public void saveComment(CommentDynamicDTO commentDynamicDTO) {
+		Long userNo = authService.getUserDetails().getUserNo();
 		
-		CommentNoticeVO requestData = CommentNoticeVO.builder()
-													 .userNo(commentNoticeDTO.getUserNo())
-													 .content(commentNoticeDTO.getContent())
-													 .noticeNo(commentNoticeDTO.getNoticeNo())
-													 .build();
-		commentNoticeMapper.saveNotice(requestData);
+		CommentVO requestData = CommentVO.builder()
+										 .commentType(COMMENT_TYPE)
+										 .userNo(userNo)
+										 .content(commentDynamicDTO.getContent())
+										 .noticeNo(commentDynamicDTO.getNoticeNo())
+										 .build();
+		commentMapper.saveComment(requestData);
 	}
 
 	@Override
-	public List<CommentNoticeDTO> findAllNotice(Long noticeNo) {
-		noticeService.findById(noticeNo);
-		return commentNoticeMapper.findAllNotice(noticeNo);
+	public List<CommentDTO> findAllComment(Long noticeNo) {
+		CommentVO requestData = CommentVO.builder()
+										 .commentType(COMMENT_TYPE)
+										 .reviewNo(noticeNo)
+										 .build();
+		return commentMapper.findAllComment(requestData);
 	}
 
 	@Override
 	@Transactional
-	public void deleteNoticeById(Long commentNo) {
-		commentNoticeMapper.deleteNoticeById(commentNo);
+	public void softDeleteCommentById(Long commentNo) {
+		CommentVO requestData = checkedOwnerByUser(commentNo);
+		commentMapper.softDeleteCommentById(requestData);
 	}
 
+	/** 사용자 인증 */
+	private CommentVO checkedOwnerByUser(Long commentNo) {
+		Long authUserNo = authService.getUserDetails().getUserNo();
+		
+		CommentVO requestData = CommentVO.builder()
+										 .commentType(COMMENT_TYPE)
+										 .commentNo(commentNo)
+										 .build();
+		Long findUserNo = commentMapper.findUserNoById(requestData);
+
+		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
+			throw new UnauthorizedException("삭제할 권한이 없습니다.");
+		}
+		return requestData;
+	}
 }
