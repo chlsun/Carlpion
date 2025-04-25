@@ -5,19 +5,27 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.kh.carlpion.exception.exceptions.AlreadyExistsException;
+import com.kh.carlpion.exception.exceptions.CarModelNotFoundException;
 import com.kh.carlpion.exception.exceptions.CreateDirectoriesException;
 import com.kh.carlpion.exception.exceptions.CustomAuthenticationException;
 import com.kh.carlpion.exception.exceptions.CustomMessagingException;
 import com.kh.carlpion.exception.exceptions.DuplicateValueException;
-import com.kh.carlpion.exception.exceptions.FileDeleteException;
 import com.kh.carlpion.exception.exceptions.EmailDuplicateException;
+import com.kh.carlpion.exception.exceptions.EmptyInputException;
+import com.kh.carlpion.exception.exceptions.FileDeleteException;
 import com.kh.carlpion.exception.exceptions.EmailVerifyFailException;
 import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
+
 import com.kh.carlpion.exception.exceptions.FileSaveException;
+import com.kh.carlpion.exception.exceptions.ImgFileNotFoundException;
+import com.kh.carlpion.exception.exceptions.ModelNotFoundException;
+import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.exception.exceptions.NotFindException;
+import com.kh.carlpion.exception.exceptions.RentCarNotFoundException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
 
@@ -29,6 +37,7 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(status).body(e.getMessage());
 	}
 
+	// 조회값으로 빈문자열이 요청왔을 경우 발생
 	@ExceptionHandler(EmptyInputException.class)
 	public ResponseEntity<?> emptyInputError(EmptyInputException e){
 		
@@ -57,6 +66,12 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 	}
 	
+	// 이미 존재하는 식별값 요청이 들어왔을 경우 발생
+	@ExceptionHandler(AlreadyExistsException.class)
+	public ResponseEntity<?> alreadyExistsError(AlreadyExistsException e){
+		
+		return exceptionHandler(e, HttpStatus.CONFLICT);
+	}
 	@ExceptionHandler(NickNameDuplicateException.class)
 	public ResponseEntity<?> handleNickNameDuplicate(NickNameDuplicateException e){
 		
@@ -122,9 +137,35 @@ public class GlobalExceptionHandler {
 		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
 	}
 	
+
+	// 차량모델을 찾을 수 없을때 발생
+	@ExceptionHandler(ModelNotFoundException.class)
+	public ResponseEntity<?> modelNotFoundError(ModelNotFoundException e){
+		return exceptionHandler(e, HttpStatus.NOT_FOUND);
+	}
+	
+	// 이미지 파일이 null로 넘어왔을 경우 발생
+	@ExceptionHandler(ImgFileNotFoundException.class)
+	public ResponseEntity<?> imgFileNotFoundError(ImgFileNotFoundException e){
+		return exceptionHandler(e, HttpStatus.NOT_FOUND);
+	}
+	
+	// 차량 모델 조회 값이 없을 경우 발생
+	@ExceptionHandler(CarModelNotFoundException.class)
+	public ResponseEntity<?> carModelNotFoundError(CarModelNotFoundException e){
+		return exceptionHandler(e, HttpStatus.NOT_FOUND);
+	}
+	
+	// 렌트 차량 조회 값이 없을 경우 발생
+	@ExceptionHandler(RentCarNotFoundException.class)
+	public ResponseEntity<?> rentCarNotFoundError(RentCarNotFoundException e){
+		return exceptionHandler(e, HttpStatus.NOT_FOUND);
+	}
+	
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<?> handleUnauthorized(UnauthorizedException e) {
 		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
 	}
+
 
 }

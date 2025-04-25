@@ -1,17 +1,19 @@
 spring:
   application:
     name: carlpion
+
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@192.168.130.17:1521:XE
+    url: jdbc:oracle:thin:@112.221.156.34:12345:XE
     username: C##PROJECTCP
     password: 1234
+
   profiles:
-    include: private
-  include: mail
+    include: mail, private
 
   mvc:
     static-path-pattern: /uploads/**
+
   web:
     resources:
       static-locations: file:uploads/
@@ -27,4 +29,4 @@ server:
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:mapper/*.xml, classpath:/mypageMapper/*.xml
