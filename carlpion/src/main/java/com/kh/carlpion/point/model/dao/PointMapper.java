@@ -23,7 +23,7 @@ public interface PointMapper {
 	
 	void saveReviewLike(LikeVO likeVO);
 	
-	List<LikeDTO> findAll();
+	List<LikeDTO> findAllLike();
 	
 	void deleteReviewLike(LikeVO likeVO);
 }
