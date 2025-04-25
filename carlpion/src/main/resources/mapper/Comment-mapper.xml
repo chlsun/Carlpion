@@ -13,14 +13,14 @@
 		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
 		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
 		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
-					<otherwise>NULL_TABLE</otherwise>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
 		  		</choose>
 		  	 (	
 				<choose>
 		  			<when test="commentType == 'notice'">NOTICE_NO</when>
 		  			<when test="commentType == 'report'">REPORT_NO</when>
 		  			<when test="commentType == 'review'">REVIEW_NO</when>
-					<otherwise>NULL_COLUMN</otherwise>
+					<otherwise>TYPE_ERROR_COLUMN</otherwise>
 		  		</choose>
 			 ,	USER_NO
 			 , 	CONTENT
@@ -31,7 +31,7 @@
 		  			<when test="commentType == 'notice'">#{noticeNo}</when>
 		  			<when test="commentType == 'report'">#{reportNo}</when>
 		  			<when test="commentType == 'review'">#{reviewNo}</when>
-					<otherwise>NULL</otherwise>
+					<otherwise>TYPE_ERROR_VALUES</otherwise>
 		  		</choose>
 			 , 	#{userNo} 	
 			 , 	#{content} 	
@@ -52,27 +52,34 @@
 		  			<when test="commentType == 'notice'">c.NOTICE_NO	AS	noticeNo</when>
 		  			<when test="commentType == 'report'">c.REPORT_NO	AS	reportNo</when>
 		  			<when test="commentType == 'review'">c.REVIEW_NO	AS	reviewNo</when>
-					<otherwise>NULL_COLUMN</otherwise>
+					<otherwise>TYPE_ERROR_COLUMN</otherwise>
 		  		</choose>
 		  FROM
 		  		<choose>
 		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
 		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
 		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
-					<otherwise>NULL_TABLE</otherwise>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
 		  		</choose>
 		  		c
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = c.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = c.USER_NO
 		 WHERE	
 		 		c.IS_ACTIVE = 'Y'
+		   AND
+		   		<choose>
+		  			<when test="commentType == 'notice'">c.NOTICE_NO = #{noticeNo}</when>
+		  			<when test="commentType == 'report'">c.REPORT_NO = #{reportNo}</when>
+		  			<when test="commentType == 'review'">c.REVIEW_NO = #{reviewNo}</when>
+					<otherwise>TYPE_ERROR_COLUMN</otherwise>
+		  		</choose>
 		 ORDER
 		 	BY	
-		 		c.CREATE_DATE DESC
+		 		c.CREATE_DATE 	ASC
 	</select>	
 	
 	<select 
-		id="findByUserNo"
+		id="findUserNoById"
 		parameterType="com.kh.carlpion.comment.model.vo.CommentVO"
 		resultType="long"
 	>
@@ -83,7 +90,7 @@
 		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
 		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
 		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
-					<otherwise>NULL_TABLE</otherwise>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
 		  		</choose>
 		 WHERE
 		 		COMMENT_NO = #{commentNo}	  		
@@ -97,7 +104,7 @@
 		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
 		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
 		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
-					<otherwise>NULL_TABLE</otherwise>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
 		  		</choose>
 		   SET
 		   		IS_ACTIVE = 'N'

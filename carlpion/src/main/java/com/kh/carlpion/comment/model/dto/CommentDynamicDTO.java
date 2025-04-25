@@ -14,7 +14,6 @@ import lombok.ToString;
 public class CommentDynamicDTO {
 	private String commentType;
 	private Long commentNo;
-	private Long userNo;
 	private String content;
 	
 	private Long noticeNo;

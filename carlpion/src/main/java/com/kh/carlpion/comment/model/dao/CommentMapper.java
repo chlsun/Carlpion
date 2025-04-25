@@ -16,5 +16,5 @@ public interface CommentMapper {
 	
 	void softDeleteCommentById(CommentVO commentVO);
 	
-	Long findByUserNo(CommentVO commentVO);
+	Long findUserNoById(CommentVO commentVO);
 }

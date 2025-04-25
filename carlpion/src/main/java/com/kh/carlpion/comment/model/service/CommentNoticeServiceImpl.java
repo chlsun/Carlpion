@@ -63,7 +63,7 @@ public class CommentNoticeServiceImpl implements CommentNoticeService {
 										 .commentType(COMMENT_TYPE)
 										 .commentNo(commentNo)
 										 .build();
-		Long findUserNo = commentMapper.findByUserNo(requestData);
+		Long findUserNo = commentMapper.findUserNoById(requestData);
 
 		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
 			throw new UnauthorizedException("삭제할 권한이 없습니다.");
