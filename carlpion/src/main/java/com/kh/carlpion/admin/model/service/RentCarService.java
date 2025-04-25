@@ -9,4 +9,6 @@ public interface RentCarService {
 	Map<String, Object> getRentCarList(int page);
 	
 	void setRentCar(RentCarDTO rentCar);
+	
+	void updateRentCar(RentCarDTO rentCar);
 }
