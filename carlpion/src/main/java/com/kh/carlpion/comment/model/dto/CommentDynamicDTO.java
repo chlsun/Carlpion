@@ -1,7 +1,5 @@
 package com.kh.carlpion.comment.model.dto;
 
-import java.sql.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +11,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CommentReportDTO {
+public class CommentDynamicDTO {
+	private String commentType;
 	private Long commentNo;
-	private Long reportNo;
-	private Long userNo;
 	private String content;
-	private String nickName;
-	private Date createDate;
+	
+	private Long noticeNo;
+	private Long reportNo;
+	private Long reviewNo;
 }

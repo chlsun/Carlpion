@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.comment.model.dao.CommentMapper">
+	<insert 
+		id="saveComment"
+		parameterType="com.kh.carlpion.comment.model.vo.CommentVO"
+	>
+		INSERT 
+		  INTO	
+		  		<choose>
+		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
+		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
+		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
+		  		</choose>
+		  	 (	
+				<choose>
+		  			<when test="commentType == 'notice'">NOTICE_NO</when>
+		  			<when test="commentType == 'report'">REPORT_NO</when>
+		  			<when test="commentType == 'review'">REVIEW_NO</when>
+					<otherwise>TYPE_ERROR_COLUMN</otherwise>
+		  		</choose>
+			 ,	USER_NO
+			 , 	CONTENT
+			 )
+		VALUES 
+			 (
+				<choose>
+		  			<when test="commentType == 'notice'">#{noticeNo}</when>
+		  			<when test="commentType == 'report'">#{reportNo}</when>
+		  			<when test="commentType == 'review'">#{reviewNo}</when>
+					<otherwise>TYPE_ERROR_VALUES</otherwise>
+		  		</choose>
+			 , 	#{userNo} 	
+			 , 	#{content} 	
+			 )
+	</insert>
+	
+	<select 
+		id="findAllComment" 
+		parameterType="com.kh.carlpion.comment.model.vo.CommentVO"
+		resultType="com.kh.carlpion.comment.model.dto.CommentDTO"
+	>
+		SELECT 
+				c.COMMENT_NO	AS	commentNo
+			 ,	c.CONTENT
+			 ,	u.NICKNAME		AS	nickName
+			 ,	c.CREATE_DATE	AS	createDate
+			 ,	<choose>
+		  			<when test="commentType == 'notice'">c.NOTICE_NO	AS	noticeNo</when>
+		  			<when test="commentType == 'report'">c.REPORT_NO	AS	reportNo</when>
+		  			<when test="commentType == 'review'">c.REVIEW_NO	AS	reviewNo</when>
+					<otherwise>TYPE_ERROR_COLUMN</otherwise>
+		  		</choose>
+		  FROM
+		  		<choose>
+		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
+		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
+		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
+		  		</choose>
+		  		c
+		  JOIN
+		  		CP_USER u 		ON 	u.USER_NO = c.USER_NO
+		 WHERE	
+		 		c.IS_ACTIVE = 'Y'
+		   AND
+		   		<choose>
+		  			<when test="commentType == 'notice'">c.NOTICE_NO = #{noticeNo}</when>
+		  			<when test="commentType == 'report'">c.REPORT_NO = #{reportNo}</when>
+		  			<when test="commentType == 'review'">c.REVIEW_NO = #{reviewNo}</when>
+					<otherwise>TYPE_ERROR_COLUMN</otherwise>
+		  		</choose>
+		 ORDER
+		 	BY	
+		 		c.CREATE_DATE 	ASC
+	</select>	
+	
+	<select 
+		id="findUserNoById"
+		parameterType="com.kh.carlpion.comment.model.vo.CommentVO"
+		resultType="long"
+	>
+		SELECT
+				USER_NO		AS	userNo
+		  FROM	
+		  		<choose>
+		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
+		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
+		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
+		  		</choose>
+		 WHERE
+		 		COMMENT_NO = #{commentNo}	  		
+	</select>
+	<update 
+		id="softDeleteCommentById"
+		parameterType="com.kh.carlpion.comment.model.vo.CommentVO"
+	>
+		UPDATE
+				<choose>
+		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
+		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
+		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
+		  		</choose>
+		   SET
+		   		IS_ACTIVE = 'N'
+		 WHERE	
+		 		COMMENT_NO = #{commentNo}
+	</update>
+</mapper>

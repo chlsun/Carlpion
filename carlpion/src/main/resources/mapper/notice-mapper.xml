@@ -44,6 +44,15 @@
 	</insert>
 	
 	<select 
+		id="findTotalCount" 
+		resultType="_int"
+	>
+		SELECT
+				COUNT(*)
+		  FROM
+		  		CP_NOTICE
+	</select>
+	<select 
 		id="findAll" 
 		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
 	>
