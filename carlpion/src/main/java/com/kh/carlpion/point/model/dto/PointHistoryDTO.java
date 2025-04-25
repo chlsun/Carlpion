@@ -1,4 +1,4 @@
-package com.kh.carlpion.comment.model.dto;
+package com.kh.carlpion.point.model.dto;
 
 import java.sql.Date;
 
@@ -10,14 +10,14 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
-public class CommentReportDTO {
-	private Long commentNo;
-	private Long reportNo;
+public class PointHistoryDTO {
+	private Long historyNo;
 	private Long userNo;
-	private String content;
-	private String nickName;
+	private Long reviewNo;
+	private Long pointChange;
+	private String reason;
 	private Date createDate;
 }

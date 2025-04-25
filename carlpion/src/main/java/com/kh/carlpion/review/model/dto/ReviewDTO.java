@@ -19,8 +19,9 @@ public class ReviewDTO {
 	private String title;
 	private String content;
 	private String nickName;
-	private String fileUrl;
 	private Date createDate;
 	private Long count;
-	private String isActive;	
+	private String fileUrl;
+	private Long point;
+	private String userLevel;
 }

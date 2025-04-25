@@ -33,10 +33,6 @@ public class NoticeServiceImpl implements NoticeService {
 		/*사용자 인증 구간*/
 		Long userNo = authService.getUserDetails().getUserNo();
 		
-		if( !userNo.equals(noticeDTO.getUserNo())) {
-			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
-		}
-		
 		NoticeVO requestData = NoticeVO.builder()
 									   .userNo(userNo)
 									   .title(noticeDTO.getTitle())
