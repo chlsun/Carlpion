@@ -1,17 +1,22 @@
 spring:
   application:
     name: carlpion
+
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@192.168.130.17:1521:XE
+    url: jdbc:oracle:thin:@112.221.156.34:12345:XE
     username: C##PROJECTCP
     password: 1234
+
   profiles:
+
     include: private,mail
   
 
+
   mvc:
     static-path-pattern: /uploads/**
+
   web:
     resources:
       static-locations: file:uploads/

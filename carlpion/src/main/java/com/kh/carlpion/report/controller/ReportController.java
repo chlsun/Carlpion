@@ -43,7 +43,7 @@ public class ReportController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<ReportDTO>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {
+	public ResponseEntity<List<ReportDTO>> findAll(@RequestParam(name = "page", defaultValue = "1") int pageNo) {
 		return ResponseEntity.ok(reportService.findAll(pageNo));
 	}
 	

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.point.model.dto.LikeDTO;
+import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
 import com.kh.carlpion.review.model.service.ReviewService;
 
@@ -28,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReviewController {
 
 	private final ReviewService reviewService;
+	private final PointService pointService;
 	
 	private static final int MAX_FILE_COUNT = 5;
 	
@@ -39,6 +42,13 @@ public class ReviewController {
 		}
 		
 		reviewService.save(reviewDTO, files);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	@PostMapping("/{id}")
+	public ResponseEntity<LikeDTO> like(@PathVariable(name = "id") Long reviewNo, LikeDTO likeDTO) {
+		likeDTO.setReviewNo(reviewNo);
+		pointService.saveReviewLike(likeDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	

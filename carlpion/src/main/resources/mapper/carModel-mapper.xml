@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.admin.model.dao.CarModelMapper">
+
+	<sql id="carModelColumn">
+		SELECT
+			MODEL_NO modelNo
+			, CAR_MODEL carModel
+			, RENT_PRICE rentPrice
+			, HOUR_PRICE hourPrice
+			, CHARGE_TYPE chargeType
+			, SEAT_COUNT seatCount
+			, CAR_IMG_URL imgURL
+		FROM 
+			CP_RENTAL_CAR_MODEL
+	</sql>
+	
+	<select id="carModelCount"
+			resultType="_int">
+	SELECT
+		COUNT(*)
+	FROM 
+		CP_RENTAL_CAR_MODEL
+	</select>
+	
+
+	<select id="getCarModelList"
+			resultType="com.kh.carlpion.admin.model.dto.CarModelDTO">
+		<include refid="carModelColumn"/>
+		ORDER BY
+			MODEL_NO DESC
+	</select>
+	
+	<select id="getCarModelByCarModel"
+			resultType="com.kh.carlpion.admin.model.dto.CarModelDTO">
+		<include refid="carModelColumn"/>
+		WHERE CAR_MODEL = #{carModel}
+	</select>
+			
+
+	<select id="checkCarModel"
+			parameterType="_int"
+			resultType="string">
+		SELECT
+			CAR_IMG_URL
+		FROM 
+			CP_RENTAL_CAR_MODEL
+		WHERE 
+			MODEL_NO = #{modelNo}
+	</select>
+	
+	<select id="getCarModelNameList"
+			resultType="com.kh.carlpion.admin.model.dto.CarModelDTO">
+		SELECT
+			MODEL_NO modelNo
+			, CAR_MODEL carModel
+		FROM 
+			CP_RENTAL_CAR_MODEL
+	</select>
+
+	<insert id="setCarModel"
+			parameterType="com.kh.carlpion.admin.model.vo.CarModel">
+		INSERT INTO
+			CP_RENTAL_CAR_MODEL(
+				CAR_MODEL
+				, RENT_PRICE
+				, HOUR_PRICE
+				, CHARGE_TYPE
+				, SEAT_COUNT
+				, CAR_IMG_URL
+			)
+		VALUES(
+			#{carModel}
+			, #{rentPrice}
+			, #{hourPrice}
+			, #{chargeType}
+			, #{seatCount}
+			, #{carImgURL}
+		)
+	</insert>
+	
+	<update id="updateCarModel"
+			parameterType="com.kh.carlpion.admin.model.vo.CarModel">
+		UPDATE
+			CP_RENTAL_CAR_MODEL
+		SET
+			CAR_MODEL = #{carModel}
+			, RENT_PRICE = #{rentPrice}
+			, HOUR_PRICE = #{hourPrice}
+			, CHARGE_TYPE = #{chargeType}
+			, SEAT_COUNT = #{seatCount}
+			, CAR_IMG_URL = #{carImgURL}
+		WHERE
+			MODEL_NO = #{modelNo}
+	</update>
+	
+	<delete id="removeCarModel"
+			parameterType="_int">
+		DELETE
+		FROM
+			CP_RENTAL_CAR_MODEL
+		WHERE 
+			MODEL_NO = #{modelNo}
+	</delete>
+	
+
+</mapper>
