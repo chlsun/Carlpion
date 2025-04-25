@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kh.carlpion.exception.EmptyInputException;
+import com.kh.carlpion.exception.exceptions.EmptyInputException;
 import com.kh.carlpion.parking.model.dao.ParkingMapper;
 import com.kh.carlpion.parking.model.dto.ParkingDTO;
 
@@ -45,15 +45,6 @@ public class ParkingServiceImpl implements ParkingService {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Override
 	public void parkingInfoSetting() {
 		List<ParkingDTO> parkingIdList = parkingMapper.selectParkingId();
@@ -64,9 +55,7 @@ public class ParkingServiceImpl implements ParkingService {
 	}
 	
 	private void setParkingByAPI(int boundsrow) {
-		
-		log.info("{}", boundsrow);
-		
+
 		HttpURLConnection connection = null;
 
 		try {
