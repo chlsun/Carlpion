@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,6 +23,7 @@ import com.kh.carlpion.mypage.model.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@CrossOrigin("*")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -84,7 +86,7 @@ public class MypageController {
 		String userName = user.getUsername();
 		
 		List<MypageDTO> result = mypageService.replyCheck(userName);
-		
+		System.out.println("댓글 컨트롤러 나오나");
 		return ResponseEntity.ok(result);
 	}
 	
@@ -92,7 +94,7 @@ public class MypageController {
 	@GetMapping("/mypage/reports")
 	public ResponseEntity<List<MypageDTO>> inquiryCheck(@AuthenticationPrincipal CarlpionUserDetails user){
 		String userName = user.getUsername();
-		
+		System.out.println("문의 컨트롤러 나오나");
 	List<MypageDTO> result	= mypageService.inquiryCheck(userName);
 		
 		return ResponseEntity.ok(result);
@@ -102,9 +104,8 @@ public class MypageController {
 	@GetMapping("/mypage/reviews")
 	public ResponseEntity<List<MypageDTO>> reviewCheck(@AuthenticationPrincipal CarlpionUserDetails user){
 		String userName = user.getUsername();
-		//System.out.println("요청한 유저네임: " + userName); 
 		List<MypageDTO> result = mypageService.reviewCheck(userName);
-		
+		System.out.println(result);
 		return ResponseEntity.ok(result);
 		
 	} 
@@ -119,11 +120,22 @@ public class MypageController {
 		
 	}
 
+	@GetMapping("/mypage/reservations")
+	public ResponseEntity<List<MypageDTO>> reservations(@AuthenticationPrincipal CarlpionUserDetails user){
+		String userNo = user.getUsername();
+			
+		List<MypageDTO> result = mypageService.reservations(userNo);
+		return ResponseEntity.ok(result);
+	}
 	
-	
-	
-	
-	
+	@GetMapping("/mypage/usedCars")
+	public ResponseEntity<List<MypageDTO>> usedCars(@AuthenticationPrincipal CarlpionUserDetails user){
+			String userNo = user.getUsername();
+		
+			List<MypageDTO> result = mypageService.usedCars(userNo);
+		return ResponseEntity.ok(result);
+	}
+ 	
 	
 	
 }

@@ -7,16 +7,16 @@
   
   <!-- 댓글 조회  -->
  	<select id="replyCheck"
- 			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
+ 			resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
  	
  			SELECT * FROM (
  	
  			SELECT
- 					'공지사항' boardType,
- 					B.NOTICE_NO boardNo,
+ 					'공지사항' AS boardType,
+ 					B.NOTICE_NO AS postNo,
  					B.TITLE,
  					B.COUNT,
- 					C.CREATE_DATE,
+ 					C.CREATE_DATE AS createDate,
  					C.COMMENT
  			 FROM
  			 		CP_NT_COMMENT C
@@ -27,14 +27,14 @@
  		    WHERE
  		    		U.USERNAME = #{userName}
  		   	
- 			UNION	
+ 			UNION ALL	
  					
  			SELECT
- 					'문의 게시판' boardType,
- 					B.REPORT_NO boardNo,
+ 					'문의 게시판' AS boardType,
+ 					B.REPORT_NO AS postNo,
  					B.TITLE,
  					B.COUNT,
- 					C.CREATE_DATE,
+ 					C.CREATE_DATE AS createDate,
  					C.COMMENT
  			 FROM			
  					CP_RP_COMMENT C 
@@ -47,14 +47,14 @@
  					U.USERNAME = #{userName}
  					
  					
- 			UNION	
+ 			UNION ALL	
  					
  			SELECT
- 					'리뷰 게시판' boardType ,
- 					B.REVIEW_NO boardNo,
+ 					'리뷰 게시판' AS boardType,
+ 					B.REVIEW_NO AS postNo,
  					B.TITLE,
  					B.COUNT,
- 					C.CREATE_DATE,
+ 					C.CREATE_DATE AS createDate,
  					C.COMMENT
  			 FROM			
  					CP_RV_COMMENT C 
@@ -67,7 +67,7 @@
  			)
  			 ORDER
  		       BY
- 					CREATE_DATE DESC;
+ 					createDate DESC;
  						
  	
  	</select>
@@ -76,14 +76,14 @@
  	
  	
  	 <select id="inquiryCheck"
-  		   resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
+  		   resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
   		   
 		  SELECT
-		        U.USER_NO,
-		        R.REPORT_NO,
+		        U.USER_NO userNo,
+		        R.REPORT_NO reportNo,
 		        R.TITLE,
 		        R.CONTENT,
-		        R.CREATE_DATE,
+		        R.CREATE_DATE createDate,
 		        R.COUNT,
 		        F.FILE_URL
 		  FROM
@@ -102,33 +102,34 @@
  	<!-- 리뷰 게시판 조회  -->
  	
  	<select id="reviewCheck"
-			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
+			resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
 	
-		SELECT
-				U.USER_NO,
-				R.REVIEW_NO,
-				R.TITLE,
-				R.CONTENT,
-				R.CREATE_DATE,
-				R.COUNT,
-				R.FILE_URL
-	 	 FROM
-	 	 		CP_REVIEW R
-	 	 JOIN
-	 	 		CP_USER U ON R.USER_NO = U.USER_NO
-			 	 	 	
-	 	WHERE
-	 			USERNAME = #{userName}
-	 	 ORDER
- 		     BY
- 					CREATE_DATE DESC;
-	 		
+		 SELECT
+		        U.USER_NO userNo,
+		        R.REVIEW_NO reviewNo,
+		        R.TITLE,
+		        R.CONTENT,
+		        R.CREATE_DATE createDate,
+		        R.COUNT,
+		        F.FILE_URL
+		  FROM
+		        CP_USER U
+		  JOIN
+		        CP_REVIEW R ON R.USER_NO = U.USER_NO
+		  JOIN
+		        CP_RV_FILE F ON F.REVIEW_NO = R.REVIEW_NO 
+		  WHERE 
+		        U.USERNAME = #{userName}
+		  ORDER BY
+		        R.CREATE_DATE DESC
+  
+	 	
 	</select>
  	 
 	<!-- 포인트 조회  -->
 	
 	<select id="pointCheck"
-			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
+			resultType="com.kh.carlpion.mypage.model.dto.PointDTO">
 			
 		SELECT
 			    P.USER_NO,
@@ -156,6 +157,69 @@
 			</select>
 
 
+	<select id="reservations"
+			resultType="com.kh.carlpion.mypage.model.dto.ReservationsDTO">
+			
+ 	SELECT
+ 			R.CAR_ID,
+ 			C.MODEL_NO,
+ 			I.PARKING_ID,
+ 			R.RESERVATION_NO,
+ 			R.RENTAL_DATE,
+ 			R.RETURN_DATE,
+ 			R.TOTAL_PRICE,
+ 			R.STATUS,
+ 			R.PAYMENT_COMPLETED_AT,
+ 			I.PARKING_TITLE,
+ 			I.PARKING_ADDR
+ 	FROM
+ 			CP_RENTAL_RESERVATION R
+ 	JOIN
+ 			CP_USER U ON U.USER_NO = R.USER_NO
+ 	JOIN
+ 			CP_RENTAL_CAR C ON R.CAR_ID = C.CAR_ID
+ 	JOIN
+ 			CP_PARKING_INFO I ON C.PARKING_ID = I.PARKING_ID
+ 	
+ 	WHERE
+ 			U.USER_NO = #{userNo}
+ 	ORDER
+ 		BY
+ 			RENTAL_DATE DESC
+ 			
+ 	</select>
+ 	
+ 	<select id="usedCars"
+			resultType="com.kh.carlpion.mypage.model.dto.ReservationsDTO">
+			
+ 	SELECT
+ 			R.CAR_ID,
+ 			C.MODEL_NO,
+ 			I.PARKING_ID,
+ 			R.RENTAL_DATE,
+ 			R.RETURN_DATE,
+ 			R.TOTAL_PRICE,
+ 			R.PAYMENT_COMPLETED_AT,
+ 			I.PARKING_TITLE,
+ 			I.PARKING_ADDR
+ 	FROM
+ 			CP_RENTAL_RESERVATION R
+ 	JOIN
+ 			CP_USER U ON U.USER_NO = R.USER_NO
+ 	JOIN
+ 			CP_RENTAL_CAR C ON R.CAR_ID = C.CAR_ID
+ 	JOIN
+ 			CP_PARKING_INFO I ON C.PARKING_ID = I.PARKING_ID
+ 	
+ 	WHERE
+			U.USER_NO = #{userNo} 	
+ 	ORDER
+ 		BY
+ 			RENTAL_DATE DESC
+ 		
+ 	
+ 	</select>
+ 	
  	
    </mapper>
   

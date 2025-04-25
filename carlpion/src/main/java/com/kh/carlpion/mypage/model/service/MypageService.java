@@ -26,12 +26,18 @@ public interface MypageService {
 	//----------------------------------------------
 	List<MypageDTO> replyCheck(String uesrName);
 	
-	
 	List<MypageDTO> inquiryCheck(String userName);
 	
 	List<MypageDTO> reviewCheck(String userName);
 	
 	List<MypageDTO> pointCheck(String userName);
+	
+	//----------------------------------------------
+	
+	List<MypageDTO> reservations(String userNo);
+	
+	List<MypageDTO> usedCars(String userNo);
+	
 	
 	
 }
