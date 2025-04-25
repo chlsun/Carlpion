@@ -43,5 +43,10 @@ public class UserDTO {
 	@NotBlank(message = "이메일은 비어있거나 공백이 포함될 수 없습니다.")
 	private String email;
 	
+	@Size(min = 8, max = 8, message = "인증코드 길이는 8자 입니다.")
+	@Pattern(regexp = "^[A-Za-z0-9]{8}$", message = "잘못된 인증코드 형식입니다.")
+	@NotBlank(message = "인증코드는 비어있거나 공백이 포함될 수 없습니다.")
+	private String code;
+	
 	private String role;
 }

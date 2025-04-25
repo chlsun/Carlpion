@@ -24,7 +24,6 @@ public class FileService {
 	
 	private static final Path BASE_LOCATION = Paths.get("uploads").toAbsolutePath().normalize();
 	
-//	private static final String UPLOAD_URL = "http://localhost/uploads/";	/* URL을 사용시 삭제구문에서 오류를 가져옵니다.. */
 	private static final List<String> FILE_EXTENSIONS = Arrays.asList(
 		".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".pdf", 
         ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".txt", ".hwp"

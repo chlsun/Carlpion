@@ -64,8 +64,8 @@ public class ReportController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteById(@PathVariable(name = "id") Long reportNo) {
-		reportService.deleteById(reportNo);
+	public ResponseEntity<?> softDeleteById(@PathVariable(name = "id") Long reportNo) {
+		reportService.softDeleteById(reportNo);
 		return ResponseEntity.noContent().build();
 	}
 }

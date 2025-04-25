@@ -19,11 +19,15 @@ public interface ReviewMapper {
 	
 	void updateById(ReviewDTO reviewDTO);
 			
-	void deleteById(Long reviewNo);
+	void softDeleteById(Long reviewNo);
 	
 	void saveFile(ReviewVO reviewVO);
 	
 	List<String> findFileByAll(Long reviewNo);
 	
 	void deleteFileById(Long reviewNo);
+	
+	Long findByUserNo(Long reviewNo);
+	
+	void updateCount(Long reviewNo); 
 }

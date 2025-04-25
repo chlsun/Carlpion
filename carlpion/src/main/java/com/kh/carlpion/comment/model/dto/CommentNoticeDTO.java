@@ -18,6 +18,7 @@ public class CommentNoticeDTO {
 	private Long noticeNo;
 	private Long userNo;
 	private String content;
+	private String nickName;
 	private Date createDate;
 	private String isActive;
 }
