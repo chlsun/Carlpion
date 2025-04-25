@@ -17,14 +17,12 @@
 			 	USER_NO
 			 ,	TITLE
 			 , 	CONTENT
-			 , 	CREATE_DATE
 			 )
 		VALUES 
 			 (
 			   	#{userNo}
 			 , 	#{title} 	
-			 , 	#{content} 	
-			 , 	SYSDATE 	
+			 , 	#{content} 		
 			 )
 	</insert>
 	<insert 
@@ -51,7 +49,6 @@
 	>
 		SELECT 
 				r.REVIEW_NO		AS	reviewNo
-			 ,	r.USER_NO		AS	userNo
 			 ,	r.TITLE
 			 ,	r.CONTENT
  			 ,	u.NICKNAME		AS	nickName
@@ -60,9 +57,9 @@
 		  FROM
 		  		CP_REVIEW r
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = r.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = r.USER_NO
 		  JOIN
-		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO	
+		  		CP_POINT p 		ON 	p.USER_NO = r.USER_NO	
 		 WHERE	
 		 		r.IS_ACTIVE = 'Y'
 		 ORDER
@@ -87,20 +84,22 @@
 	>
 		SELECT 
 				r.REVIEW_NO		AS	reviewNo
-			 ,	r.USER_NO		AS	userNo
 			 ,	r.TITLE
 			 ,	r.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	r.CREATE_DATE	AS	createDate
 			 ,	r.COUNT
+			 ,	f.FILE_URL		AS	fileUrl
 			 ,	p.POINT
-			 ,	p.USER_LEVEL
+			 ,	p.USER_LEVEL	AS	userLevel
 		  FROM
 		  		CP_REVIEW r
 		  JOIN
-		  		CP_USER u 	ON 	u.USER_NO = r.USER_NO
+		  		CP_USER u 		ON 	u.USER_NO = r.USER_NO
 		  JOIN
-		  		CP_POINT p 	ON 	p.USER_NO = r.USER_NO
+		  		CP_POINT p 		ON 	p.USER_NO = r.USER_NO
+		  JOIN
+		  		CP_RV_FILE f 	ON 	f.REVIEW_NO = r.REVIEW_NO
 		 WHERE	
 		 		r.IS_ACTIVE = 'Y'
 		   AND	
@@ -144,7 +143,7 @@
 		id="findFileByAll"
 		resultType="string"
 	>
-		SLELCT
+		SELECT
 				FILE_URL	AS	fileUrl
 		  FROM	
 		  		CP_RV_FILE

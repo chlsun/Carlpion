@@ -11,6 +11,8 @@ import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.point.model.dto.PointHistoryDTO;
+import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dao.ReviewMapper;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
 import com.kh.carlpion.review.model.vo.ReviewVO;
@@ -26,16 +28,13 @@ public class ReviewServiceImpl implements ReviewService {
 	private final ReviewMapper reviewMapper;
 	private final AuthService authService;
 	private final FileService fileService;
+	private final PointService pointService;
 
 	@Override
 	@Transactional
 	public void save(ReviewDTO reviewDTO, List<MultipartFile> files) {
 		/*사용자 인증 구간*/
-		Long userNo = authService.getUserDetails().getUserNo();
-		
-		if( !userNo.equals(reviewDTO.getUserNo())) {
-			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
-		}
+		Long userNo = authService.getUserDetails().getUserNo();		
 		
 		ReviewVO requestData = ReviewVO.builder()
 									   .userNo(userNo)
@@ -43,6 +42,7 @@ public class ReviewServiceImpl implements ReviewService {
 									   .content(reviewDTO.getContent())
 									   .build();
 		reviewMapper.save(requestData);
+		Long reviewNo = requestData.getReviewNo();
 		
 		if(files != null && !files.isEmpty()) {
 			for(MultipartFile file : files) {
@@ -51,14 +51,14 @@ public class ReviewServiceImpl implements ReviewService {
 					String filePath = fileService.storage(file);
 					
 					ReviewVO requestFileData = ReviewVO.builder()
-													   .reviewNo(requestData.getReviewNo())
+													   .reviewNo(reviewNo)
 													   .fileUrl(filePath)
 													   .build();
 					reviewMapper.saveFile(requestFileData);
 				}
 			}
 		}
-//		log.info("save: {}", requestData);
+//		log.info("save: {}", requestData);		
 	}
 
 	@Override
