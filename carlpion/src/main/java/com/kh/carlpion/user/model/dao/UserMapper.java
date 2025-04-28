@@ -2,6 +2,7 @@ package com.kh.carlpion.user.model.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.kh.carlpion.auth.model.dto.SocialDTO;
 import com.kh.carlpion.user.model.dto.UserDTO;
 import com.kh.carlpion.user.model.vo.UserVO;
 
@@ -13,6 +14,8 @@ public interface UserMapper {
 	UserDTO selectUserByNickname(String nickname);
 	
 	UserDTO selectUserByEmail(String email);
+	
+	SocialDTO selectSocialUserByCompositePK(SocialDTO socialLoginInfo);
 	
 	int signUp(UserVO userInfo);
 }

@@ -53,6 +53,26 @@
 		WHERE
 			EMAIL = #{email}
 	</select>
+	
+	<select id="selectSocialUserByCompositePK"
+			parameterType="com.kh.carlpion.auth.model.dto.SocialDTO"
+			resultType="com.kh.carlpion.auth.model.dto.SocialDTO">
+		SELECT
+			SOCIAL_ID socialId,
+			PLATFORM,
+			NICKNAME,
+			REALNAME,
+			EMAIL,
+			ROLE,
+			CREATE_DATE createDate,
+			IS_ACTIVE isActive
+		FROM
+			CP_USER_SOCIAL
+		WHERE
+			SOCIAL_ID = #{socialId}
+		AND
+			PLATFORM = #{platform}
+	</select>
 
 	<insert id="signUp"
 			parameterType="com.kh.carlpion.user.model.vo.UserVO">
