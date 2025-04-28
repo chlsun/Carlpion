@@ -27,10 +27,17 @@ import lombok.RequiredArgsConstructor;
 public class JwtFilter extends OncePerRequestFilter {
 
 	private final JwtUtil util;
-	private final UserDetailsService userService;
+	private final UserDetailsService userDetailsService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+		
+		String uri = request.getRequestURI();
+		
+		if(uri.equals("/api/google")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 		
 		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 		
@@ -46,7 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			Claims claims = util.parseJwt(token);
 			String username = claims.getSubject();
 			
-			CarlpionUserDetails user = (CarlpionUserDetails)userService.loadUserByUsername(username);
+			CarlpionUserDetails user = (CarlpionUserDetails)userDetailsService.loadUserByUsername(username);
 			
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 			
@@ -59,7 +66,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setContentType("text/plain;charset=UTF-8");
 			response.getWriter().write("토큰이 만료 되었습니다.");
-			 response.getWriter().flush();
+			response.getWriter().flush();
 			
 			return;
 			

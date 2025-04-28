@@ -6,6 +6,7 @@ import com.kh.carlpion.auth.model.dto.EmailDTO;
 import com.kh.carlpion.auth.model.dto.FindIdDTO;
 import com.kh.carlpion.auth.model.dto.FindPwDTO;
 import com.kh.carlpion.auth.model.dto.LoginDTO;
+import com.kh.carlpion.auth.model.dto.SocialDTO;
 import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
 
 public interface AuthService {
@@ -19,4 +20,8 @@ public interface AuthService {
 	void sendTemporaryPasswordEmail(FindPwDTO findPwInfo);
 	
 	void sendVerifyEmailByType(EmailDTO emailInfo);
+	
+	SocialDTO checkSocialUser(SocialDTO socialLoginInfo);
+	
+	void signUpBySocial(SocialDTO socialSignUpInfo);
 }
