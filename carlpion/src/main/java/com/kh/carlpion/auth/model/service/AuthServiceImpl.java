@@ -384,6 +384,28 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public void signUpBySocial(SocialDTO socialSignUpInfo) {
 		
+		String platform = socialSignUpInfo.getPlatform();
+		String nickname = socialSignUpInfo.getNickname();
+		String realname = socialSignUpInfo.getRealname();
 		
+		if(!platform.equals("google")) {
+			throw new InvalidParameterException("잘못된 플랫폼 입니다.");
+		}
+		
+		if(!nickname.matches("^[\\uAC00-\\uD7A3a-zA-Z0-9]{2,10}$")) {
+			throw new InvalidParameterException("잘못된 닉네임 형식입니다.");	
+		}
+		
+		if(userMapper.selectUserByNickname(nickname) != null || userMapper.selectSocialUserUserByNickname(nickname) != null) {
+			throw new DuplicateValueException("이미 사용중인 닉네임 입니다.");
+		}
+		
+		if(!realname.matches("^([a-zA-Z]{2,30}|[\\uAC00-\\uD7A3]{2,5})$")) {
+			throw new InvalidParameterException("잘못된 이름 형식입니다.");	
+		}
+		
+		if(userMapper.signUpBySocial(socialSignUpInfo) != 1) {
+			throw new UnexpectSqlException("예기치 않은 오류로 회원가입이 정상적으로 이루어지지 않았습니다.");
+		}
 	}
 }

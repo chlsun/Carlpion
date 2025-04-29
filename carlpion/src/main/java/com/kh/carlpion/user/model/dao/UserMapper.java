@@ -17,5 +17,9 @@ public interface UserMapper {
 	
 	SocialDTO selectSocialUserByCompositePK(SocialDTO socialLoginInfo);
 	
+	SocialDTO selectSocialUserUserByNickname(String nickname);
+	
 	int signUp(UserVO userInfo);
+	
+	int signUpBySocial(SocialDTO socialSignUpInfo);
 }
