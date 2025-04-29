@@ -32,13 +32,6 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		
-		String uri = request.getRequestURI();
-		
-		if(uri.equals("/api/google")) {
-			filterChain.doFilter(request, response);
-			return;
-		}
-		
 		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 		
 		if(authorization == null || !authorization.startsWith("Bearer ")) {
@@ -51,6 +44,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		try {
 			Claims claims = util.parseJwt(token);
+			
+			String issuer = claims.getIssuer();
+			
+			if(issuer.equals("https://accounts.google.com")) {
+				filterChain.doFilter(request, response);
+				
+				return;
+			}
+			
 			String username = claims.getSubject();
 			
 			CarlpionUserDetails user = (CarlpionUserDetails)userDetailsService.loadUserByUsername(username);

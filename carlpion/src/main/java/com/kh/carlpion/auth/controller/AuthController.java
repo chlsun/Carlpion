@@ -94,7 +94,6 @@ public class AuthController {
 	}
 	
 	// 소셜 로그인 기존 정보 유무 확인하여 로그인
-	@SuppressWarnings("deprecation")
 	@PostMapping("/login-social")
 	public ResponseEntity<?> loginBySocial(@RequestBody @Valid SocialDTO socialLoginInfo) {
 		
