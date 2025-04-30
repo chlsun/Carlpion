@@ -24,4 +24,5 @@ public class ReportDTO {
 	private String fileUrl;
 	private Long point;
 	private String userLevel;
+	private boolean hasPermission;
 }
