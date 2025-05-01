@@ -21,7 +21,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -47,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			
 			String issuer = claims.getIssuer();
 			
-			if(issuer.equals("https://accounts.google.com")) {
+			if(issuer != null && issuer.equals("https://accounts.google.com")) {
 				filterChain.doFilter(request, response);
 				
 				return;
