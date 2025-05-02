@@ -36,10 +36,6 @@ public class RentCarServiceImpl implements RentCarService {
 		
 		int rentCarCount = rentCarMapper.rentCarCount();
 		
-		log.info("1111111111111111111111111111" );
-		
-		log.info("rentCarCount : {}", rentCarCount );
-		
 		if(rentCarCount < 1) {
 			throw new RentCarNotFoundException("차량 모델이 존재하지 않습니다.");
 		}
@@ -86,16 +82,19 @@ public class RentCarServiceImpl implements RentCarService {
 	@Override
 	public void updateRentCar(RentCarDTO rentCar) {
 		
-		int checkNum = rentCarMapper.checkCarId(rentCar.getCarId());
+		String checkId = rentCarMapper.checkCarNo(rentCar.getCarNo());
 		
-		log.info("rentCar : {}", rentCar);
-		
-		
-		if(checkNum > 0) {
-			throw new CarNotFoundException("이미 존재하는 차량 번호입니다.");
+		if(checkId == null) {
+			throw new CarNotFoundException("등록되어있지 않은 차량입니다.");
 		}
 		
-		log.info("modelNo : {}", rentCar.getModelNo());
+		if(!!!checkId.equals(rentCar.getCarId())) {
+			int checkNum = rentCarMapper.checkCarId(rentCar.getCarId());
+			
+			if(checkNum > 0) {
+				throw new AlreadyExistsException("이미 존재하는 차량 번호입니다.");
+			}
+		}
 		
 		String checkModel = carModelMapper.checkCarModel(rentCar.getModelNo());
 		
@@ -103,11 +102,20 @@ public class RentCarServiceImpl implements RentCarService {
 			throw new ModelNotFoundException("존재하지 않는 차량 모델입니다.");
 		}
 		
-		
-		
 		rentCarMapper.updateRentCar(rentCar);
 	}
 
 
+	public void deleteRentCarByCarNo(int carNo) {
+		
+		String checkId = rentCarMapper.checkCarNo(carNo);
+		
+		if(checkId == null) {
+			throw new CarNotFoundException("등록되어있지 않은 차량입니다.");
+		}
+		
+		rentCarMapper.deleteRentCarByCarNo(carNo);
+		
+	}
 
 }
