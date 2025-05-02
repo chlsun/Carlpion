@@ -154,8 +154,7 @@ public class NoticeServiceImpl implements NoticeService {
 	private void checkedOwnerByUser(Long noticeNo) {
 		Long authUserNo = authService.getUserDetails().getUserNo();
 		Long findUserNo = noticeMapper.findByUserNo(noticeNo);
-		
-		
+
 		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
 		        .getAuthorities().stream()
 		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
