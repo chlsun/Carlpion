@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,8 @@ public class ReportServiceImpl implements ReportService {
 									   .content(reportDTO.getContent())
 									   .build();
 		reportMapper.save(requestData);
+		
+		
 		
 		if(files != null && !files.isEmpty()) {
 			for(MultipartFile file : files) {
@@ -79,6 +82,7 @@ public class ReportServiceImpl implements ReportService {
 		if(endBtn > maxPage) {
 			endBtn = maxPage;
 		}
+		log.info("{}", maxPage);
 
 		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);		
 		List<ReportDTO> list = reportMapper.findAll(rowBounds);	
@@ -98,10 +102,12 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public ReportDTO findById(Long reportNo) {
 		ReportDTO reportDTO = reportMapper.findById(reportNo);
+
 		
 		if(reportDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
+		
 		
 		reportMapper.updateCount(reportNo);
 		return reportDTO;
@@ -152,9 +158,14 @@ public class ReportServiceImpl implements ReportService {
 		Long authUserNo = authService.getUserDetails().getUserNo();
 		Long findUserNo = reportMapper.findByUserNo(reportNo);
 		
-		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
-			throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
-		}
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
+		        .getAuthorities().stream()
+		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+		
+		
+		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
+	        throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
+	    }
 	}	
 
 }

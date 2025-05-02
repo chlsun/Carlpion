@@ -2,6 +2,7 @@ package com.kh.carlpion.comment.model.service;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,15 +58,20 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 
 	/** 사용자 인증 */
 	private CommentVO checkedOwnerByUser(Long commentNo) {
-		Long authUserNo = authService.getUserDetails().getUserNo();		
+		Long authUserNo = authService.getUserDetails().getUserNo();
 		
 		CommentVO requestData = CommentVO.builder()
 										 .commentType(COMMENT_TYPE)
 										 .commentNo(commentNo)
 										 .build();
-		Long findUserNo = commentMapper.findUserNoById(requestData);
 		
-		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
+		Long findUserNo = commentMapper.findUserNoById(requestData);
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
+		        .getAuthorities().stream()
+		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+		
+		
+		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
 			throw new UnauthorizedException("삭제할 권한이 없습니다.");
 		}
 		

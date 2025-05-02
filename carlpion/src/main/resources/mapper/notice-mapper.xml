@@ -51,6 +51,8 @@
 				COUNT(*)
 		  FROM
 		  		CP_NOTICE
+		  WHERE
+		  		IS_ACTIVE = 'Y'
 	</select>
 	<select 
 		id="findAll" 
@@ -62,6 +64,7 @@
 			 ,	n.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	n.CREATE_DATE	AS	createDate
+			 ,	n.MODIFY_DATE	AS	modifyDate
 			 ,	n.COUNT
 		  FROM
 		  		CP_NOTICE n
@@ -74,8 +77,6 @@
 		 ORDER
 		 	BY	
 		 		n.NOTICE_NO 	DESC
-		   	 , 	u.POINT 		DESC
-           	 ,  u.USER_LEVEL 	DESC
 	</select>
 	
 	<update id="updateCount">
@@ -97,6 +98,7 @@
 			 ,	n.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	n.CREATE_DATE	AS	createDate
+			 ,	n.MODIFY_DATE	AS	modifyDate
 			 ,	n.COUNT
 			 ,	f.FILE_URL		AS	fileUrl
 			 ,	p.POINT
@@ -107,8 +109,8 @@
 		  		CP_USER u 		ON 	u.USER_NO = n.USER_NO
 		  JOIN
 		  		CP_POINT p 		ON 	p.USER_NO = n.USER_NO
-		  JOIN
-		  		CP_NT_FILE f 	ON 	f.NOTICE_NO = r.NOTICE_NO
+		  LEFT JOIN
+		  		CP_NT_FILE f 	ON 	f.NOTICE_NO = n.NOTICE_NO
 		 WHERE	
 		 		n.IS_ACTIVE = 'Y'
 		   AND	
@@ -136,6 +138,8 @@
 		   SET
 		   		TITLE = #{title}
 		   	 ,	CONTENT = #{content}
+		   	 ,	MODIFIER_NO = #{modifierNo}
+		   	 ,	MODIFY_DATE = SYSDATE
 		 WHERE	
 		 		NOTICE_NO = #{noticeNo}
 	</update>
