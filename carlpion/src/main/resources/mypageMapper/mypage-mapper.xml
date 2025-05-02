@@ -18,12 +18,28 @@
 	
 	<select id="checkNickName"
 			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO"
-			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
-			SELECT *
+			resultType="_int">
+			SELECT COUNT(*)
 			  FROM CP_USER
-			 WHERE NICKNAME = #{nickname}
+			 WHERE NICKNAME = #{nickName}
 	
 	</select>
+	
+	<select id="selectNickName"
+				parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO"
+				resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
+		
+			SELECT 
+					NICKNAME nickname
+			FROM
+					CP_USER
+			WHERE
+					USER_NO = #{userNo}
+	
+	
+	
+	</select>
+	
 	
 	<update id="updatePassword"
 			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
@@ -31,12 +47,27 @@
 			UPDATE
 					CP_USER
 			   SET
-					PASSWORD = #{passWord}
+					PASSWORD = #{modifyPw}
 			 WHERE 
 					USER_NO = #{userNo}
-			   AND
-			   		PASSOWRD = #{currentPassword}
 	</update>
+	
+	<select id="passowordCheck"
+				parameterType="long"
+				resultType="string">
+	
+			SELECT
+					PASSWORD password
+			FROM
+					CP_USER
+			WHERE
+					USER_NO = #{userNo}
+					
+	
+	
+	</select>
+	
+	
 	
 	<update id="updateEmail"
 			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
@@ -47,16 +78,32 @@
 					EMAIL = #{email}
 			 WHERE 
 					USER_NO = #{userNo}
-			   AND
-			   		PASSWORD = #{password}
+			 
 	</update>
 	
 	<select id="checkEmail"
 			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO"
-			resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
-			SELECT *
+			resultType="_int">
+			SELECT COUNT(*)
 			  FROM CP_USER
 			 WHERE EMAIL = #{email}
+	
+	</select>
+	
+
+	
+	<select id="getUserInfo"
+				parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO"
+				resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
+				
+			SELECT 
+					REALNAME realName,
+					EMAIL email
+			FROM 
+					CP_USER
+			WHERE 
+					USER_NO = #{userNo}
+	
 	
 	</select>
 	
@@ -71,17 +118,20 @@
 			 		USER_NO = #{userNo}
 			
 	</update>
+	
+	
+	
 	<update id="updateName"
 			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 		
 			UPDATE
 					CP_USER
 			   SET
-			  		USERNAME = #{userName}
+			  		REALNAME = #{realName},
+			  		EMAIL = #{email}
 			 WHERE
 			 		USER_NO = #{userNo}
-			   AND
-			   		PASSWORD = #{password}
+			   
 	
 	</update>
 
