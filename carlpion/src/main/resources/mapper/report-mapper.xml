@@ -51,6 +51,8 @@
 				COUNT(*)
 		  FROM
 		  		CP_REPORT
+		  WHERE
+		  		IS_ACTIVE = 'Y'
 	</select>
 	<select 
 		id="findAll" 
@@ -74,8 +76,7 @@
 		 ORDER
 		 	BY	
 		 		r.REPORT_NO 	DESC
-		 	 , 	p.POINT 		DESC
-           	 ,  p.USER_LEVEL 	DESC
+
 
 	</select>
 	
@@ -108,7 +109,7 @@
 		  		CP_USER u 		ON 	u.USER_NO = r.USER_NO
 		  JOIN
 		  		CP_POINT p 		ON 	p.USER_NO = r.USER_NO
-		  JOIN
+		  LEFT JOIN
 		  		CP_RP_FILE f 	ON 	f.REPORT_NO = r.REPORT_NO
 		 WHERE	
 		 		r.IS_ACTIVE = 'Y'
