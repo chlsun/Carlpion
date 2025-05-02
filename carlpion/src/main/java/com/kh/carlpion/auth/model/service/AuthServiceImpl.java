@@ -395,7 +395,7 @@ public class AuthServiceImpl implements AuthService {
 			throw new InvalidParameterException("잘못된 닉네임 형식입니다.");	
 		}
 		
-		if(userMapper.selectUserByNickname(nickname) != null || userMapper.selectSocialUserUserByNickname(nickname) != null) {
+		if(userMapper.selectUserByNickname(nickname) != null || userMapper.selectSocialUserByNickname(nickname) != null) {
 			throw new DuplicateValueException("이미 사용중인 닉네임 입니다.");
 		}
 		
