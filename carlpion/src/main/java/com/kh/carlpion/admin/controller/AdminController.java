@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import com.kh.carlpion.admin.model.dto.RentCarDTO;
 import com.kh.carlpion.admin.model.service.CarModelService;
 import com.kh.carlpion.admin.model.service.RentCarService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,8 +52,10 @@ public class AdminController {
 	}
 
 	@PostMapping("/model")
-	public ResponseEntity<?> setCarModel(CarModelDTO carModel, 
+	public ResponseEntity<?> setCarModel(@Valid @ModelAttribute CarModelDTO carModel, 
 										 @RequestParam(name="file", required=false) MultipartFile file){
+		
+		log.info("여기는 오나");
 		
 		carModelService.setCarModel(carModel, file);
 		
@@ -60,7 +64,7 @@ public class AdminController {
 	}
 	
 	@PutMapping("/model")
-	public ResponseEntity<?> updateCarModel(CarModelDTO carModel,
+	public ResponseEntity<?> updateCarModel(@Valid @ModelAttribute CarModelDTO carModel,
 											@RequestParam(name="file", required=false) MultipartFile file){
 		
 		log.info("file: {} ", file);
@@ -81,7 +85,7 @@ public class AdminController {
 	
 	
 	@PostMapping("/car")
-	public ResponseEntity<?> setRentCar(@RequestBody RentCarDTO rentCar){
+	public ResponseEntity<?> setRentCar(@Valid @RequestBody RentCarDTO rentCar){
 		
 		rentCarService.setRentCar(rentCar);
 		
@@ -91,7 +95,6 @@ public class AdminController {
 	
 	@GetMapping("/car/{page}")
 	public ResponseEntity<?> getRentCarList(@PathVariable(name="page") int page){
-		log.info("222222222222" );
 		
 		Map<String, Object> viewInfo = rentCarService.getRentCarList(page);
 		
@@ -99,10 +102,20 @@ public class AdminController {
 	}
 	
 	@PutMapping("/car")
-	public ResponseEntity<?> updateRentCar(@RequestBody RentCarDTO rentCar){
+	public ResponseEntity<?> updateRentCar(@Valid @RequestBody RentCarDTO rentCar){
 		
 		rentCarService.updateRentCar(rentCar);
 		
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+	
+	@DeleteMapping("/car")
+	public ResponseEntity<?> deleteRentCarByCarNo(@RequestParam(name = "carNo") int carNo){
+		
+		rentCarService.deleteRentCarByCarNo(carNo);
+		
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	
+	
 }
