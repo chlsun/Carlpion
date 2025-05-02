@@ -20,6 +20,7 @@ public class ReservationsDTO {
 	private Long modelNo;
 	private String carModel;
 	private Long rentPrice;
+	private Long carNo;
 	
 	private Long  reservationNo;
 	private Date rentalDate; 
