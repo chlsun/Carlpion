@@ -2,6 +2,7 @@ package com.kh.carlpion.mypage.model.dao;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.http.ResponseEntity;
@@ -13,19 +14,23 @@ import com.kh.carlpion.mypage.model.dto.MypageDTO;
 public interface MypageMapper {
 
 	
-	MypageDTO updateNickName(MypageDTO mypage);
+	int updateNickName(Map<String, Object> checkNickName);
 	
-	int checkNickName(MypageDTO mypage);
+	MypageDTO selectNickName(Long userNo);
+	
+	int checkNickName(Map<String, Object> checkNickName);
 	
 	void updatePassword(MypageDTO mypage);
 	
-	MypageDTO updateEmail(MypageDTO mypage);
+	String passowordCheck(Long userNo);
+	
+	MypageDTO getUserInfo(Long userNo);
 	
 	int checkEmail(MypageDTO mypage);
 	
-	MypageDTO updateProfile (MultipartFile file, Long userNo);
+	int updateName(MypageDTO updateName);
 	
-	MypageDTO updateName(MypageDTO myapge);
+	MypageDTO updateProfile (MultipartFile file, Long userNo);
 	
 	void deleteUser(MypageDTO mypage);
 //--------------------------------------------------------
@@ -35,12 +40,23 @@ public interface MypageMapper {
 
 	List<MypageDTO> reviewCheck(Long userNo);
 	
-	List<MypageDTO> pointCheck(Long userNo);
+	List<MypageDTO> pointCheck(Map<String, Object> page);
 
 //--------------------------------------------------------
 
 	List<MypageDTO> reservations(Long userNo);
 	List<MypageDTO> usedCars(Long userNo);
+
+
+
+	
+
+
+
+
+
+
+	
 
 
 }
