@@ -74,7 +74,7 @@
 			PLATFORM = #{platform}
 	</select>
 	
-	<select id="selectSocialUserUserByNickname"
+	<select id="selectSocialUserByNickname"
 			parameterType="string"
 			resultType="com.kh.carlpion.auth.model.dto.SocialDTO">
 		SELECT
