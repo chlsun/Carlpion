@@ -6,11 +6,12 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.kh.carlpion.exception.exceptions.AlreadyExistsException;
+import com.kh.carlpion.exception.exceptions.BadRequestException;
 import com.kh.carlpion.exception.exceptions.CarModelNotFoundException;
 import com.kh.carlpion.exception.exceptions.CarNotFoundException;
 import com.kh.carlpion.exception.exceptions.CreateDirectoriesException;
@@ -167,6 +168,7 @@ public class GlobalExceptionHandler {
 		return exceptionHandler(e, HttpStatus.NOT_FOUND);
 	}
 	
+	// 렌트차량을 찾을 수 없을때 발생
 	@ExceptionHandler(CarNotFoundException.class)
 	public ResponseEntity<?> carNotFoundError(CarNotFoundException e){
 		return exceptionHandler(e, HttpStatus.NOT_FOUND);
@@ -193,6 +195,11 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(UnauthorizedException.class)
 	public ResponseEntity<?> handleUnauthorized(UnauthorizedException e) {
+		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(BadRequestException.class)
+	public ResponseEntity<?> badRequestError(BadRequestException e) {
 		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
 	}
 
