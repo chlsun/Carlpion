@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +23,11 @@ import com.kh.carlpion.exception.exceptions.EmailVerifyFailException;
 import com.kh.carlpion.exception.exceptions.EmptyInputException;
 import com.kh.carlpion.exception.exceptions.FileDeleteException;
 import com.kh.carlpion.exception.exceptions.FileSaveException;
+
+import com.kh.carlpion.exception.exceptions.IllegalArgumentPwException;
+import com.kh.carlpion.exception.exceptions.ImgFileNotFoundException;
+import com.kh.carlpion.exception.exceptions.ModelNotFoundException;
+import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.exception.exceptions.ImgFileNotFoundException;
 import com.kh.carlpion.exception.exceptions.ModelNotFoundException;
 import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
@@ -82,6 +88,10 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(EmailDuplicateException.class)
 	public ResponseEntity<?> handleEmailDuplicate(EmailDuplicateException e){
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+	}
+	@ExceptionHandler(IllegalArgumentPwException.class)
+	public ResponseEntity<?> IllegalArgumentPw(IllegalArgumentPwException e){
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
 	
 
