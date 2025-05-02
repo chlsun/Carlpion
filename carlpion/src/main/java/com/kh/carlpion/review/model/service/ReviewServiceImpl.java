@@ -1,6 +1,8 @@
 package com.kh.carlpion.review.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dao.ReviewMapper;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
 import com.kh.carlpion.review.model.vo.ReviewVO;
@@ -26,16 +29,13 @@ public class ReviewServiceImpl implements ReviewService {
 	private final ReviewMapper reviewMapper;
 	private final AuthService authService;
 	private final FileService fileService;
+	private final PointService pointService;
 
 	@Override
 	@Transactional
 	public void save(ReviewDTO reviewDTO, List<MultipartFile> files) {
 		/*사용자 인증 구간*/
-		Long userNo = authService.getUserDetails().getUserNo();
-		
-		if( !userNo.equals(reviewDTO.getUserNo())) {
-			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
-		}
+		Long userNo = authService.getUserDetails().getUserNo();		
 		
 		ReviewVO requestData = ReviewVO.builder()
 									   .userNo(userNo)
@@ -43,6 +43,7 @@ public class ReviewServiceImpl implements ReviewService {
 									   .content(reviewDTO.getContent())
 									   .build();
 		reviewMapper.save(requestData);
+		Long reviewNo = requestData.getReviewNo();
 		
 		if(files != null && !files.isEmpty()) {
 			for(MultipartFile file : files) {
@@ -51,21 +52,49 @@ public class ReviewServiceImpl implements ReviewService {
 					String filePath = fileService.storage(file);
 					
 					ReviewVO requestFileData = ReviewVO.builder()
-													   .reviewNo(requestData.getReviewNo())
+													   .reviewNo(reviewNo)
 													   .fileUrl(filePath)
 													   .build();
 					reviewMapper.saveFile(requestFileData);
 				}
 			}
 		}
-//		log.info("save: {}", requestData);
+//		log.info("save: {}", requestData);		
 	}
 
 	@Override
-	public List<ReviewDTO> findAll(int pageNo) {
-		int pageSize = 10;
-		RowBounds rowBounds = new RowBounds(pageNo * pageSize, pageSize);
-		return reviewMapper.findAll(rowBounds);
+	public Map<String, Object> findAll(int pageNo) {
+		int pageLimit = 10;
+		int btnLimit = 10;	
+		int totalCount = reviewMapper.findTotalCount(pageNo);
+		int maxPage = (int)Math.ceil((double) totalCount / pageLimit);	
+		int startBtn = (pageNo - 1) / btnLimit * btnLimit + 1;
+		int endBtn = startBtn + btnLimit - 1;
+		
+		if(pageNo > maxPage && maxPage > 0) {
+			pageNo = maxPage;
+		}
+		
+		if(maxPage == 0) {
+			pageNo = 1;
+		}
+
+		if(endBtn > maxPage) {
+			endBtn = maxPage;
+		}
+		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);
+		List<ReviewDTO> list = reviewMapper.findAll(rowBounds);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("totalCount", totalCount);
+		map.put("pageNo", pageNo);
+		map.put("pageLimit", pageLimit);
+		map.put("btnLimit", btnLimit);
+		map.put("maxPage", maxPage);
+		map.put("startBtn", startBtn);
+		map.put("endBtn", endBtn);
+		return map;
 	}
 
 	@Override

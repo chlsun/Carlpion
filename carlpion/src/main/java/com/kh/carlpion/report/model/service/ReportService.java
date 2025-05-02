@@ -1,6 +1,7 @@
 package com.kh.carlpion.report.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,7 @@ public interface ReportService {
 	
 	void save(ReportDTO reportDTO, List<MultipartFile> files);
 	
-	List<ReportDTO> findAll(int pageNo);
+	Map<String, Object> findAll(int pageNo);
 	
 	ReportDTO findById(Long reportNo);
 	

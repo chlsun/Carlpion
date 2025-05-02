@@ -1,6 +1,7 @@
 package com.kh.carlpion.auth.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class EmailDTO {
 	@NotBlank(message = "이메일은 비어있거나 공백이 포함될 수 없습니다.")
 	private String email;
 	
+	@NotNull(message = "이메일 종류는 비어 있을 수 없습니다.")
 	private String type;
 	
 	private String code;

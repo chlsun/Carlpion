@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 		
 		if(authMapper.selectEmailVerifyInfoByCodeAndCompositePK(emailVerifyInfo) == null) {
 			throw new EmailVerifyFailException("이메일 인증에 실패 했습니다. 코드를 다시 확인해 주세요.");
-		};
+		}
 		
 		if(authMapper.deleteEmailVerifyInfo(emailVerifyInfo) != 1) {
 			throw new UnexpectSqlException("예기치 않은 오류로 회원가입이 정상적으로 이루어지지 않았습니다.");
@@ -72,6 +72,6 @@ public class UserServiceImpl implements UserService {
 		
 		if(userMapper.signUp(userInfo) != 1) {
 			throw new UnexpectSqlException("예기치 않은 오류로 회원가입이 정상적으로 이루어지지 않았습니다.");
-		}	
+		}
 	}
 }
