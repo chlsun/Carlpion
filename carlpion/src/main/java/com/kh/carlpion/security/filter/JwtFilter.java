@@ -21,13 +21,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
 	private final JwtUtil util;
-	private final UserDetailsService userService;
+	private final UserDetailsService userDetailsService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -44,9 +46,18 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		try {
 			Claims claims = util.parseJwt(token);
+			
+			String issuer = claims.getIssuer();
+			
+			if(issuer != null && issuer.equals("https://accounts.google.com")) {
+				filterChain.doFilter(request, response);
+				
+				return;
+			}
+			
 			String username = claims.getSubject();
 			
-			CarlpionUserDetails user = (CarlpionUserDetails)userService.loadUserByUsername(username);
+			CarlpionUserDetails user = (CarlpionUserDetails)userDetailsService.loadUserByUsername(username);
 			
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 			
@@ -59,7 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setContentType("text/plain;charset=UTF-8");
 			response.getWriter().write("토큰이 만료 되었습니다.");
-			 response.getWriter().flush();
+			response.getWriter().flush();
 			
 			return;
 			

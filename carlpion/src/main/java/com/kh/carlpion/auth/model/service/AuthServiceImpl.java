@@ -20,6 +20,7 @@ import com.kh.carlpion.auth.model.dto.EmailDTO;
 import com.kh.carlpion.auth.model.dto.FindIdDTO;
 import com.kh.carlpion.auth.model.dto.FindPwDTO;
 import com.kh.carlpion.auth.model.dto.LoginDTO;
+import com.kh.carlpion.auth.model.dto.SocialDTO;
 import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
 import com.kh.carlpion.auth.model.vo.EmailVerifyVO;
 import com.kh.carlpion.exception.exceptions.CustomAuthenticationException;
@@ -360,6 +361,50 @@ public class AuthServiceImpl implements AuthService {
 			
 		default: 
 			throw new EmailVerifyFailException("올바르지 않은 요청입니다.");
+		}
+	}
+
+	// 소셜 로그인 메서드
+	@Override
+	public SocialDTO checkSocialUser(SocialDTO socialLoginInfo) {
+		
+		SocialDTO user = userMapper.selectSocialUserByCompositePK(socialLoginInfo);
+		
+		// DB와 일치하는 정보가 없으면 회원가입 아니면 로그인
+		if(user == null) {
+			
+			return null;
+		};
+		
+		return user;
+	}
+
+	// 소셜 회원가입 메서드
+	@Override
+	public void signUpBySocial(SocialDTO socialSignUpInfo) {
+		
+		String platform = socialSignUpInfo.getPlatform();
+		String nickname = socialSignUpInfo.getNickname();
+		String realname = socialSignUpInfo.getRealname();
+		
+		if(!platform.equals("google")) {
+			throw new InvalidParameterException("잘못된 플랫폼 입니다.");
+		}
+		
+		if(!nickname.matches("^[\\uAC00-\\uD7A3a-zA-Z0-9]{2,10}$")) {
+			throw new InvalidParameterException("잘못된 닉네임 형식입니다.");	
+		}
+		
+		if(userMapper.selectUserByNickname(nickname) != null || userMapper.selectSocialUserByNickname(nickname) != null) {
+			throw new DuplicateValueException("이미 사용중인 닉네임 입니다.");
+		}
+		
+		if(!realname.matches("^([a-zA-Z]{2,30}|[\\uAC00-\\uD7A3]{2,5})$")) {
+			throw new InvalidParameterException("잘못된 이름 형식입니다.");	
+		}
+		
+		if(userMapper.signUpBySocial(socialSignUpInfo) != 1) {
+			throw new UnexpectSqlException("예기치 않은 오류로 회원가입이 정상적으로 이루어지지 않았습니다.");
 		}
 	}
 }

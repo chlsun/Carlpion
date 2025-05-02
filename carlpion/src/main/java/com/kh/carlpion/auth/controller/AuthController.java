@@ -14,6 +14,7 @@ import com.kh.carlpion.auth.model.dto.EmailDTO;
 import com.kh.carlpion.auth.model.dto.FindIdDTO;
 import com.kh.carlpion.auth.model.dto.FindPwDTO;
 import com.kh.carlpion.auth.model.dto.LoginDTO;
+import com.kh.carlpion.auth.model.dto.SocialDTO;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.token.model.service.TokenService;
 
@@ -88,6 +89,28 @@ public class AuthController {
 	public ResponseEntity<?> sendVerifyEmailByType(@RequestBody @Valid EmailDTO emailInfo) {
 		
 		authService.sendVerifyEmailByType(emailInfo);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	// 소셜 로그인 기존 정보 유무 확인하여 로그인
+	@PostMapping("/login-social")
+	public ResponseEntity<?> loginBySocial(@RequestBody @Valid SocialDTO socialLoginInfo) {
+		
+		SocialDTO user = authService.checkSocialUser(socialLoginInfo);
+		
+		if(user == null) {
+			return ResponseEntity.status(HttpStatus.MOVED_TEMPORARILY).build();
+		}
+		
+		return ResponseEntity.status(HttpStatus.OK).body(user);
+	}
+	
+	// 소셜 회원가입
+	@PostMapping("/sign-up-social")
+	public ResponseEntity<?> signUpBySocial(@RequestBody @Valid SocialDTO socialSignUpInfo) {
+		
+		authService.signUpBySocial(socialSignUpInfo);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
