@@ -2,6 +2,7 @@ package com.kh.carlpion.comment.model.service;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,7 @@ public class CommentReportServiceImpl implements CommentReportService {
 	public List<CommentDTO> findAllComment(Long reportNo) {
 		CommentVO requestData = CommentVO.builder()
 										 .commentType(COMMENT_TYPE)
-										 .reviewNo(reportNo)
+										 .reportNo(reportNo)
 										 .build();	
 		return commentMapper.findAllComment(requestData);
 	}
@@ -63,9 +64,14 @@ public class CommentReportServiceImpl implements CommentReportService {
 										 .commentType(COMMENT_TYPE)
 										 .commentNo(commentNo)
 										 .build();
+		
 		Long findUserNo = commentMapper.findUserNoById(requestData);
-				
-		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
+		        .getAuthorities().stream()
+		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+		
+		
+		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
 			throw new UnauthorizedException("삭제할 권한이 없습니다.");
 		}
 		

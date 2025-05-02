@@ -54,7 +54,7 @@ public class ReviewController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {
+	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "1") int pageNo) {
 		return ResponseEntity.ok(reviewService.findAll(pageNo));
 	}
 	

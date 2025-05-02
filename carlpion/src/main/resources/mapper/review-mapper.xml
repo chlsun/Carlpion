@@ -51,6 +51,8 @@
 				COUNT(*)
 		  FROM
 		  		CP_REVIEW
+		  WHERE
+		  		IS_ACTIVE = 'Y'
 	</select>
 	<select 
 		id="findAll" 
@@ -74,8 +76,6 @@
 		 ORDER
 		 	BY	
 		 		r.REVIEW_NO 	DESC
-		   	 , 	p.POINT 		DESC
-           	 ,  p.USER_LEVEL 	DESC
 	</select>
 	
 	<update id="updateCount">
@@ -86,33 +86,46 @@
 		 WHERE
 		 		REVIEW_NO = #{reviewNo}
 	</update>
+	<resultMap id="reviewMap" type="com.kh.carlpion.review.model.dto.ReviewDTO">
+	  <id property="reviewNo" column="reviewNo" />
+	  <result property="title" column="TITLE" />
+	  <result property="content" column="CONTENT" />
+	  <result property="nickName" column="nickName" />
+	  <result property="createDate" column="createDate" />
+	  <result property="count" column="COUNT" />
+	  <result property="point" column="POINT" />
+	  <result property="userLevel" column="USER_LEVEL" />
+	  <collection property="fileUrls" ofType="String">
+	    <result column="fileUrl" />
+	  </collection>
+	</resultMap>
+	
 	<select 
-		id="findById" 
-		parameterType="long"
-		resultType="com.kh.carlpion.review.model.dto.ReviewDTO"
+	  id="findById" 
+	  parameterType="long"
+	  resultMap="reviewMap"
 	>
-		SELECT 
-				r.REVIEW_NO		AS	reviewNo
-			 ,	r.TITLE
-			 ,	r.CONTENT
-			 ,	u.NICKNAME		AS	nickName
-			 ,	r.CREATE_DATE	AS	createDate
-			 ,	r.COUNT
-			 ,	f.FILE_URL		AS	fileUrl
-			 ,	p.POINT
-			 ,	p.USER_LEVEL	AS	userLevel
-		  FROM
-		  		CP_REVIEW r
-		  JOIN
-		  		CP_USER u 		ON 	u.USER_NO = r.USER_NO
-		  JOIN
-		  		CP_POINT p 		ON 	p.USER_NO = r.USER_NO
-		  JOIN
-		  		CP_RV_FILE f 	ON 	f.REVIEW_NO = r.REVIEW_NO
-		 WHERE	
-		 		r.IS_ACTIVE = 'Y'
-		   AND	
-		   		r.REVIEW_NO = #{reviewNo} 
+	  SELECT 
+	    r.REVIEW_NO AS reviewNo,
+	    r.TITLE,
+	    r.CONTENT,
+	    u.NICKNAME AS nickName,
+	    r.CREATE_DATE AS createDate,
+	    r.COUNT,
+	    f.FILE_URL AS fileUrl,
+	    p.POINT,
+	    p.USER_LEVEL AS userLevel
+	  FROM
+	    CP_REVIEW r
+	  JOIN
+	    CP_USER u ON u.USER_NO = r.USER_NO
+	  JOIN
+	    CP_POINT p ON p.USER_NO = r.USER_NO
+	  LEFT JOIN
+	    CP_RV_FILE f ON f.REVIEW_NO = r.REVIEW_NO
+	  WHERE
+	    r.IS_ACTIVE = 'Y'
+	    AND r.REVIEW_NO = #{reviewNo}
 	</select>
 		
 	<select 
@@ -150,6 +163,7 @@
 	
 	<select 
 		id="findFileByAll"
+		parameterType="long"
 		resultType="string"
 	>
 		SELECT

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.kh.carlpion.rental.model.dao.RentalMapper">
+
+	<select id="getRentCarPriceByCarNo"
+			parameterType="_int"
+			resultType="com.kh.carlpion.rental.model.dto.RentCarPriceDTO">
+		SELECT
+			CAR_NO carNo
+			, RENT_PRICE rentPrice
+			, HOUR_PRICE hourPrice
+		FROM
+			CP_RENTAL_CAR C
+		JOIN
+			CP_RENTAL_CAR_MODEL M ON (C.MODEL_NO = M.MODEL_NO)
+		WHERE
+			C.CAR_NO = #{carNo}
+			
+	</select>
+	
+	<select id="checkReservation"
+			parameterType="string"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			RESERVATION_ID = #{merchantUid}
+	</select>
+	
+	<select id="checkDuplicationReservation"
+			parameterType="com.kh.carlpion.rental.model.dto.PreparePaymentRequestDTO"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM 
+			CP_RENTAL_RESERVATION
+		WHERE
+			CAR_NO = #{carNo}
+		AND
+			RENTAL_DATE BETWEEN TO_DATE(#{rentalDate}, 'YY/MM/DD HH24') AND TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
+		OR 
+			RETURN_DATE BETWEEN TO_DATE(#{rentalDate}, 'YY/MM/DD HH24') AND TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
+	</select>
+	
+	<insert id="saveReservation"
+			parameterType="com.kh.carlpion.rental.model.entity.Reservation">
+	
+		INSERT INTO
+			CP_RENTAL_RESERVATION(
+				RESERVATION_ID
+				, USER_NO
+				, CAR_NO
+				, RENTAL_DATE
+				, RETURN_DATE
+				, TOTAL_PRICE
+				, STATUS
+				, IMP_UID
+				, PAYMENT_COMPLETED_AT
+			)
+		VALUES(
+			#{merchantUid}
+			, #{userNo}
+			, #{carNo}
+			, TO_DATE(#{rentalDate}, 'YY/MM/DD HH24:MI')
+			, TO_DATE(#{returnDate}, 'YY/MM/DD HH24:MI')
+			, #{totalPrice}
+			, #{status}
+			, #{impUID}
+			, SYSDATE
+		)
+	</insert>
+</mapper>
