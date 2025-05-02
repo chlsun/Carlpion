@@ -108,14 +108,6 @@ public class ReportServiceImpl implements ReportService {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
 		
-		Long authUserNo = authService.getUserDetails().getUserNo();
-		Long findUserNo = reportMapper.findByUserNo(reportNo);
-		
-		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
-		            .getAuthorities().stream()
-		            .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-		boolean hasPermission = isAdmin || (findUserNo != null && findUserNo.equals(authUserNo));
-		reportDTO.setHasPermission(hasPermission);
 		
 		reportMapper.updateCount(reportNo);
 		return reportDTO;

@@ -98,27 +98,18 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public NoticeDTO findById(Long noticeNo) {
-		NoticeDTO noticeDTO = noticeMapper.findById(noticeNo);
-		
-		if(noticeDTO == null) {
-			throw new NotFindException("해당 글을 찾을 수 없습니다.");
-		}
-		
-		noticeMapper.updateCount(noticeNo);
-	
-		
-	    Long authUserNo = authService.getUserDetails().getUserNo();
-	    Long findUserNo = noticeMapper.findByUserNo(noticeNo);
-	    
-	    boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
-	            .getAuthorities().stream()
-	            .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-	    boolean hasPermission = isAdmin || (findUserNo != null && findUserNo.equals(authUserNo));
-	    noticeDTO.setHasPermission(hasPermission);
-	    
-		return noticeDTO;
-	}
+	    NoticeDTO noticeDTO = noticeMapper.findById(noticeNo);
 
+	    if(noticeDTO == null) {
+	        throw new NotFindException("해당 글을 찾을 수 없습니다.");
+	    }
+
+	    noticeMapper.updateCount(noticeNo);
+
+
+	    return noticeDTO;
+	}
+	
 	@Override
 	@Transactional
 	public NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files) {
@@ -163,6 +154,7 @@ public class NoticeServiceImpl implements NoticeService {
 	private void checkedOwnerByUser(Long noticeNo) {
 		Long authUserNo = authService.getUserDetails().getUserNo();
 		Long findUserNo = noticeMapper.findByUserNo(noticeNo);
+		
 		
 		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
 		        .getAuthorities().stream()
