@@ -1,12 +1,15 @@
 package com.kh.carlpion.exception;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.kh.carlpion.exception.exceptions.AlreadyExistsException;
 import com.kh.carlpion.exception.exceptions.CarModelNotFoundException;
@@ -20,6 +23,11 @@ import com.kh.carlpion.exception.exceptions.EmailVerifyFailException;
 import com.kh.carlpion.exception.exceptions.EmptyInputException;
 import com.kh.carlpion.exception.exceptions.FileDeleteException;
 import com.kh.carlpion.exception.exceptions.FileSaveException;
+
+import com.kh.carlpion.exception.exceptions.IllegalArgumentPwException;
+import com.kh.carlpion.exception.exceptions.ImgFileNotFoundException;
+import com.kh.carlpion.exception.exceptions.ModelNotFoundException;
+import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.exception.exceptions.ImgFileNotFoundException;
 import com.kh.carlpion.exception.exceptions.ModelNotFoundException;
 import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
@@ -81,6 +89,10 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> handleEmailDuplicate(EmailDuplicateException e){
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 	}
+	@ExceptionHandler(IllegalArgumentPwException.class)
+	public ResponseEntity<?> IllegalArgumentPw(IllegalArgumentPwException e){
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+	}
 	
 
 	// AuthenticationManager가 사용자 인증을 실패했을 경우 발생
@@ -114,6 +126,28 @@ public class GlobalExceptionHandler {
 		error.put("cause", e.getMessage());
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
+	
+	// 잘못된 값으로 인해 SQL문이 제대로 작동하지 않았을 때 발생
+	@ExceptionHandler(InvalidParameterException.class)
+	public ResponseEntity<?> handleInvalidParameter(InvalidParameterException e) {
+		
+		Map<String, String> error = new HashMap<String, String>();
+		
+		error.put("cause", e.getMessage());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
+	
+	// 클라이언트 측에서 요청과 함께 보내는 데이터가 유효성 검사를 통과하지 못했을 때 발생
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<?> handleArgumentNotValid(MethodArgumentNotValidException e) {
+		
+		Map<String, String> errors = new HashMap<>();
+		
+		e.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
 	
 	@ExceptionHandler(NotFindException.class)

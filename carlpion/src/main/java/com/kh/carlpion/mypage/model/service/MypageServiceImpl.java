@@ -1,10 +1,14 @@
 package com.kh.carlpion.mypage.model.service;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,50 +24,85 @@ import lombok.RequiredArgsConstructor;
 public class MypageServiceImpl implements MypageService {
 
 	private final MypageMapper mapper;
+	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 	@Override
-	public 	MypageDTO updateNickName(MypageDTO mypage) {
+	public int updateNickName(Long userNo, String nickname) {
 		
-			int checkNickName =	mapper.checkNickName(mypage);
+			Map<String, Object> checkNickName = new HashMap<>();
 			
-			if(checkNickName > 0) {
+			checkNickName.put("userNo", userNo);
+			checkNickName.put("nickName", nickname);
+			int check =	mapper.checkNickName(checkNickName);
+			
+			if(check > 0) {
 				throw new NickNameDuplicateException("이미 존재하는 닉네임 입니다.");
 			}
 			
-		MypageDTO result =  mapper.updateNickName(mypage);
+			int result =  mapper.updateNickName(checkNickName);
 		
 		 return result;
 	}
 	
 	@Override
-	public void updatePassword(MypageDTO mypage) {
-		mapper.updatePassword(mypage);
-	}
-
-	@Override
-	public 	MypageDTO updateEmail(MypageDTO mypage) {
-		int checkEmail = mapper.checkEmail(mypage);
+	public MypageDTO selectNickName(Long userNo) {
+		MypageDTO result = mapper.selectNickName(userNo);
 		
-		if(checkEmail > 0 ) {
-			throw new EmailDuplicateException("이미 존재하는 이메일 입니다.");
-			
-		}	
-		
-		MypageDTO result = mapper.updateEmail(mypage);
 		return result;
 	}
 
+	
+	@Override
+	public void updatePassword(MypageDTO mypage) {
+		
+				String passwordCheck = mapper.passowordCheck(mypage.getUserNo());
+				if(!passwordEncoder.matches(mypage.getPassword(),passwordCheck))
+					throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+					
+				String newEncodedPw  = passwordEncoder.encode(mypage.getModifyPw());
+				mypage.setModifyPw(newEncodedPw);
+				 mapper.updatePassword(mypage);
+				
+	}		
+
+	/*
+	 * @Override public int updateEmail(Long userNo, String email,String password) {
+	 * Map<String, Object> checkEmail = new HashMap<>(); checkEmail.put("userNo",
+	 * userNo); checkEmail.put("email", email); int check =
+	 * mapper.checkEmail(checkEmail);
+	 * 
+	 * if(check > 0 ) { throw new EmailDuplicateException("이미 존재하는 이메일 입니다.");
+	 * 
+	 * }
+	 * 
+	 * int result = mapper.updateEmail(checkEmail); return result; }
+	 */
+
+	@Override
+	public MypageDTO getUserInfo(Long userNo) {
+		MypageDTO result = mapper.getUserInfo(userNo);
+		
+		
+		return result;
+	}
+	
+	
+	
+	@Override
+	public 	int updateName(MypageDTO mypage) {
+		
+		int result = mapper.updateName(mypage);
+		
+		return result;
+	}
+	
+	
 	@Override
 	public 	MypageDTO updateProfile(MultipartFile file, Long userNo) {
 		MypageDTO result = mapper.updateProfile(file,userNo);
 		return result;
 	}
 
-	@Override
-	public 	MypageDTO updateName(MypageDTO mypage) {
-		MypageDTO result = mapper.updateName(mypage);
-		return result;
-	}
 
 	
 	@Override
@@ -98,9 +137,12 @@ public class MypageServiceImpl implements MypageService {
 	}
 
 	@Override
-	public List<MypageDTO> pointCheck(Long userNo) {
-		
-		List<MypageDTO> result =mapper.pointCheck(userNo);
+	public List<MypageDTO> pointCheck(Long userNo,int limit, int offset) {
+		Map<String,Object> page = new HashMap<>();
+		page.put("userNo", userNo);
+		page.put("limit", limit);
+		page.put("offset", offset);
+		List<MypageDTO> result =mapper.pointCheck(page);
 		return result;
 	}
 	//--------------------------------------------------------
@@ -119,6 +161,8 @@ public class MypageServiceImpl implements MypageService {
 		
 		return result;
 	}
+
+	
 	
 	
 	
