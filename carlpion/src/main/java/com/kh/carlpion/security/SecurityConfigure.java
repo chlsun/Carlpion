@@ -43,13 +43,13 @@ public class SecurityConfigure {
 							   request.requestMatchers("/admin/**").hasRole("ADMIN");
 							   request.requestMatchers(HttpMethod.POST, "/users", "/auth/**", "/parking/setting").permitAll();
 							   request.requestMatchers(HttpMethod.GET, "/notice", "/notice/**", "/reports", "/reports/**", "/reviews", "/reviews/**", "/uploads/**", "/parking/**").permitAll();
-							   request.requestMatchers(HttpMethod.POST, "/rents", "/notice/**", "/reviews", "/reviews/**", "/admin/**").authenticated();
-							   request.requestMatchers(HttpMethod.POST, "/notice", "/reports/**").hasRole("ADMIN");
+							   request.requestMatchers(HttpMethod.POST, "/rents",  "/reviews", "/reports", "/reviews/**", "/admin/**").authenticated();
+							   request.requestMatchers(HttpMethod.POST, "/notice","/notice/**", "/reports/**").hasRole("ADMIN");
 							   request.requestMatchers(HttpMethod.PUT, "/users/**", "/reports/**", "/reviews/**", "/admin/**" ).authenticated();
 							   request.requestMatchers(HttpMethod.PUT, "/notice/**").hasRole("ADMIN");
 							   request.requestMatchers(HttpMethod.DELETE, "/users", "/notice/**", "/reports/**", "/reviews/**").authenticated();
 							   request.requestMatchers(HttpMethod.DELETE, "/notice/**", "/reports/comments").hasRole("ADMIN");
-							   request.requestMatchers(HttpMethod.GET, "/mypage/**").authenticated();
+							   request.requestMatchers(HttpMethod.GET, "/mypage/**","/users/getUserInfo").authenticated();
 							   request.requestMatchers(HttpMethod.PUT, "/users/update-pw","/users/update-nickname","/users/update-email").authenticated();
 							   request.requestMatchers(HttpMethod.PUT, "/users/update-profile","/users/update-realname").authenticated();
 							   

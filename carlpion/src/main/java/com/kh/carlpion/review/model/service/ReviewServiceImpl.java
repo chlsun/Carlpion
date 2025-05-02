@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,8 +65,8 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public Map<String, Object> findAll(int pageNo) {
-		int pageLimit = 10;
-		int btnLimit = 10;	
+		int pageLimit = 12;
+		int btnLimit = 12;	
 		int totalCount = reviewMapper.findTotalCount(pageNo);
 		int maxPage = (int)Math.ceil((double) totalCount / pageLimit);	
 		int startBtn = (pageNo - 1) / btnLimit * btnLimit + 1;
@@ -104,8 +105,14 @@ public class ReviewServiceImpl implements ReviewService {
 		if(reviewDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
+
 		
+		List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
+		reviewDTO.setFileUrls(fileUrls);
 		reviewMapper.updateCount(reviewNo);
+		
+		
+		
 		return reviewDTO;
 	}
 
@@ -154,8 +161,13 @@ public class ReviewServiceImpl implements ReviewService {
 		Long authUserNo = authService.getUserDetails().getUserNo();
 		Long findUserNo = reviewMapper.findByUserNo(reviewNo);
 		
-		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
-			throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
-		}
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
+		        .getAuthorities().stream()
+		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+		
+		
+		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
+	        throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
+	    }
 	}
 }
