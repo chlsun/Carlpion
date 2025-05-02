@@ -11,15 +11,15 @@ import com.kh.carlpion.mypage.model.dto.MypageDTO;
 public interface MypageService {
 	
 	
-	MypageDTO updateNickName(MypageDTO mypage);
+	int updateNickName(Long userNo, String nickname);
 	
 	void updatePassword(MypageDTO mypage);
 	
-	MypageDTO updateEmail(MypageDTO mypage);
+	MypageDTO getUserInfo(Long userNo);
 	
 	MypageDTO updateProfile(MultipartFile file, Long userNo);
 	
-	MypageDTO updateName(MypageDTO mypage);
+	int updateName(MypageDTO mypage);
 	
 	void deleteUser(MypageDTO mypage);
 	
@@ -30,13 +30,19 @@ public interface MypageService {
 	
 	List<MypageDTO> reviewCheck(Long userNo);
 	
-	List<MypageDTO> pointCheck(Long userNo);
+	List<MypageDTO> pointCheck(Long userNo,int limit, int offset);
 	
 	//----------------------------------------------
 	
 	List<MypageDTO> reservations(Long userNo);
 	
 	List<MypageDTO> usedCars(Long userNo);
+
+	MypageDTO selectNickName(Long userNo);
+
+	
+
+
 	
 	
 	

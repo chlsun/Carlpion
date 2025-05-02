@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.kh.carlpion.report.model.dto.ReportDTO;
 import com.kh.carlpion.report.model.service.ReportService;
 
@@ -44,7 +43,7 @@ public class ReportController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {
+	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "1") int pageNo) {
 		return ResponseEntity.ok(reportService.findAll(pageNo));
 	}
 	
