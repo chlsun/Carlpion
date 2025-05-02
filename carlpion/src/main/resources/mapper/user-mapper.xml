@@ -53,6 +53,44 @@
 		WHERE
 			EMAIL = #{email}
 	</select>
+	
+	<select id="selectSocialUserByCompositePK"
+			parameterType="com.kh.carlpion.auth.model.dto.SocialDTO"
+			resultType="com.kh.carlpion.auth.model.dto.SocialDTO">
+		SELECT
+			SOCIAL_ID socialId,
+			PLATFORM,
+			NICKNAME,
+			REALNAME,
+			EMAIL,
+			ROLE,
+			CREATE_DATE createDate,
+			IS_ACTIVE isActive
+		FROM
+			CP_USER_SOCIAL
+		WHERE
+			SOCIAL_ID = #{socialId}
+		AND
+			PLATFORM = #{platform}
+	</select>
+	
+	<select id="selectSocialUserByNickname"
+			parameterType="string"
+			resultType="com.kh.carlpion.auth.model.dto.SocialDTO">
+		SELECT
+			SOCIAL_ID socialId,
+			PLATFORM,
+			NICKNAME,
+			REALNAME,
+			EMAIL,
+			ROLE,
+			CREATE_DATE createDate,
+			IS_ACTIVE isActive
+		FROM
+			CP_USER_SOCIAL
+		WHERE
+			NICKNAME = #{nickname}
+	</select>
 
 	<insert id="signUp"
 			parameterType="com.kh.carlpion.user.model.vo.UserVO">
@@ -72,6 +110,33 @@
 			(
 				#{username},
 				#{password},
+				#{nickname},
+				#{realname},
+				#{email},
+				DEFAULT,
+				DEFAULT,
+				DEFAULT
+			)
+	</insert>
+	
+		<insert id="signUpBySocial"
+			parameterType="com.kh.carlpion.auth.model.dto.SocialDTO">
+		INSERT INTO
+			CP_USER_SOCIAL
+			(
+				SOCIAL_ID,
+				PLATFORM,
+				NICKNAME,
+				REALNAME,
+				EMAIL,
+				ROLE,
+				CREATE_DATE,
+				IS_ACTIVE
+			)
+		VALUES
+			(
+				#{socialId},
+				#{platform},
 				#{nickname},
 				#{realname},
 				#{email},
