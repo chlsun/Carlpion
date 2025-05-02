@@ -62,6 +62,7 @@
 			 ,	n.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	n.CREATE_DATE	AS	createDate
+			 ,	n.MODIFY_DATE	AS	modifyDate
 			 ,	n.COUNT
 		  FROM
 		  		CP_NOTICE n
@@ -97,6 +98,7 @@
 			 ,	n.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	n.CREATE_DATE	AS	createDate
+			 ,	n.MODIFY_DATE	AS	modifyDate
 			 ,	n.COUNT
 			 ,	f.FILE_URL		AS	fileUrl
 			 ,	p.POINT
@@ -136,6 +138,8 @@
 		   SET
 		   		TITLE = #{title}
 		   	 ,	CONTENT = #{content}
+		   	 ,	MODIFIER_NO = #{modifierNo}
+		   	 ,	MODIFY_DATE = SYSDATE
 		 WHERE	
 		 		NOTICE_NO = #{noticeNo}
 	</update>
