@@ -48,12 +48,6 @@
 			 ,	c.CONTENT
 			 ,	u.NICKNAME		AS	nickName
 			 ,	c.CREATE_DATE	AS	createDate
-			 ,	<choose>
-		  			<when test="commentType == 'notice'">c.NOTICE_NO	AS	noticeNo</when>
-		  			<when test="commentType == 'report'">c.REPORT_NO	AS	reportNo</when>
-		  			<when test="commentType == 'review'">c.REVIEW_NO	AS	reviewNo</when>
-					<otherwise>TYPE_ERROR_COLUMN</otherwise>
-		  		</choose>
 		  FROM
 		  		<choose>
 		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>

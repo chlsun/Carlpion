@@ -1,10 +1,12 @@
 package com.kh.carlpion.notice.model.service;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -151,8 +153,19 @@ public class NoticeServiceImpl implements NoticeService {
 	private void checkedOwnerByUser(Long noticeNo) {
 		Long authUserNo = authService.getUserDetails().getUserNo();
 		Long findUserNo = noticeMapper.findByUserNo(noticeNo);
+		Collection<? extends GrantedAuthority> checkedRole = authService.getUserDetails().getAuthorities();
 		
-		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
+		boolean isAdmin = false;
+		
+		for(GrantedAuthority auth : checkedRole) {
+			
+			if("ROLE_ADMIN".equals(auth.getAuthority())) {
+				isAdmin = true;
+				break;
+			}
+		}
+		
+		if(findUserNo == null || !authUserNo.equals(findUserNo) && !isAdmin) {
 			throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
 		}
 	}

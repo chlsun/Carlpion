@@ -39,11 +39,11 @@ public class FileService {
 		}
 	}
 	
+	/** 파일 저장 */
 	public String storage(MultipartFile file) {
 		return storage(file, "");
 	}
 
-	
 	public String storage(MultipartFile file, String subDirectory) {
 		String originalFileName = file.getOriginalFilename();
 		String newFileName = createdFileName(originalFileName);
@@ -62,7 +62,7 @@ public class FileService {
 		}
 	}
 	
-	/* 랜덤 파일명 생성 */
+	/** UUID, Base64를 사용하고. 랜덤 파일명 생성 + 확장자 return */
 	private String createdFileName(String originalFileName) {
 		UUID uuid = UUID.randomUUID();	/* 32자 (-)포함 36자 */
 		
@@ -83,7 +83,7 @@ public class FileService {
 		return uuidShort + extension;
 	}
 	
-	/* 파일 삭제 */
+	/** 파일 삭제 */
 	public boolean deleteFile(String fileName) {
 	    // 기본적으로 uploads 폴더에서 파일 삭제
 	    return deleteFile("", fileName);
@@ -107,5 +107,10 @@ public class FileService {
 	    } catch (IOException e) {
 	        throw new FileDeleteException(fileName + " 파일을 삭제할 수 없습니다: " + e.getMessage());
 	    }
+	}
+	
+	/** 원본 파일명만 return */
+	public String memory(MultipartFile file) {
+		return file.getOriginalFilename();
 	}
 }
