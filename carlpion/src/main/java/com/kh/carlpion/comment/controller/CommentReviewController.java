@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.carlpion.comment.model.dto.CommentReviewDTO;
+import com.kh.carlpion.comment.model.dto.CommentDTO;
+import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
 import com.kh.carlpion.comment.model.service.CommentReviewService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class CommentReviewController {
 	private final CommentReviewService commentReviewService;
 	
 	@PostMapping
-	public ResponseEntity<?> saveComment(CommentReviewDTO commentReviewDTO) {
-		commentReviewService.saveComment(commentReviewDTO);
+	public ResponseEntity<?> saveComment(CommentDynamicDTO commentDynamicDTO) {
+		commentReviewService.saveComment(commentDynamicDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<CommentReviewDTO>> findAllComment(@RequestParam(name = "reviewNo") Long reviewNo) {
+	public ResponseEntity<List<CommentDTO>> findAllComment(@RequestParam(name = "reviewNo") Long reviewNo) {
 		return ResponseEntity.ok(commentReviewService.findAllComment(reviewNo));
 	}
 	

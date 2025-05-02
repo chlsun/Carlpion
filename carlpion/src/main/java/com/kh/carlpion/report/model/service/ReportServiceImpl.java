@@ -1,6 +1,8 @@
 package com.kh.carlpion.report.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,6 @@ public class ReportServiceImpl implements ReportService {
 		/*사용자 인증 구간*/
 		Long userNo = authService.getUserDetails().getUserNo();
 		
-		if( !userNo.equals(reportDTO.getUserNo())) {
-			throw new UnauthorizedException("사용자 정보가 일치하지 않습니다.");
-		}
-		
 		ReportVO requestData = ReportVO.builder()
 									   .userNo(userNo)
 									   .title(reportDTO.getTitle())
@@ -58,14 +56,43 @@ public class ReportServiceImpl implements ReportService {
 				}
 			}
 		}
-//		log.info("save: {}", requestData);
+//		log.info("save: {}", requestData);		
 	}
-
+	
 	@Override
-	public List<ReportDTO> findAll(int pageNo) {
-		int pageSize = 10;
-		RowBounds rowBounds = new RowBounds(pageNo * pageSize, pageSize);
-		return reportMapper.findAll(rowBounds);
+	public Map<String, Object> findAll(int pageNo) {	
+		int pageLimit = 10;
+		int btnLimit = 10;	
+		int totalCount = reportMapper.findTotalCount(pageNo);
+		int maxPage = (int)Math.ceil((double) totalCount / pageLimit);	
+		int startBtn = (pageNo - 1) / btnLimit * btnLimit + 1;
+		int endBtn = startBtn + btnLimit - 1;
+		
+		if(pageNo > maxPage && maxPage > 0) {
+			pageNo = maxPage;
+		}
+		
+		if(maxPage == 0) {
+			pageNo = 1;
+		}
+
+		if(endBtn > maxPage) {
+			endBtn = maxPage;
+		}
+
+		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);		
+		List<ReportDTO> list = reportMapper.findAll(rowBounds);	
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", list);
+		map.put("totalCount", totalCount);
+		map.put("pageNo", pageNo);
+		map.put("pageLimit", pageLimit);
+		map.put("btnLimit", btnLimit);
+		map.put("maxPage", maxPage);
+		map.put("startBtn", startBtn);
+		map.put("endBtn", endBtn);
+		return map;
 	}
 
 	@Override
@@ -128,5 +155,6 @@ public class ReportServiceImpl implements ReportService {
 		if(findUserNo == null || !authUserNo.equals(findUserNo)) {
 			throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
 		}
-	}
+	}	
+
 }

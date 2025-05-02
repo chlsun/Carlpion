@@ -30,4 +30,6 @@ public interface ReviewMapper {
 	Long findByUserNo(Long reviewNo);
 	
 	void updateCount(Long reviewNo); 
+	
+	int findTotalCount(int pageNo);
 }

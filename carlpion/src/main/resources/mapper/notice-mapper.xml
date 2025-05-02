@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.notice.model.dao.NoticeMapper">
+	<insert 
+		id="save"
+		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+		useGeneratedKeys="true"
+		keyProperty="noticeNo"
+		keyColumn="NOTICE_NO"
+	>
+		INSERT 
+		  INTO	
+		  		CP_NOTICE
+		  	 (
+			 	USER_NO
+			 ,	TITLE
+			 , 	CONTENT
+			 )
+		VALUES 
+			 (
+			   	#{userNo}
+			 , 	#{title} 	
+			 , 	#{content} 	
+			 )
+	</insert>
+	<insert 
+		id="saveFile" 
+		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+	>
+		INSERT
+		  INTO
+		  		CP_NT_FILE
+		  	 (
+				NOTICE_NO
+			 ,	FILE_URL
+			 )
+		VALUES
+			 (
+				#{noticeNo}
+			 ,	#{fileUrl}
+			 )	
+	</insert>
+	
+	<select 
+		id="findTotalCount" 
+		resultType="_int"
+	>
+		SELECT
+				COUNT(*)
+		  FROM
+		  		CP_NOTICE
+	</select>
+	<select 
+		id="findAll" 
+		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
+	>
+		SELECT 
+				n.NOTICE_NO		AS	noticeNo
+			 ,	n.TITLE
+			 ,	n.CONTENT
+			 ,	u.NICKNAME		AS	nickName
+			 ,	n.CREATE_DATE	AS	createDate
+			 ,	n.COUNT
+		  FROM
+		  		CP_NOTICE n
+		  JOIN
+		  		CP_USER u 		ON 	u.USER_NO = n.USER_NO
+		  JOIN
+		  		CP_POINT p 		ON 	p.USER_NO = n.USER_NO	
+		 WHERE	
+		 		n.IS_ACTIVE = 'Y'
+		 ORDER
+		 	BY	
+		 		n.NOTICE_NO 	DESC
+		   	 , 	u.POINT 		DESC
+           	 ,  u.USER_LEVEL 	DESC
+	</select>
+	
+	<update id="updateCount">
+		UPDATE
+				CP_NOTICE
+		   SET
+		   		COUNT = COUNT + 1
+		 WHERE
+		 		NOTICE_NO = #{noticeNo} 
+	</update>
+	<select 
+		id="findById" 
+		parameterType="long"
+		resultType="com.kh.carlpion.notice.model.dto.NoticeDTO"
+	>
+		SELECT 
+				n.NOTICE_NO		AS	noticeNo
+			 ,	n.TITLE
+			 ,	n.CONTENT
+			 ,	u.NICKNAME		AS	nickName
+			 ,	n.CREATE_DATE	AS	createDate
+			 ,	n.COUNT
+			 ,	f.FILE_URL		AS	fileUrl
+			 ,	p.POINT
+			 ,	p.USER_LEVEL	AS	userLevel	
+		  FROM
+		  		CP_NOTICE n
+		  JOIN
+		  		CP_USER u 		ON 	u.USER_NO = n.USER_NO
+		  JOIN
+		  		CP_POINT p 		ON 	p.USER_NO = n.USER_NO
+		  JOIN
+		  		CP_NT_FILE f 	ON 	f.NOTICE_NO = r.NOTICE_NO
+		 WHERE	
+		 		n.IS_ACTIVE = 'Y'
+		   AND	
+		   		n.NOTICE_NO = #{noticeNo} 
+	</select>
+		
+	<select 
+		id="findByUserNo"
+		parameterType="long"
+		resultType="long"
+	>
+		SELECT
+				USER_NO		AS	userNo
+		  FROM	
+		  		CP_NOTICE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}	  		
+	</select>
+	<update 
+		id="updateById"
+		parameterType="com.kh.carlpion.notice.model.vo.NoticeVO"
+	>
+		UPDATE
+				CP_NOTICE
+		   SET
+		   		TITLE = #{title}
+		   	 ,	CONTENT = #{content}
+		 WHERE	
+		 		NOTICE_NO = #{noticeNo}
+	</update>
+	<update id="softDeleteById">
+		UPDATE
+				CP_NOTICE
+		   SET
+		   		IS_ACTIVE = 'N'
+		 WHERE	
+		 		NOTICE_NO = #{noticeNo}
+	</update>
+	
+	<select 
+		id="findFileByAll"
+		resultType="string"
+	>
+		SELECT
+				FILE_URL	AS	fileUrl
+		  FROM
+		  		CP_NT_FILE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+	</select>
+	<delete id="deleteFileById">
+		DELETE
+		  FROM
+		  		CP_NT_FILE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+	</delete>
+</mapper>

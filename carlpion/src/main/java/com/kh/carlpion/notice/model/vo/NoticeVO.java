@@ -1,7 +1,5 @@
 package com.kh.carlpion.notice.model.vo;
 
-import java.sql.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +16,4 @@ public class NoticeVO {
 	private String content;
 	private String nickName;
 	private String fileUrl;
-	private Date createDate;
-	private Long count;
-	private String isActive;
 }

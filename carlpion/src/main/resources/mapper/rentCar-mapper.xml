@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.kh.carlpion.admin.model.dao.RentCarMapper">
+
+	<select id="checkCarNo"
+			parameterType="_int"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			CP_RENTAL_CAR
+		WHERE 
+			CAR_NO = #{carNo}
+	</select>
+
+	<select id="checkCarId"
+			parameterType="string"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			CP_RENTAL_CAR
+		WHERE 
+			CAR_ID = #{carId}
+	</select>
+	
+	<insert id="setRentCar"
+			parameterType="com.kh.carlpion.admin.model.dto.RentCarDTO">
+		INSERT INTO
+			CP_RENTAL_CAR(
+				CAR_ID,
+				MODEL_NO,
+				PARKING_ID,
+				ENROLL_DATE
+			)
+		VALUES(
+			#{carId}
+			, #{modelNo}
+			, #{parkingId}
+			, SYSDATE
+		)
+	</insert>
+	
+	<update id="updateRentCar"
+			parameterType="com.kh.carlpion.admin.model.dto.RentCarDTO">
+		UPDATE
+			CP_RENTAL_CAR
+		SET
+			CAR_ID = #{carId}
+			, MODEL_NO = #{modelNo}
+			, PARKING_ID = #{parkingId}
+			, ENROLL_DATE = SYSDATE
+		WHERE
+			CAR_NO = #{carNo}
+	</update>
+
+	<select id="rentCarCount"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM 
+			CP_RENTAL_CAR
+	</select>
+	
+
+	<resultMap id="rentCarResultMap" type="com.kh.carlpion.admin.model.dto.RentCarDTO">
+	
+		<id column="CAR_NO" property="carNo"/>
+		<id column="CAR_ID" property="carId"/>
+		<id column="MODEL_NO" property="modelNo"/>
+		<id column="PARKING_ID" property="parkingId"/>
+		<result column="ENROLL_DATE" property="enrollDate"/>
+		
+		<association property="carModel" javaType="com.kh.carlpion.admin.model.dto.CarModelDTO">
+			<result column="CAR_MODEL" property="carModel"/>
+			<result column="RENT_PRICE" property="rentPrice"/>
+			<result column="HOUR_PRICE" property="hourPrice"/>
+			<result column="CHARGE_TYPE" property="chargeType"/>
+			<result column="SEAT_COUNT" property="seatCount"/>
+			<result column="CAR_IMG_URL" property="imgURL"/>
+		</association>
+		
+		<association property="parking" javaType="com.kh.carlpion.parking.model.dto.ParkingDTO">
+			<result column="PARKING_TITLE" property="parkingTitle"/>
+			<result column="PARKING_ADDR" property="parkingAddr"/>
+			<result column="LAT" property="lat"/>
+			<result column="LOT" property="lot"/>
+		</association>
+	
+	</resultMap>
+	
+	<select id="getRentCarList"
+			resultMap="rentCarResultMap">
+		SELECT
+			C.CAR_NO CAR_NO
+			, C.CAR_ID CAR_ID
+			, C.MODEL_NO MODEL_NO
+			, C.PARKING_ID PARKING_ID
+			, C.ENROLL_DATE ENROLL_DATE
+			, M.CAR_MODEL CAR_MODEL
+			, M.RENT_PRICE RENT_PRICE
+			, M.HOUR_PRICE HOUR_PRICE
+			, M.CHARGE_TYPE CHARGE_TYPE
+			, M.SEAT_COUNT SEAT_COUNT
+			, M.CAR_IMG_URL CAR_IMG_URL
+			, P.PARKING_TITLE PARKING_TITLE
+			, P.PARKING_ADDR PARKING_ADDR
+			, P.LAT LAT
+			, P.LOT LOT
+		FROM
+			CP_RENTAL_CAR C
+		JOIN
+			CP_RENTAL_CAR_MODEL M ON (C.MODEL_NO = M.MODEL_NO)
+		JOIN
+			CP_PARKING_INFO P ON (C.PARKING_ID = P.PARKING_ID)
+		ORDER BY 
+			C.ENROLL_DATE DESC
+			
+	</select>
+
+</mapper>
