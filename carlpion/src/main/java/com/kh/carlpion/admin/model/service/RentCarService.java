@@ -11,4 +11,6 @@ public interface RentCarService {
 	void setRentCar(RentCarDTO rentCar);
 	
 	void updateRentCar(RentCarDTO rentCar);
+	
+	void deleteRentCarByCarNo(int carNo);
 }

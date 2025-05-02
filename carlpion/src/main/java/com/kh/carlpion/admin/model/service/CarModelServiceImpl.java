@@ -79,6 +79,9 @@ public class CarModelServiceImpl implements CarModelService {
 		
 		String filePath = fileService.storage(file, "carModel");
 		
+		
+		log.info("filePath : ", filePath);
+		
 		CarModel model = CarModel.builder()
 								 .carModel(carModel.getCarModel())
 								 .rentPrice(carModel.getRentPrice())
