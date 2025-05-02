@@ -102,15 +102,15 @@
 			resultType="com.kh.carlpion.mypage.model.dto.PointDTO">
 			
 		SELECT
-			    USER_NO,
-			    REVIEW_NO,
-			    USERNAME,
-			    REALNAME,
-			    USER_LEVEL,
-			    REASON,
-			    POINT_CHANGE,
-			    POINT,
-			    CREATE_DATE
+			    H.HISTORY_NO historyNo,
+			    H.REVIEW_NO reviewNo,
+			    U.USERNAME userName,
+			    U.REALNAME realName,
+			    P.USER_LEVEL userLevel,
+			    H.REASON reason, 
+			    H.POINT_CHANGE pointChange,
+			    P.POINT point,
+			    H.CREATE_DATE createDate
 		FROM
 		    	CP_POINT_HISTORY H
 		JOIN
@@ -118,10 +118,11 @@
 		JOIN
 		   		CP_USER U ON P.USER_NO = U.USER_NO
 		WHERE
-		    	U.USERNAME = #{userName}
+		    	U.USER_NO = #{userNo}
 		ORDER 
 		BY
-		    	CREATE_DATE DESC
+		    	createDate DESC
+		    	LIMIT #{limit} OFFSET #{offset};
 			
 			
 			</select>
@@ -131,7 +132,7 @@
 			resultType="com.kh.carlpion.mypage.model.dto.ReservationsDTO">
 			
  	SELECT
- 			R.CAR_ID carId,
+ 			R.CAR_NO carNo,
  			R.RENTAL_DATE rentalDate,
  			R.RETURN_DATE returnDate,
  			R.PAYMENT_COMPLETED_AT paymentCompletedAt,
@@ -146,7 +147,7 @@
  	FROM
  			CP_RENTAL_RESERVATION R
  	JOIN
- 			CP_RENTAL_CAR C ON R.CAR_ID = C.CAR_ID
+ 			CP_RENTAL_CAR C ON R.CAR_NO = C.CAR_NO
  	JOIN
  			CP_RENTAL_CAR_MODEL D ON C.MODEL_NO = D.MODEL_NO
  	JOIN
@@ -164,7 +165,7 @@
 			resultType="com.kh.carlpion.mypage.model.dto.ReservationsDTO">
 			
  	SELECT
- 			R.CAR_ID carId,
+ 			R.CAR_NO carNo,
  			R.RENTAL_DATE rentalDate,
  			R.RETURN_DATE returnDate,
  			R.TOTAL_PRICE totalPrice,
@@ -177,7 +178,7 @@
  	FROM
  			CP_RENTAL_RESERVATION R
  	JOIN
- 			CP_RENTAL_CAR C ON R.CAR_ID = C.CAR_ID
+ 			CP_RENTAL_CAR C ON R.CAR_NO = C.CAR_NO
  	JOIN
  			CP_RENTAL_CAR_MODEL D ON C.MODEL_NO = D.MODEL_NO
  	JOIN

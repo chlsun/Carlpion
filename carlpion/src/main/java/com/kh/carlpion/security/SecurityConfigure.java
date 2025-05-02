@@ -41,15 +41,15 @@ public class SecurityConfigure {
 						   .cors(Customizer.withDefaults())
 						   .authorizeHttpRequests(request -> {
 							   request.requestMatchers("/admin/**").hasRole("ADMIN");
-							   request.requestMatchers(HttpMethod.POST, "/users", "/auth/**").permitAll();
-							   request.requestMatchers(HttpMethod.GET, "/notice", "/notice/**", "/reports", "/reports/**", "/reviews", "/reviews/**", "/uploads/**", "/parking/**", "/rents/**").permitAll();
-							   request.requestMatchers(HttpMethod.POST, "/rents/**", "/notice/**", "/reviews", "/reviews/**").authenticated();
-							   request.requestMatchers(HttpMethod.POST, "/notice", "/reports/**", "/admin/**", "/parking/setting").hasRole("ADMIN");
-							   request.requestMatchers(HttpMethod.PUT, "/users/**", "/reports/**", "/reviews/**").authenticated();
-							   request.requestMatchers(HttpMethod.PUT, "/notice/**", "/admin/**" ).hasRole("ADMIN");
-							   request.requestMatchers(HttpMethod.DELETE, "/users", "/notice/**", "/reports/**", "/reviews/**").authenticated();
-							   request.requestMatchers(HttpMethod.DELETE, "/notice/**", "/reports/comments", "/admin/**").hasRole("ADMIN");
-							   request.requestMatchers(HttpMethod.GET, "/mypage/**", "/admin/**").authenticated();
+                 request.requestMatchers(HttpMethod.POST, "/users", "/auth/**").permitAll();
+                 request.requestMatchers(HttpMethod.GET, "/notice", "/notice/**", "/reports", "/reports/**", "/reviews", "/reviews/**", "/uploads/**", "/parking/**", "/rents/**").permitAll();
+                 request.requestMatchers(HttpMethod.POST, "/rents/**",  "/notice/**", "/reviews", "/reports", "/reviews/**", "/admin/**").authenticated();
+                 request.requestMatchers(HttpMethod.POST, "/notice", "/reports", "/notice/**", "/admin", "/reports/**", "/parking/setting").hasRole("ADMIN");
+                 request.requestMatchers(HttpMethod.PUT, "/users/**", "/reports/**", "/reviews/**", "/admin/**" ).authenticated();
+                 request.requestMatchers(HttpMethod.PUT, "/notice/**", "/admin/**" ).hasRole("ADMIN");
+                 request.requestMatchers(HttpMethod.DELETE, "/users", "/notice/**", "/reports/**", "/reviews/**").authenticated();
+                 request.requestMatchers(HttpMethod.DELETE, "/notice/**", "/reports/comments", "/admin/**").hasRole("ADMIN");
+                 request.requestMatchers(HttpMethod.GET, "/mypage/**", "/admin/**", "/users/getUserInfo").authenticated();
 							   request.requestMatchers(HttpMethod.PUT, "/users/update-pw","/users/update-nickname","/users/update-email").authenticated();
 							   request.requestMatchers(HttpMethod.PUT, "/users/update-profile","/users/update-realname").authenticated();
 							   

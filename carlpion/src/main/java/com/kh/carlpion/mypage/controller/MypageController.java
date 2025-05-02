@@ -1,7 +1,9 @@
 package com.kh.carlpion.mypage.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
 import com.kh.carlpion.mypage.model.dto.MypageDTO;
+import com.kh.carlpion.mypage.model.dto.PointDTO;
 import com.kh.carlpion.mypage.model.service.MypageService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,26 +37,57 @@ public class MypageController {
 	
 	
 	@PutMapping("/users/update-nickname")
-	public ResponseEntity<MypageDTO> updateNickName(@RequestBody MypageDTO mypage) {
-		MypageDTO result = mypageService.updateNickName(mypage);
-		
+	public ResponseEntity<?> updateNickName(@AuthenticationPrincipal CarlpionUserDetails user, @RequestBody MypageDTO mypage) {
+		Long userNo= user.getUserNo();
+		String nickname = mypage.getNickName();
+		  int result = mypageService.updateNickName(userNo,nickname);
+		  
+		  
 		return ResponseEntity.ok(result);
 		
 	}
 	
-	@PutMapping("/users/update-pw")
-	public ResponseEntity<?> updatePassword(@RequestBody MypageDTO mypage) {
+	@GetMapping("/mypage/selectNickname")
+	public ResponseEntity<?> selectNickName(@AuthenticationPrincipal CarlpionUserDetails user){
+			Long userNo = user.getUserNo();
+			
+			MypageDTO result = mypageService.selectNickName(userNo);
+		return ResponseEntity.ok(result);
+		
+	}
 	
+	
+	@PutMapping("/users/update-pw")
+	public ResponseEntity<?> updatePassword(@AuthenticationPrincipal CarlpionUserDetails user,@RequestBody MypageDTO mypage) {
+		Long userNo = user.getUserNo();
+		mypage.setUserNo(userNo);
+		String modifyPw = mypage.getModifyPw();
+				
 		mypageService.updatePassword(mypage);
 		return ResponseEntity.status(HttpStatus.OK).body("비밀번호 변경");
 	}
 	
-	@PutMapping("/users/update-email")
-	public ResponseEntity<MypageDTO> updateEmail(@RequestBody MypageDTO mypage) {
-		MypageDTO result = mypageService.updateEmail(mypage);
+	
+	
+	@PutMapping("/users/update-realname")
+	public ResponseEntity<?> updateName(@AuthenticationPrincipal CarlpionUserDetails user,@RequestBody MypageDTO mypage){
+		Long userNo = user.getUserNo();
+		mypage.setUserNo(userNo);
+		int result = mypageService.updateName(mypage);
+		return ResponseEntity.status(HttpStatus.OK).body(result);
+	}
+	
+	@GetMapping("/users/getUserInfo")
+	public  ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CarlpionUserDetails user){
+		Long userNo = user.getUserNo();
+		
+		MypageDTO  result = mypageService.getUserInfo(userNo);
+		
 		return ResponseEntity.ok(result);
 		
 	}
+	
+	
 	
 	@PutMapping("/users/update-profile")
 	public ResponseEntity<MypageDTO> updateProfile(@RequestParam("file") MultipartFile file,
@@ -61,13 +95,6 @@ public class MypageController {
 		MypageDTO result = mypageService.updateProfile(file, userNo);
 		return ResponseEntity.ok(result);
 		
-	}
-	@PutMapping("/users/update-relname")
-	public ResponseEntity<MypageDTO> updateName(@RequestBody MypageDTO mypage){
-		
-		MypageDTO result = mypageService.updateName(mypage);
-		return ResponseEntity.ok(result);
-			
 	}
 		
 	@DeleteMapping("/users")
@@ -111,10 +138,11 @@ public class MypageController {
 	} 
 	
 	@GetMapping("/mypage/points")
-	public ResponseEntity<List<MypageDTO>> pointCheck(@AuthenticationPrincipal CarlpionUserDetails user ){
+	public ResponseEntity<List<MypageDTO>> pointCheck(@AuthenticationPrincipal CarlpionUserDetails user ,
+														@RequestParam(defaultValue = "3")int limit,
+														@RequestParam(defaultValue = "0") int offset){
 		Long userNo= user.getUserNo();
-		
-		List<MypageDTO> result = mypageService.pointCheck(userNo);
+		List<MypageDTO> result = mypageService.pointCheck(userNo, limit, offset);
 		
 		return ResponseEntity.ok(result);
 		
