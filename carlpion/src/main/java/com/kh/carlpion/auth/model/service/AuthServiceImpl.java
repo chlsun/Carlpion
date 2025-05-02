@@ -51,7 +51,6 @@ public class AuthServiceImpl implements AuthService {
 	public CarlpionUserDetails getUserDetails() {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
 		CarlpionUserDetails user = (CarlpionUserDetails)authentication.getPrincipal();
 		
 		return user;
