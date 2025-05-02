@@ -29,11 +29,15 @@ public class PointDTO {
 	private Long reviewNo;
 	private String content;
 	private Long commentNo;
-	
+	private Long historyNo;
 	private Long reportNo;
 	
 	private Long fileNo;
 	private String fileUrl;
+	
+	private Long limit;
+	private Long offset;
+	
 	
 	
 	
