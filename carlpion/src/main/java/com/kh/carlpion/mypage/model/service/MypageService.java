@@ -32,6 +32,8 @@ public interface MypageService {
 	
 	List<MypageDTO> pointCheck(Long userNo,int limit, int offset);
 	
+	int pointCheckCount(Long userNo);
+	
 	//----------------------------------------------
 	
 	List<MypageDTO> reservations(Long userNo);
@@ -39,6 +41,7 @@ public interface MypageService {
 	List<MypageDTO> usedCars(Long userNo);
 
 	MypageDTO selectNickName(Long userNo);
+
 
 	
 

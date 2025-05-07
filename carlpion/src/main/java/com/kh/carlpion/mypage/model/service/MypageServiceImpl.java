@@ -1,9 +1,12 @@
 package com.kh.carlpion.mypage.model.service;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.exception.exceptions.EmailDuplicateException;
+import com.kh.carlpion.exception.exceptions.IllegalArgumentPwException;
 import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.mypage.model.dao.MypageMapper;
 import com.kh.carlpion.mypage.model.dto.MypageDTO;
@@ -98,15 +102,40 @@ public class MypageServiceImpl implements MypageService {
 	
 	
 	@Override
-	public 	MypageDTO updateProfile(MultipartFile file, Long userNo) {
-		MypageDTO result = mapper.updateProfile(file,userNo);
-		return result;
+	public MypageDTO updateProfile(MultipartFile file, Long userNo) {
+		String path = new File("").getAbsolutePath() + "/uploads/profile/";
+		File uploadPath = new File(path);
+		if(!uploadPath.exists()) {
+			uploadPath.mkdirs();
+		}
+		String originalFilename = file.getOriginalFilename();
+		String fileName = UUID.randomUUID() + "_" + originalFilename;
+		
+		File dset = new File(uploadPath,fileName);
+		
+		
+		try {
+	        file.transferTo(dset); 
+	    } catch (IOException e) {
+	        throw new RuntimeException("파일 저장 실패", e);
+	    }
+		String imgUrl = "http://localhost:80/uploads/profile/" + fileName;
+		mapper.updateProfile(userNo,imgUrl);
+		
+		MypageDTO dto = new MypageDTO();
+		dto.setFileUrl(imgUrl);
+		
+		return dto;
 	}
 
 
 	
 	@Override
 	public void deleteUser(MypageDTO mypage) {
+		String passwordCheck = mapper.passowordCheck(mypage.getUserNo());
+		if(!passwordEncoder.matches(mypage.getPassword(), passwordCheck))
+			throw new IllegalArgumentPwException("현재 비밀번호가 일치하지 않습니다.");
+		
 		mapper.deleteUser(mypage);
 	}
 
@@ -138,13 +167,24 @@ public class MypageServiceImpl implements MypageService {
 
 	@Override
 	public List<MypageDTO> pointCheck(Long userNo,int limit, int offset) {
+		
+		int startRow = offset;
+		int endRow = offset + limit;
+		
 		Map<String,Object> page = new HashMap<>();
 		page.put("userNo", userNo);
-		page.put("limit", limit);
-		page.put("offset", offset);
+		page.put("startRow", startRow);
+		page.put("endRow", endRow);
 		List<MypageDTO> result =mapper.pointCheck(page);
 		return result;
 	}
+	@Override
+	public int pointCheckCount(Long userNo) {
+	
+		return mapper.pointCheckCount(userNo);
+	}
+	
+	
 	//--------------------------------------------------------
 	@Override
 	public List<MypageDTO> reservations(Long userNo) {
@@ -153,6 +193,9 @@ public class MypageServiceImpl implements MypageService {
 		
 		return result;
 	}
+	
+	
+	
 
 	@Override
 	public List<MypageDTO> usedCars(Long userNo) {
@@ -161,6 +204,8 @@ public class MypageServiceImpl implements MypageService {
 		
 		return result;
 	}
+
+
 
 	
 	
