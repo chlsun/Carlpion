@@ -55,7 +55,13 @@ public class SecurityConfigure {
 							   request.requestMatchers(HttpMethod.GET, 
 									   "/mypage/**", 
 									   "/admin/**", 
-									   "/users/getUserInfo").authenticated();
+									   "/users/getUserInfo",
+									   "/mypage/reservation",
+									   "/rents/payment/**",
+									   "/rents/history/**",
+									   "/rents/reservation",
+									   "/rents/reservations",
+									   "/rents/reservation/**").authenticated();
 							   
 							   request.requestMatchers(HttpMethod.POST, 
 									   "/users", 
