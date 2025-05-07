@@ -233,8 +233,6 @@ public class RentalServiceImpl implements RentalService{
 		history.put("historyList", reservationList);
 		history.put("historyCount", historyCount);
 		
-		log.info("history : {}", history);
-		
 		return history;
 	}
 
@@ -246,6 +244,30 @@ public class RentalServiceImpl implements RentalService{
 		List<ReservationHistoryDTO> reservationList = rentalMapper.getReservationAllList(userNo);
 		
 		return reservationList;
+	}
+
+	@Override
+	public void deleteReservationByImpUID(String impUID) {
+		
+		long userNo = authService.getUserDetails().getUserNo();
+		
+		Long checkUserNo = rentalMapper.getUserNoByImpUID(impUID);
+		
+		if(checkUserNo == null) {
+			throw new CarNotFoundException("존재하지 않는 주문번호 요청입니다.");
+		}
+		
+		if(checkUserNo != userNo) {
+			throw new CarNotFoundException("요청 권한이 없는 사용자 입니다.");
+		}
+		
+		int checkTime = rentalMapper.checkDeleteTime(impUID);
+		
+		if(checkTime > 0) {
+			throw new CarNotFoundException("반납완료 혹은 대여중인 차량은 예약취소가 불가합니다.");
+		}
+		
+		rentalMapper.deleteReservationByImpUID(impUID);
 	}
 
 }
