@@ -14,6 +14,8 @@
 			CP_RENTAL_CAR
 		WHERE 
 			CAR_NO = #{carNo}
+		AND
+			STATUS = 'Y'
 	</select>
 
 	<select id="checkCarId"
@@ -25,6 +27,8 @@
 			CP_RENTAL_CAR
 		WHERE 
 			CAR_ID = #{carId}
+		AND
+			STATUS = 'Y'
 	</select>
 	
 	
@@ -64,6 +68,8 @@
 			COUNT(*)
 		FROM 
 			CP_RENTAL_CAR
+		WHERE
+			STATUS = 'Y'
 	</select>
 	
 
@@ -118,6 +124,8 @@
 			CP_RENTAL_CAR_MODEL M ON (C.MODEL_NO = M.MODEL_NO)
 		JOIN
 			CP_PARKING_INFO P ON (C.PARKING_ID = P.PARKING_ID)
+		WHERE
+			C.STATUS = 'Y'
 		ORDER BY 
 			C.ENROLL_DATE DESC
 	</select>
@@ -183,18 +191,21 @@
 			CP_RENTAL_CAR_MODEL M ON (C.MODEL_NO = M.MODEL_NO)
 		JOIN
 			CP_PARKING_INFO P ON (C.PARKING_ID = P.PARKING_ID)
-		LEFT JOIN (
-			SELECT 
-				* 
-			FROM 
-				CP_RENTAL_RESERVATION 
-			WHERE 
-				RENTAL_DATE BETWEEN TO_DATE(#{rentalDate}, 'YY/MM/DD HH24') AND TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
-			OR 
-				RETURN_DATE BETWEEN TO_DATE(#{rentalDate}, 'YY/MM/DD HH24') AND TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
+		LEFT JOIN 
+			(
+				SELECT 
+					* 
+				FROM 
+					CP_RENTAL_RESERVATION 
+				WHERE 
+					RENTAL_DATE &lt; TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
+			    AND
+			    	RETURN_DATE &gt; TO_DATE(#{rentalDate}, 'YY/MM/DD HH24')
 			) R ON (C.CAR_NO = R.CAR_NO)
 		WHERE 
 			P.PARKING_ADDR LIKE '%' || #{parkingAddr} || '%'
+		AND
+			C.STATUS = 'Y'
 		ORDER BY 
 			C.ENROLL_DATE DESC
 	</select>
@@ -237,16 +248,16 @@
 			FROM 
 				CP_RENTAL_RESERVATION 
 			WHERE 
-				RENTAL_DATE BETWEEN TO_DATE(#{rentalDate}, 'YY/MM/DD HH24') AND TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
-			OR 
-				RETURN_DATE BETWEEN TO_DATE(#{rentalDate}, 'YY/MM/DD HH24') AND TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
+				RENTAL_DATE &lt; TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
+			AND
+			    RETURN_DATE &gt; TO_DATE(#{rentalDate}, 'YY/MM/DD HH24')
 			) R ON (C.CAR_NO = R.CAR_NO)
 		WHERE 
 			C.PARKING_ID = #{parkingId}
+		AND
+			C.STATUS = 'Y'
 		ORDER BY 
 			C.ENROLL_DATE DESC
-		
-			
 	</select>
 	
 	
@@ -282,20 +293,22 @@
 			CP_RENTAL_RESERVATION R ON (C.CAR_NO = R.CAR_NO)
 		WHERE 
 			C.CAR_NO = #{carNo}
+		AND
+			C.STATUS = 'Y'
 		ORDER BY 
 			C.ENROLL_DATE DESC
 		
 			
 	</select>
-
 	
-	<delete id="deleteRentCarByCarNo"
+	<update id="deleteRentCarByCarNo"
 			parameterType="_int">
-		DELETE
-		FROM
+		UPDATE
 			CP_RENTAL_CAR
+		SET
+			STATUS = 'N'
 		WHERE
 			CAR_NO = #{carNo}
-	</delete>
+	</update>
 
 </mapper>
