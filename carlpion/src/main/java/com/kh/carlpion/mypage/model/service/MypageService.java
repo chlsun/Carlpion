@@ -2,11 +2,12 @@ package com.kh.carlpion.mypage.model.service;
 
 
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.carlpion.mypage.model.dto.MypageDTO;
+import com.kh.carlpion.rental.model.dto.ReservationHistoryDTO;
 
 public interface MypageService {
 	
@@ -41,6 +42,8 @@ public interface MypageService {
 	List<MypageDTO> usedCars(Long userNo);
 
 	MypageDTO selectNickName(Long userNo);
+	
+	Map<String, Object> getReservationList();
 
 
 	

@@ -22,6 +22,7 @@ import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
 import com.kh.carlpion.mypage.model.dto.MypageDTO;
 import com.kh.carlpion.mypage.model.dto.PointDTO;
 import com.kh.carlpion.mypage.model.service.MypageService;
+import com.kh.carlpion.rental.model.dto.ReservationHistoryDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -162,6 +163,13 @@ public class MypageController {
 		System.out.println("값오나");
 		List<MypageDTO> result = mypageService.reservations(userNo);
 		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/mypage/reservation")
+	public ResponseEntity<?> getReservationList(){
+		Map<String, Object> reservationList = mypageService.getReservationList();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(reservationList);
 	}
 	
 	@GetMapping("/mypage/usedCars")

@@ -37,18 +37,16 @@ public class CarModelServiceImpl implements CarModelService {
 		
 		int carModelCount = carModelMapper.carModelCount();
 		
-		if(carModelCount < 1) {
-			throw new CarModelNotFoundException("차량 모델이 존재하지 않습니다.");
-		}
-		
 		int offsetNum = (page - 1) * pageSize;
 		
 		RowBounds rowBound = new RowBounds(offsetNum, pageSize);
 		
 		List<CarModelDTO> returnList = carModelMapper.getCarModelList(rowBound);
 		
-		for(CarModelDTO carModel : returnList) {
-			carModel.setImgURL("http://localhost/uploads/carModel/" + carModel.getImgURL());
+		if(!returnList.isEmpty()) {
+			for(CarModelDTO carModel : returnList) {
+				carModel.setImgURL("http://localhost/uploads/carModel/" + carModel.getImgURL());
+			}
 		}
 		
 		Map<String, Integer> pageInfo = pageInfoUtil.getPageInfo(page, carModelCount, pageSize);
@@ -103,6 +101,7 @@ public class CarModelServiceImpl implements CarModelService {
 			throw new ModelNotFoundException("존재하지 않는 차량 모델입니다.");
 		}
 		
+		
 		String filePath = prevImg;
 		
 		if(file != null) {
@@ -133,6 +132,12 @@ public class CarModelServiceImpl implements CarModelService {
 		
 		if(prevImg == null) {
 			throw new ModelNotFoundException("존재하지 않는 차량 모델입니다.");
+		}
+		
+		int rentCarCount = carModelMapper.getRentCarByModelNo(carModel.getModelNo());
+		
+		if(rentCarCount > 0) {
+			throw new ModelNotFoundException("운영중인 렌트 차량이 있습니다. \n운영중인 치량을 먼저 삭제해주세요.");
 		}
 		
 		carModelMapper.removeCarModel(carModel.getModelNo());

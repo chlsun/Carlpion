@@ -13,6 +13,7 @@ public class Reservation {
 	private String merchantUid;
 	private Long userNo;
 	private int carNo;
+	private String parkingId;
 	private String rentalDate;
 	private String returnDate;
 	private int totalPrice;
