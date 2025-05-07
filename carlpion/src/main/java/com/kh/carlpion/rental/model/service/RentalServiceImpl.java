@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.dao.TypeMismatchDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ import com.kh.carlpion.rental.model.dto.PreparePaymentRequestDTO;
 import com.kh.carlpion.rental.model.dto.RentCarPriceDTO;
 import com.kh.carlpion.rental.model.dto.ReservationDTO;
 import com.kh.carlpion.rental.model.dto.ReservationDetailDTO;
+import com.kh.carlpion.rental.model.dto.ReservationHistoryDTO;
 import com.kh.carlpion.rental.model.entity.Reservation;
 
 import lombok.RequiredArgsConstructor;
@@ -90,9 +92,13 @@ public class RentalServiceImpl implements RentalService{
 	@Override
 	public Map<String, Integer> preparePaymdent(PreparePaymentRequestDTO preparePaymentRequest) {
 		
-		log.info("rentalDate : {}", preparePaymentRequest.getRentalDate());
+		long userNo = authService.getUserDetails().getUserNo();
 		
-		log.info("rentalDate : {}", preparePaymentRequest.getReturnDate());
+		int check = rentalMapper.checkDuplicationReservationByUserNo(preparePaymentRequest ,userNo);
+		
+		if(check > 0) {
+			throw new CarNotFoundException("사용자께서 이미 예약한 차량이 존재합니다.\n확인 후 다시 시도해 주세요");
+		}
 		
 		int checkNum = rentalMapper.checkReservation(preparePaymentRequest.getMerchantUid());
 		
@@ -136,17 +142,12 @@ public class RentalServiceImpl implements RentalService{
         int paidAmount = (int) paymentData.get("amount");
         String status = (String) paymentData.get("status");
 
-        RentCarPriceDTO rentCarPrice = rentalMapper.getRentCarPriceByCarNo(reservationDetail.getCarNo());
+        RentCarPriceDTO rentCar = rentalMapper.getRentCarPriceByCarNo(reservationDetail.getCarNo());
 		
         int expectedPrice = calculate(reservationDetail.getRentalDate(), 
         		   reservationDetail.getReturnDate(), 
-				   rentCarPrice.getRentPrice(),
-				   rentCarPrice.getHourPrice());
-        
-        log.info("getRentalDate : {}" ,reservationDetail.getRentalDate());
-        
-        log.info("getReturnDate : {}" ,reservationDetail.getReturnDate() + ":00");
-        
+        		   rentCar.getRentPrice(),
+        		   rentCar.getHourPrice()); 
         
         if (paidAmount != expectedPrice || !"paid".equals(status)) {
             throw new RentCarNotFoundException("결제 검증 실패!!");
@@ -158,6 +159,7 @@ public class RentalServiceImpl implements RentalService{
     											 .merchantUid(reservationDetail.getMerchantUid())
     										  	 .userNo(user.getUserNo())
     										  	 .carNo(reservationDetail.getCarNo())
+    										  	 .parkingId(rentCar.getParkingId())
     										  	 .rentalDate(reservationDetail.getRentalDate() + ":00")
     										  	 .returnDate(reservationDetail.getReturnDate() + ":00")
     										  	 .totalPrice(expectedPrice)
@@ -185,6 +187,87 @@ public class RentalServiceImpl implements RentalService{
 		long difference = freturnDate.getTime() - frentalDate.getTime();
 		
 		return (int)(difference / (1000 * 60 * 60)) * hourPrice + rentPrice;
+	}
+
+	@Override
+	public ReservationHistoryDTO getPaymentHistory(String impUID) {
+		
+		int checkNum = rentalMapper.checkReservationByImpUID(impUID);
+		
+		if(checkNum < 1) {
+			throw new CarNotFoundException("존재하지 않은 주문번호입니다.");
+		}
+		
+		ReservationHistoryDTO reservation = rentalMapper.getPaymentHistory(impUID);
+		
+		return reservation;
+	}
+
+	@Override
+	public ReservationHistoryDTO getReservation() {
+		
+		long userNo = authService.getUserDetails().getUserNo();
+		
+		ReservationHistoryDTO reservation = rentalMapper.getReservation(userNo);
+		
+		return reservation;
+	}
+
+	@Override
+	public Map<String, Object> getRentHistory(int limit) {
+		
+		if(limit < 0) {
+			throw new CarNotFoundException("잘못된 요청입니다.");
+		}
+		
+		long userNo = authService.getUserDetails().getUserNo();
+		
+		RowBounds rowBounds = new RowBounds(0, limit);
+		
+		List<ReservationHistoryDTO> reservationList = rentalMapper.getRentHistory(rowBounds, userNo);
+		
+		int historyCount = rentalMapper.getRentHistoryCount(userNo);
+		
+		Map<String, Object> history = new HashMap();
+		
+		history.put("historyList", reservationList);
+		history.put("historyCount", historyCount);
+		
+		return history;
+	}
+
+	@Override
+	public List<ReservationHistoryDTO> getReservationList() {
+
+		long userNo = authService.getUserDetails().getUserNo();
+		
+		List<ReservationHistoryDTO> reservationList = rentalMapper.getReservationAllList(userNo);
+		
+		return reservationList;
+	}
+
+	@Override
+	public void deleteReservationByImpUID(String impUID) {
+		
+		long userNo = authService.getUserDetails().getUserNo();
+		
+		Long checkUserNo = rentalMapper.getUserNoByImpUID(impUID);
+		
+		if(checkUserNo == null) {
+			throw new CarNotFoundException("존재하지 않는 주문번호 요청입니다.");
+		}
+		
+		if(checkUserNo != userNo) {
+			throw new CarNotFoundException("요청 권한이 없는 사용자 입니다.");
+		}
+		
+		int checkTime = rentalMapper.checkDeleteTime(impUID);
+		
+		if(checkTime > 0) {
+			throw new CarNotFoundException("반납완료 혹은 대여중인 차량은 예약취소가 불가합니다.");
+		}
+		
+		rentalMapper.deleteReservationByImpUID(impUID);
 	}
 
 }

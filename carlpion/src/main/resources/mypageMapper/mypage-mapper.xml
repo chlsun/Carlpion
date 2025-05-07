@@ -99,7 +99,7 @@
 			SELECT 
 					REALNAME realName,
 					EMAIL email,
-					FILE_URL file_url
+					FILE_URL fileUrl
 			FROM 
 					CP_USER
 			WHERE 
