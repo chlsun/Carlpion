@@ -23,12 +23,16 @@
 		COUNT(*)
 	FROM 
 		CP_RENTAL_CAR_MODEL
+	WHERE
+		STATUS = 'Y'
 	</select>
 	
 
 	<select id="getCarModelList"
 			resultType="com.kh.carlpion.admin.model.dto.CarModelDTO">
 		<include refid="carModelColumn"/>
+		WHERE
+			STATUS = 'Y'
 		ORDER BY
 			MODEL_NO DESC
 	</select>
@@ -36,7 +40,10 @@
 	<select id="getCarModelByCarModel"
 			resultType="com.kh.carlpion.admin.model.dto.CarModelDTO">
 		<include refid="carModelColumn"/>
-		WHERE CAR_MODEL = #{carModel}
+		WHERE 
+			CAR_MODEL = #{carModel}
+		AND
+			STATUS = 'Y'
 	</select>
 			
 
@@ -49,6 +56,8 @@
 			CP_RENTAL_CAR_MODEL
 		WHERE 
 			MODEL_NO = #{modelNo}
+		AND
+			STATUS = 'Y'
 	</select>
 	
 	<select id="getCarModelNameList"
@@ -58,6 +67,8 @@
 			, CAR_MODEL carModel
 		FROM 
 			CP_RENTAL_CAR_MODEL
+		WHERE
+			STATUS = 'Y'
 	</select>
 
 	<insert id="setCarModel"
@@ -96,14 +107,15 @@
 			MODEL_NO = #{modelNo}
 	</update>
 	
-	<delete id="removeCarModel"
+	<update id="removeCarModel"
 			parameterType="_int">
-		DELETE
-		FROM
+		UPDATE
 			CP_RENTAL_CAR_MODEL
+		SET
+			STATUS = 'N'
 		WHERE 
 			MODEL_NO = #{modelNo}
-	</delete>
+	</update>
 	
 
 </mapper>

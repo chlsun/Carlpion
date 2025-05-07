@@ -40,6 +40,8 @@ public class AdminController {
 
 		Map<String, Object> viewInfo = carModelService.getCarModelList(page);
 		
+		log.info("viewInfo : ", viewInfo);
+		
 		return ResponseEntity.status(HttpStatus.OK).body(viewInfo);
 	}
 	
