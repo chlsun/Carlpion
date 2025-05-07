@@ -36,17 +36,11 @@ public class RentCarServiceImpl implements RentCarService {
 		
 		int rentCarCount = rentCarMapper.rentCarCount();
 		
-		if(rentCarCount < 1) {
-			throw new RentCarNotFoundException("차량 모델이 존재하지 않습니다.");
-		}
-		
 		int offsetNum = (page - 1) * pageSize;
 		
 		RowBounds rowBound = new RowBounds(offsetNum, pageSize);
 		
 		List<RentCarDTO> returnList = rentCarMapper.getRentCarList(rowBound);
-		
-		log.info("returnList : {}" ,returnList);
 		
 		Map<String, Integer> pageInfo = pageInfoUtil.getPageInfo(page, rentCarCount, pageSize);
 		
@@ -63,13 +57,13 @@ public class RentCarServiceImpl implements RentCarService {
 	@Override
 	public void setRentCar(RentCarDTO rentCar) {
 		
-		int checkNum = rentCarMapper.checkCarId(rentCar.getCarId());
-		
 		String checkModel = carModelMapper.checkCarModel(rentCar.getModelNo());
 		
 		if(checkModel == null) {
 			throw new ModelNotFoundException("존재하지 않는 차량 모델입니다.");
 		}
+		
+		int checkNum = rentCarMapper.checkCarId(rentCar.getCarId());
 		
 		if(checkNum > 0) {
 			throw new AlreadyExistsException("이미 존재하는 렌트 차량입니다.");

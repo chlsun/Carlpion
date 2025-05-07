@@ -9,10 +9,9 @@ import lombok.Data;
 @Data
 public class ReservationDateDTO {
 	
-	private int reservationId;
+	private String reservationId;
 
 	private String rentalDate;
 	
-//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private String returnDate;
 }
