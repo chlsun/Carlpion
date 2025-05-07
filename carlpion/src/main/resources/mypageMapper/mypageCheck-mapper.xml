@@ -98,34 +98,51 @@
  	 
 	<!-- 포인트 조회  -->
 	
-	<select id="pointCheck"
-			resultType="com.kh.carlpion.mypage.model.dto.PointDTO">
-			
-		SELECT
-			    H.HISTORY_NO historyNo,
-			    H.REVIEW_NO reviewNo,
-			    U.USERNAME userName,
-			    U.REALNAME realName,
-			    P.USER_LEVEL userLevel,
-			    H.REASON reason, 
-			    H.POINT_CHANGE pointChange,
-			    P.POINT point,
-			    H.CREATE_DATE createDate
-		FROM
-		    	CP_POINT_HISTORY H
-		JOIN
-		    	CP_POINT P ON H.USER_NO = P.USER_NO
-		JOIN
-		   		CP_USER U ON P.USER_NO = U.USER_NO
-		WHERE
-		    	U.USER_NO = #{userNo}
-		ORDER 
-		BY
-		    	createDate DESC
-		    	LIMIT #{limit} OFFSET #{offset};
-			
-			
-			</select>
+<select id="pointCheck"
+		resultType="com.kh.carlpion.mypage.model.dto.PointDTO">
+	SELECT *
+	FROM (
+		SELECT ROWNUM AS RN, sub_result.*
+		FROM (
+			SELECT
+				H.HISTORY_NO historyNo,
+				H.REVIEW_NO reviewNo,
+				U.USERNAME userName,
+				U.REALNAME realName,
+				P.USER_LEVEL userLevel,
+				H.REASON reason, 
+				H.POINT_CHANGE pointChange,
+				P.POINT point,
+				H.CREATE_DATE createDate
+			FROM 
+				CP_POINT_HISTORY H
+			JOIN 
+				CP_POINT P ON H.USER_NO = P.USER_NO
+			JOIN
+				 CP_USER U ON P.USER_NO = U.USER_NO
+			WHERE 
+				U.USER_NO = #{userNo}
+			ORDER 
+				BY H.CREATE_DATE DESC
+		) sub_result
+		WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+	)
+	WHERE RN > #{startRow}
+</select>
+
+	<select id="pointCheckCount" resultType="int">
+		
+	  	SELECT
+	  			 COUNT(*)
+	  	  FROM
+	  			 CP_POINT_HISTORY
+	  	 WHERE
+	  			 USER_NO = #{userNo}
+	  			 
+	</select>
+
+
+
 
 
 	<select id="reservations"
@@ -138,12 +155,13 @@
  			R.PAYMENT_COMPLETED_AT paymentCompletedAt,
  			R.TOTAL_PRICE totalPrice,
  			R.STATUS status,
- 			R.RESERVATION_NO reservationNo,
+ 			R.RESERVATION_ID reservationId,
  			C.MODEL_NO modelNo,
  			D.CAR_MODEL carModel,
  			I.PARKING_ID parkingId,
  			I.PARKING_TITLE title,
- 			I.PARKING_ADDR parkingAddr
+ 			I.PARKING_ADDR parkingAddr,
+ 			C.CAR_ID carId
  	FROM
  			CP_RENTAL_RESERVATION R
  	JOIN
@@ -155,6 +173,8 @@
  	
  	WHERE
  			R.USER_NO = #{userNo}
+ 	  AND
+ 			R.RETURN_DATE &lt; SYSDATE	
  	ORDER
  		BY
  			RENTAL_DATE DESC

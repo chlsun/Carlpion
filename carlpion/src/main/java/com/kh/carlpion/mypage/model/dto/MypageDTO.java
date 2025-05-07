@@ -22,7 +22,7 @@ public class MypageDTO {
 	private String realName;
 	private String email;
 	private String nickName;
-	private String imgUrl;
+	private String fileUrl;
 	private String modifyPw;
 
 	
