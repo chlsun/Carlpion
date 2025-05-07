@@ -8,5 +8,6 @@ public class RentCarPriceDTO {
 	private int carNo;
 	private int rentPrice;
 	private int hourPrice;
+	private String parkingId;
 
 }

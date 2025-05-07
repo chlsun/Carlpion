@@ -5,17 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kh.carlpion.exception.exceptions.EmailDuplicateException;
+import com.kh.carlpion.auth.model.service.AuthService;
+import com.kh.carlpion.exception.exceptions.CarNotFoundException;
 import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.mypage.model.dao.MypageMapper;
 import com.kh.carlpion.mypage.model.dto.MypageDTO;
+import com.kh.carlpion.rental.model.dao.RentalMapper;
+import com.kh.carlpion.rental.model.dto.ReservationHistoryDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,8 @@ public class MypageServiceImpl implements MypageService {
 
 	private final MypageMapper mapper;
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	private final AuthService authService;
+	private final RentalMapper rentalMapper;
 	
 	@Override
 	public int updateNickName(Long userNo, String nickname) {
@@ -162,11 +165,29 @@ public class MypageServiceImpl implements MypageService {
 		return result;
 	}
 
-	
-	
-	
-	
-	
-
+	@Override
+	public Map<String, Object> getReservationList() {
+		
+		long userNo = authService.getUserDetails().getUserNo();
+		
+		int reservationCount = rentalMapper.getReservationCount(userNo);
+		
+		if(reservationCount < 1) {
+			throw new CarNotFoundException("조회결과 없음");
+		}
+		
+		RowBounds rowBounds = new RowBounds(0, 3);
+		
+		List<ReservationHistoryDTO> result = rentalMapper.getReservationList(rowBounds, userNo);
+		
+		
+		Map<String, Object> reservationList = new HashMap();
+		
+		reservationList.put("reservation", result);
+		
+		reservationList.put("reservationCount", reservationCount);
+		
+		return reservationList;
+	}
 
 }

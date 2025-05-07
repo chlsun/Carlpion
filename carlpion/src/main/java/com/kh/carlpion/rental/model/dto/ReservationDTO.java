@@ -1,7 +1,5 @@
 package com.kh.carlpion.rental.model.dto;
 
-import java.time.LocalDateTime;
-
 import lombok.Data;
 
 @Data

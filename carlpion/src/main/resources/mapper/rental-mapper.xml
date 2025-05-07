@@ -12,6 +12,7 @@
 			CAR_NO carNo
 			, RENT_PRICE rentPrice
 			, HOUR_PRICE hourPrice
+			, PARKING_ID parkingId
 		FROM
 			CP_RENTAL_CAR C
 		JOIN
@@ -32,6 +33,21 @@
 			RESERVATION_ID = #{merchantUid}
 	</select>
 	
+	<select id="checkDuplicationReservationByUserNo">
+		SELECT
+			COUNT(*)
+		FROM 
+			CP_RENTAL_RESERVATION
+		WHERE
+			USER_NO = #{userNo}
+		AND 
+			(
+		    	RENTAL_DATE &lt; TO_DATE(#{preparePaymentRequest.returnDate}, 'YY/MM/DD HH24')
+		    	AND
+		    	RETURN_DATE &gt; TO_DATE(#{preparePaymentRequest.rentalDate}, 'YY/MM/DD HH24')
+			)
+	</select>
+	
 	<select id="checkDuplicationReservation"
 			parameterType="com.kh.carlpion.rental.model.dto.PreparePaymentRequestDTO"
 			resultType="_int">
@@ -41,10 +57,10 @@
 			CP_RENTAL_RESERVATION
 		WHERE
 			CAR_NO = #{carNo}
+		AND 
+			RENTAL_DATE &lt; TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
 		AND
-			RENTAL_DATE BETWEEN TO_DATE(#{rentalDate}, 'YY/MM/DD HH24') AND TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
-		OR 
-			RETURN_DATE BETWEEN TO_DATE(#{rentalDate}, 'YY/MM/DD HH24') AND TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
+			RETURN_DATE &gt; TO_DATE(#{rentalDate}, 'YY/MM/DD HH24')
 	</select>
 	
 	<insert id="saveReservation"
@@ -55,6 +71,7 @@
 				RESERVATION_ID
 				, USER_NO
 				, CAR_NO
+				, PARKING_ID
 				, RENTAL_DATE
 				, RETURN_DATE
 				, TOTAL_PRICE
@@ -66,6 +83,7 @@
 			#{merchantUid}
 			, #{userNo}
 			, #{carNo}
+			, #{parkingId}
 			, TO_DATE(#{rentalDate}, 'YY/MM/DD HH24:MI')
 			, TO_DATE(#{returnDate}, 'YY/MM/DD HH24:MI')
 			, #{totalPrice}
@@ -74,4 +92,194 @@
 			, SYSDATE
 		)
 	</insert>
+	
+	<select id="checkReservationByImpUID"
+			parameterType="string"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM 
+			CP_RENTAL_RESERVATION
+		WHERE
+			IMP_UID = #{impUID}
+	</select>
+	
+	<select id="getPaymentHistory"
+			parameterType="string"
+			resultType="com.kh.carlpion.rental.model.dto.ReservationHistoryDTO">
+		SELECT
+			R.CAR_NO carNo
+			, M.CAR_MODEL carModel
+			, C.CAR_ID carId
+			, RENTAL_DATE rentalDate
+			, RETURN_DATE returnDate
+			, TOTAL_PRICE totalPrice
+			, IMP_UID impUID
+		FROM 
+			CP_RENTAL_RESERVATION R
+		JOIN
+			CP_RENTAL_CAR C ON(R.CAR_NO = C.CAR_NO)
+		JOIN
+			CP_RENTAL_CAR_MODEL M ON(C.MODEL_NO = M.MODEL_NO)
+		WHERE
+			IMP_UID = #{impUID}
+	</select>
+	
+	<select id="getReservationCount"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			USER_NO = #{userNo}
+		AND
+			RETURN_DATE >= SYSDATE
+	</select>
+	
+	<select id="getReservation"
+			resultType="com.kh.carlpion.rental.model.dto.ReservationHistoryDTO">
+		SELECT
+			R.CAR_NO carNo
+			, M.CAR_MODEL carModel
+			, C.CAR_ID carId
+			, RENTAL_DATE rentalDate
+			, RETURN_DATE returnDate
+			, TOTAL_PRICE totalPrice
+			, IMP_UID impUID
+		FROM 
+			CP_RENTAL_RESERVATION R
+		JOIN
+			CP_RENTAL_CAR C ON(R.CAR_NO = C.CAR_NO)
+		JOIN
+			CP_RENTAL_CAR_MODEL M ON(C.MODEL_NO = M.MODEL_NO)
+		WHERE
+			R.USER_NO = #{userNo}
+		AND
+			RETURN_DATE >= SYSDATE
+	</select>
+	
+	<select id="getReservationList"
+			resultType="com.kh.carlpion.rental.model.dto.ReservationHistoryDTO">
+		SELECT
+			R.CAR_NO carNo
+			, M.CAR_MODEL carModel
+			, C.CAR_ID carId
+			, PARKING_ADDR parkingAddr
+			, PARKING_TITLE parkingTitle
+			, RENTAL_DATE rentalDate
+			, RETURN_DATE returnDate
+			, TOTAL_PRICE totalPrice
+			, IMP_UID impUID
+		FROM 
+			CP_RENTAL_RESERVATION R
+		JOIN
+			CP_RENTAL_CAR C ON(R.CAR_NO = C.CAR_NO)
+		JOIN
+			CP_RENTAL_CAR_MODEL M ON(C.MODEL_NO = M.MODEL_NO)
+		JOIN
+			CP_PARKING_INFO P ON(R.PARKING_ID = P.PARKING_ID)
+		WHERE
+			R.USER_NO = #{userNo}
+		AND
+			RETURN_DATE >= SYSDATE
+		ORDER BY
+			RENTAL_DATE ASC
+	</select>
+	
+	<select id="getReservationAllList"
+			resultType="com.kh.carlpion.rental.model.dto.ReservationHistoryDTO">
+		SELECT
+			R.CAR_NO carNo
+			, M.CAR_MODEL carModel
+			, C.CAR_ID carId
+			, PARKING_ADDR parkingAddr
+			, PARKING_TITLE parkingTitle
+			, RENTAL_DATE rentalDate
+			, RETURN_DATE returnDate
+			, TOTAL_PRICE totalPrice
+			, IMP_UID impUID
+		FROM 
+			CP_RENTAL_RESERVATION R
+		JOIN
+			CP_RENTAL_CAR C ON(R.CAR_NO = C.CAR_NO)
+		JOIN
+			CP_RENTAL_CAR_MODEL M ON(C.MODEL_NO = M.MODEL_NO)
+		JOIN
+			CP_PARKING_INFO P ON(R.PARKING_ID = P.PARKING_ID)
+		WHERE
+			R.USER_NO = #{userNo}
+		AND
+			RETURN_DATE >= SYSDATE
+		ORDER BY
+			RENTAL_DATE ASC
+	</select>
+	
+	<select id="getRentHistory"
+			resultType="com.kh.carlpion.rental.model.dto.ReservationHistoryDTO">
+		SELECT
+			R.CAR_NO carNo
+			, M.CAR_MODEL carModel
+			, C.CAR_ID carId
+			, PARKING_ADDR parkingAddr
+			, PARKING_TITLE parkingTitle
+			, RENTAL_DATE rentalDate
+			, RETURN_DATE returnDate
+			, TOTAL_PRICE totalPrice
+			, IMP_UID impUID
+		FROM 
+			CP_RENTAL_RESERVATION R
+		JOIN
+			CP_RENTAL_CAR C ON(R.CAR_NO = C.CAR_NO)
+		JOIN
+			CP_RENTAL_CAR_MODEL M ON(C.MODEL_NO = M.MODEL_NO)
+		JOIN
+			CP_PARKING_INFO P ON(R.PARKING_ID = P.PARKING_ID)
+		WHERE
+			R.USER_NO = #{userNo}
+		AND
+			RETURN_DATE &lt; SYSDATE
+		ORDER BY
+			RENTAL_DATE DESC
+	</select>
+	
+	<select id="getRentHistoryCount"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			USER_NO = #{userNo}
+		AND
+			RETURN_DATE &lt; SYSDATE
+	</select>
+	
+	<select id="getUserNoByImpUID">
+		SELECT
+			USER_NO userNo
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			IMP_UID = #{impUID}
+	</select>
+	
+	<select id="checkDeleteTime">
+		SELECT
+			COUNT(*)
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			IMP_UID = #{impUID}
+		AND
+			RENTAL_DATE &lt;= SYSDATE
+	</select>
+	
+	<delete id="deleteReservationByImpUID">
+		DELETE
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			IMP_UID = #{impUID}	
+	</delete>
 </mapper>

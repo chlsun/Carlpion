@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import com.kh.carlpion.admin.model.dto.RentCarDTO;
 import com.kh.carlpion.rental.model.dto.PreparePaymentRequestDTO;
 import com.kh.carlpion.rental.model.dto.ReservationDTO;
 import com.kh.carlpion.rental.model.dto.ReservationDetailDTO;
+import com.kh.carlpion.rental.model.dto.ReservationHistoryDTO;
 import com.kh.carlpion.rental.model.service.RentalService;
 
 import lombok.RequiredArgsConstructor;
@@ -47,8 +49,6 @@ public class RentalController {
 	
 	@GetMapping("/details/{carNo}")
 	public ResponseEntity<?> getRentalListByCarNo(@PathVariable(name="carNo") int carNo){
-			
-			log.info("carNo : {}", carNo);
 		
 			List<RentCarDTO> rentCarList = rentalService.getRentalListByCarNo(carNo);
 		
@@ -70,4 +70,46 @@ public class RentalController {
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body("성공");
 	}
+	
+	@GetMapping("/payment/{impUID}")
+	public ResponseEntity<?> getPaymentHistory(@PathVariable(name = "impUID") String impUID){
+		
+		ReservationHistoryDTO reservation = rentalService.getPaymentHistory(impUID);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(reservation);
+	}
+	
+	@GetMapping("/reservation")
+	public ResponseEntity<?> getReservation(){
+		
+		ReservationHistoryDTO reservation = rentalService.getReservation();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(reservation);
+	}
+	
+	@GetMapping("/reservations")
+	public ResponseEntity<?> getReservationList(){
+		
+		List<ReservationHistoryDTO> reservation = rentalService.getReservationList();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(reservation);
+	}
+	
+	@DeleteMapping("/reservation/{impUID}")
+	public ResponseEntity<?> deleteReservationByImpUID(@PathVariable(name = "impUID") String impUID){
+		
+		rentalService.deleteReservationByImpUID(impUID);
+		
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+	
+	
+	@GetMapping("/history/{limit}")
+	public ResponseEntity<?> getRentHistory(@PathVariable(name = "limit") int limit){
+		
+		Map<String, Object> history = rentalService.getRentHistory(limit);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(history);
+	}
+	
 }
