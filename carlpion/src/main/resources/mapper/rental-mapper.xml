@@ -254,4 +254,32 @@
 		AND
 			RETURN_DATE &lt; SYSDATE
 	</select>
+	
+	<select id="getUserNoByImpUID">
+		SELECT
+			USER_NO userNo
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			IMP_UID = #{impUID}
+	</select>
+	
+	<select id="checkDeleteTime">
+		SELECT
+			COUNT(*)
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			IMP_UID = #{impUID}
+		AND
+			RENTAL_DATE &lt;= SYSDATE
+	</select>
+	
+	<delete id="deleteReservationByImpUID">
+		DELETE
+		FROM
+			CP_RENTAL_RESERVATION
+		WHERE
+			IMP_UID = #{impUID}	
+	</delete>
 </mapper>

@@ -27,4 +27,6 @@ public interface RentalService {
 	List<ReservationHistoryDTO> getReservationList();
 	
 	Map<String, Object> getRentHistory(int limit);
+	
+	void deleteReservationByImpUID(String impUID);
 }
