@@ -25,5 +25,7 @@ public interface CarModelMapper {
 	
 	void removeCarModel(int modelNo);
 	
+	int getRentCarByModelNo(int modelNo);
+	
 	List<CarModelDTO> getCarModelNameList();
 }

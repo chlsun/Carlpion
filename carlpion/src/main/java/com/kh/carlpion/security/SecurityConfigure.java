@@ -55,7 +55,13 @@ public class SecurityConfigure {
 							   request.requestMatchers(HttpMethod.GET, 
 									   "/mypage/**", 
 									   "/admin/**", 
-									   "/users/getUserInfo").authenticated();
+									   "/users/getUserInfo",
+									   "/mypage/reservation",
+									   "/rents/payment/**",
+									   "/rents/history/**",
+									   "/rents/reservation",
+									   "/rents/reservations",
+									   "/rents/reservation/**").authenticated();
 							   
 							   request.requestMatchers(HttpMethod.POST, 
 									   "/users", 
@@ -93,7 +99,8 @@ public class SecurityConfigure {
 									   "/users", 
 									   "/notice/**", 
 									   "/reports/**", 
-									   "/reviews/**").authenticated();
+									   "/reviews/**",
+									   "/rents/reservation/**").authenticated();
 							   request.requestMatchers(HttpMethod.DELETE, 
 									   "/notice/**", 
 									   "/reports/comments", 
