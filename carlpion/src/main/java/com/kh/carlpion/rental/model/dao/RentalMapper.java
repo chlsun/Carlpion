@@ -43,4 +43,10 @@ public interface RentalMapper {
 	
 	int getReservationCount(long userNo);
 	
+	Long getUserNoByImpUID(String impUID);
+	
+	int checkDeleteTime(String impUID);
+	
+	void deleteReservationByImpUID(String impUID);
+	
 }

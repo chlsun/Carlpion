@@ -99,7 +99,8 @@ public class SecurityConfigure {
 									   "/users", 
 									   "/notice/**", 
 									   "/reports/**", 
-									   "/reviews/**").authenticated();
+									   "/reviews/**",
+									   "/rents/reservation/**").authenticated();
 							   request.requestMatchers(HttpMethod.DELETE, 
 									   "/notice/**", 
 									   "/reports/comments", 
