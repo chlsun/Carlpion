@@ -1,6 +1,7 @@
 package com.kh.carlpion.report.model.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class ReportDTO {
 	private String nickName;
 	private Date createDate;
 	private Long count;
-	private String fileUrl;
+	private List<String> fileUrls;
 	private Long point;
 	private String userLevel;
 }
