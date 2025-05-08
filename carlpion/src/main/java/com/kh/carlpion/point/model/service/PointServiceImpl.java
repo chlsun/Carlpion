@@ -2,11 +2,14 @@ package com.kh.carlpion.point.model.service;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.carlpion.auth.model.service.AuthService;
+import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.PointException;
+import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.point.model.dao.PointMapper;
 import com.kh.carlpion.point.model.dto.LikeDTO;
 import com.kh.carlpion.point.model.dto.PointDTO;
@@ -25,46 +28,40 @@ public class PointServiceImpl implements PointService {
 	private final AuthService authService;
 	
 	/** 
-	 * Long pointChange
+	 * Long userNo,
+	 * Long pointChange,
 	 * String reason 
 	 */
 	@Override
 	@Transactional
-	public void saveHistoryPoint(PointHistoryDTO pointHistoryDTO) {
-		Long userNo = authService.getUserDetails().getUserNo();
-		
+	public void saveHistoryPoint(PointHistoryDTO pointHistoryDTO) {	
+		checkedOwnerByUser(pointHistoryDTO.getUserNo());
 		PointHistoryVO pointHistoryVO = PointHistoryVO.builder()
-													  .userNo(userNo)
+													  .userNo(pointHistoryDTO.getUserNo())
 													  .pointChange(pointHistoryDTO.getPointChange())
 													  .reason(pointHistoryDTO.getReason())
 													  .build();
 		pointMapper.saveHistoryPoint(pointHistoryVO);
 		
 		PointDTO pointDTO = new PointDTO();
-		pointDTO.setPoint(pointHistoryDTO.getPointChange());	
-		
+		pointDTO.setUserNo(pointHistoryDTO.getUserNo());
+		pointDTO.setPoint(pointHistoryDTO.getPointChange());			
 		updateUserPoint(pointDTO);
-	}
-
-	@Override
-	public List<PointHistoryDTO> findAll(Long userNo) {
-		return pointMapper.findAllHistory(userNo);
 	}
 
 	/** Long point */
 	@Override
 	@Transactional
 	public void updateUserPoint(PointDTO pointDTO) {
-		Long userNo = authService.getUserDetails().getUserNo();
+		Long userNo = pointDTO.getUserNo();
 		Long changePoint = pointDTO.getPoint();
 		
 		if(changePoint != null && changePoint < 0) {
 			PointVO currentPoint = pointMapper.findByPoint(userNo);
 			
 			if(currentPoint == null) {
-				throw new PointException("포인트 조회 오류!");
+				throw new PointException("포인트 조회의 오류가 발생했습니다.");
 			}
-			
 			Long totalPoint = currentPoint.getPoint();
 			
 			if(totalPoint + changePoint < 0) {
@@ -77,6 +74,11 @@ public class PointServiceImpl implements PointService {
 								 .point(changePoint)
 								 .build();
 		pointMapper.updateUserPoint(pointVO);
+	}
+	
+	@Override
+	public List<PointHistoryDTO> findAll(Long userNo) {
+		return pointMapper.findAllHistory(userNo);
 	}
 
 	/** String userLevel */
@@ -91,7 +93,28 @@ public class PointServiceImpl implements PointService {
 								 .build();
 		pointMapper.updateUserLevel(pointVO);
 	}
+	
+	/** 사용자 인증 */
+	private void checkedOwnerByUser(Long targetUserNo) {
+		Long userNo = authService.getUserDetails().getUserNo();
+		boolean isAdmin = SecurityContextHolder.getContext()
+											   .getAuthentication()
+									           .getAuthorities()
+									           .stream()
+									           .anyMatch(authority -> 
+									           		authority.getAuthority().equals("ROLE_ADMIN")
+						         			   );
+		if( !isAdmin && !userNo.equals(targetUserNo)) {
+			throw new UnauthorizedException("해당 요청을 처리할 수 없습니다.");
+		}
+		PointVO userInfo = pointMapper.findByPoint(targetUserNo);
+		
+		if(userInfo == null) {
+			throw new NotFindException("해당 사용자를 찾을 수 없습니다. ["+ targetUserNo +"]");
+		}
+	}
 
+	
 	@Override
 	@Transactional
 	public void saveReviewLike(LikeDTO likeDTO) {
