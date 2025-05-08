@@ -105,8 +105,6 @@ public class NoticeServiceImpl implements NoticeService {
 	    }
 
 	    noticeMapper.updateCount(noticeNo);
-
-
 	    return noticeDTO;
 	}
 	
@@ -116,19 +114,14 @@ public class NoticeServiceImpl implements NoticeService {
 		Long noticeNo = noticeDTO.getNoticeNo();
 		checkedOwnerByUser(noticeNo);
 		
-		if(files != null && !files.isEmpty() && files.stream().anyMatch(file -> !file.isEmpty())) {
-			List<String> fileUrls = noticeMapper.findFileByAll(noticeNo);
-			
-			if(fileUrls != null) {
-				for(String fileUrl : fileUrls) {
-					fileService.deleteFile(fileUrl);
-				}
-			}
-			noticeMapper.deleteFileById(noticeNo);
+		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
+		
+		if(containsFiles) {
+			deleteFiles(noticeNo);
 			
 			for(MultipartFile file : files) {
 				
-				if( !file.isEmpty()) {
+				if(file != null && !file.isEmpty()) {
 					String filePath = fileService.storage(file);
 					
 					NoticeVO requestFileData = NoticeVO.builder()
@@ -138,9 +131,20 @@ public class NoticeServiceImpl implements NoticeService {
 					noticeMapper.saveFile(requestFileData);
 				}
 			}
-		}
+		} else { /* 기존 파일 유지 구문 */ }
 		noticeMapper.updateById(noticeDTO);
 		return noticeDTO;
+	}
+	
+	private void deleteFiles(Long noticeNo) {
+		List<String> fileUrls = noticeMapper.findFileByAll(noticeNo);
+		
+		if(fileUrls != null && !fileUrls.isEmpty()) {
+			for(String fileUrl : fileUrls) {
+				fileService.deleteFile(fileUrl);
+			}
+			noticeMapper.deleteFileById(noticeNo);
+		}
 	}
 
 	@Override

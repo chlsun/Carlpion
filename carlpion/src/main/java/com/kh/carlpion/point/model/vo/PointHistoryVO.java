@@ -11,7 +11,6 @@ import lombok.Value;
 @AllArgsConstructor
 public class PointHistoryVO {
 	private Long userNo;
-	private Long reviewNo;
 	private Long pointChange;
 	private String reason;
 }
