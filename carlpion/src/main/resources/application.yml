@@ -6,8 +6,9 @@ spring:
     driver-class-name: oracle.jdbc.driver.OracleDriver
 
   profiles:
-    include: private,mail
-
+    include: 
+     - private
+     - mail
 
   mvc:
     static-path-pattern: /uploads/**
