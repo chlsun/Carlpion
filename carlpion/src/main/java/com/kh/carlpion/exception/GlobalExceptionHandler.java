@@ -33,6 +33,7 @@ import com.kh.carlpion.exception.exceptions.ImgFileNotFoundException;
 import com.kh.carlpion.exception.exceptions.ModelNotFoundException;
 import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.exception.exceptions.NotFindException;
+import com.kh.carlpion.exception.exceptions.PointException;
 import com.kh.carlpion.exception.exceptions.RentCarNotFoundException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.exception.exceptions.UnexpectSqlException;
@@ -168,6 +169,11 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(CreateDirectoriesException.class)
 	public ResponseEntity<?> handleCreateDirectories(CreateDirectoriesException e) {
+		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(PointException.class)
+	public ResponseEntity<?> handlePoint(PointException e) {
 		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
 	}
 	

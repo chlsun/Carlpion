@@ -12,31 +12,40 @@
 		  		CP_POINT_HISTORY
 		  	 (
 				USER_NO
-			 ,	REVIEW_NO
 			 ,	POINT_CHANGE
 			 ,	REASON
 			 )
 		VALUES
 			 (
 				#{userNo}
-			 ,	#{reviewNo}
 			 ,	#{pointChange}
 			 ,	#{reason}
 			 )
 	</insert>
 	
 	<select 
-		id="findAll"
+		id="findAllHistory"
 		resultType="com.kh.carlpion.point.model.dto.PointHistoryDTO"
 	>
 		SELECT
 				HISTORY_NO
-			 ,	REVIEW_NO
 			 ,	POINT_CHANGE
 			 ,	REASON
 			 ,	CREATE_DATE
 		  FROM
 		  		CP_POINT_HISTORY
+		 WHERE
+		 		USER_NO = #{userNo}
+	</select>
+	<select 
+		id="findByPoint" 
+		resultType="com.kh.carlpion.point.model.vo.PointVO"
+	>
+		SELECT 
+				POINT
+			 ,	USER_LEVEL	AS userLevel
+		  FROM	
+		  		CP_POINT
 		 WHERE
 		 		USER_NO = #{userNo}
 	</select>
@@ -48,9 +57,11 @@
 		UPDATE 
 				CP_POINT
 		   SET	
-		  		POINT = #{point}
+		  		POINT = POINT + #{point}
 		 WHERE
 		 		USER_NO = #{userNo}
+		   AND
+		   		(POINT + #{point}) >= 0
 	</update>
 	<update 
 		id="updateUserLevel"
@@ -72,6 +83,10 @@
 		INSERT 
 		  INTO	
 		  		CP_LIKE
+		  	 (
+				USER_NO
+			 ,	REVIEW_NO
+			 )
 		VALUES 
 			 (
 			   	#{userNo}

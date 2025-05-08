@@ -105,8 +105,6 @@ public class NoticeServiceImpl implements NoticeService {
 	    }
 
 	    noticeMapper.updateCount(noticeNo);
-
-
 	    return noticeDTO;
 	}
 	
