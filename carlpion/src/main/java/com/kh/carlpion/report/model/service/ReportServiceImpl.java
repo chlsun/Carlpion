@@ -102,13 +102,11 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public ReportDTO findById(Long reportNo) {
 		ReportDTO reportDTO = reportMapper.findById(reportNo);
-
 		
 		if(reportDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
-		
-		
+				
 		reportMapper.updateCount(reportNo);
 		return reportDTO;
 	}

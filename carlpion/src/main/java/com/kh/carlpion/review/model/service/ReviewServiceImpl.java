@@ -14,6 +14,8 @@ import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.point.model.dto.LikeDTO;
+import com.kh.carlpion.point.model.dto.PointHistoryDTO;
 import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dao.ReviewMapper;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
@@ -60,6 +62,10 @@ public class ReviewServiceImpl implements ReviewService {
 				}
 			}
 		}
+		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
+		pointHistoryDTO.setReason("리뷰 작성");
+		pointHistoryDTO.setPointChange(10L);
+		pointService.saveHistoryPoint(pointHistoryDTO);
 //		log.info("save: {}", requestData);		
 	}
 
@@ -106,13 +112,11 @@ public class ReviewServiceImpl implements ReviewService {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
 
-		
 		List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
+		
 		reviewDTO.setFileUrls(fileUrls);
-		reviewMapper.updateCount(reviewNo);
 		
-		
-		
+		reviewMapper.updateCount(reviewNo);		
 		return reviewDTO;
 	}
 
@@ -154,6 +158,11 @@ public class ReviewServiceImpl implements ReviewService {
 	public void softDeleteById(Long reviewNo) {
 		checkedOwnerByUser(reviewNo);
 		reviewMapper.softDeleteById(reviewNo);
+		
+		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
+		pointHistoryDTO.setReason("리뷰 삭제");
+		pointHistoryDTO.setPointChange(-10L);	
+		pointService.saveHistoryPoint(pointHistoryDTO);
 	}
 	
 	/** 사용자 인증 */

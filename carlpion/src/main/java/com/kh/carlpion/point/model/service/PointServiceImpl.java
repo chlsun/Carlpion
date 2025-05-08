@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.carlpion.auth.model.service.AuthService;
+import com.kh.carlpion.exception.exceptions.PointException;
 import com.kh.carlpion.point.model.dao.PointMapper;
 import com.kh.carlpion.point.model.dto.LikeDTO;
 import com.kh.carlpion.point.model.dto.PointDTO;
@@ -22,7 +23,11 @@ public class PointServiceImpl implements PointService {
 	
 	private final PointMapper pointMapper;
 	private final AuthService authService;
-
+	
+	/** 
+	 * Long pointChange
+	 * String reason 
+	 */
 	@Override
 	@Transactional
 	public void saveHistoryPoint(PointHistoryDTO pointHistoryDTO) {
@@ -30,30 +35,51 @@ public class PointServiceImpl implements PointService {
 		
 		PointHistoryVO pointHistoryVO = PointHistoryVO.builder()
 													  .userNo(userNo)
-													  .reviewNo(pointHistoryDTO.getReviewNo())
 													  .pointChange(pointHistoryDTO.getPointChange())
 													  .reason(pointHistoryDTO.getReason())
 													  .build();
 		pointMapper.saveHistoryPoint(pointHistoryVO);
+		
+		PointDTO pointDTO = new PointDTO();
+		pointDTO.setPoint(pointHistoryDTO.getPointChange());	
+		
+		updateUserPoint(pointDTO);
 	}
 
 	@Override
 	public List<PointHistoryDTO> findAll(Long userNo) {
-		return pointMapper.findAll(userNo);
+		return pointMapper.findAllHistory(userNo);
 	}
 
+	/** Long point */
 	@Override
 	@Transactional
 	public void updateUserPoint(PointDTO pointDTO) {
 		Long userNo = authService.getUserDetails().getUserNo();
+		Long changePoint = pointDTO.getPoint();
 		
+		if(changePoint != null && changePoint < 0) {
+			PointVO currentPoint = pointMapper.findByPoint(userNo);
+			
+			if(currentPoint == null) {
+				throw new PointException("포인트 조회 오류!");
+			}
+			
+			Long totalPoint = currentPoint.getPoint();
+			
+			if(totalPoint + changePoint < 0) {
+				throw new PointException("포인트가 부족합니다. 보유한 포인트: ["+ totalPoint +"]");
+			}
+		}
+
 		PointVO pointVO = PointVO.builder()
 								 .userNo(userNo)
-								 .point(pointDTO.getPoint())
+								 .point(changePoint)
 								 .build();
 		pointMapper.updateUserPoint(pointVO);
 	}
 
+	/** String userLevel */
 	@Override
 	@Transactional
 	public void updateUserLevel(PointDTO pointDTO) {
