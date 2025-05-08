@@ -33,21 +33,24 @@ public interface MypageMapper {
 	
 	void updateProfile(@Param("userNo") Long userNo, @Param("fileUrl") String imgUrl);
 	
-	void deleteUser(MypageDTO mypage);
+	void deleteUser(long userNo);
 //--------------------------------------------------------
-	List<MypageDTO> replyCheck(Long userNo);
+	List<MypageDTO> replyCheck(Map<String, Object> page);
 
-	List<MypageDTO> inquiryCheck(Long userNo);
+	List<MypageDTO> inquiryCheck(Map<String, Object> page);
 
-	List<MypageDTO> reviewCheck(Long userNo);
+	List<MypageDTO> reviewCheck(Map<String, Object> page);
 	
 	List<MypageDTO> pointCheck(Map<String, Object> page);
 	int pointCheckCount(Long userNo);
+	int reviewCheckCount(Long userNo);
+	int replyCheckCount(Long userNo);
+	int inquiryCheckCount(Long userNo);
+
 
 //--------------------------------------------------------
 
 	List<MypageDTO> reservations(Long userNo);
-	List<MypageDTO> usedCars(Long userNo);
 
 
 

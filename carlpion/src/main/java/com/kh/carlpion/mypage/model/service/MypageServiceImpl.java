@@ -1,6 +1,7 @@
 package com.kh.carlpion.mypage.model.service;
 
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,10 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kh.carlpion.exception.exceptions.EmailDuplicateException;
-import com.kh.carlpion.exception.exceptions.IllegalArgumentPwException;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.CarNotFoundException;
+import com.kh.carlpion.exception.exceptions.IllegalArgumentPwException;
 import com.kh.carlpion.exception.exceptions.NickNameDuplicateException;
 import com.kh.carlpion.mypage.model.dao.MypageMapper;
 import com.kh.carlpion.mypage.model.dto.MypageDTO;
@@ -24,7 +24,9 @@ import com.kh.carlpion.rental.model.dao.RentalMapper;
 import com.kh.carlpion.rental.model.dto.ReservationHistoryDTO;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class MypageServiceImpl implements MypageService {
@@ -73,18 +75,7 @@ public class MypageServiceImpl implements MypageService {
 				
 	}		
 
-	/*
-	 * @Override public int updateEmail(Long userNo, String email,String password) {
-	 * Map<String, Object> checkEmail = new HashMap<>(); checkEmail.put("userNo",
-	 * userNo); checkEmail.put("email", email); int check =
-	 * mapper.checkEmail(checkEmail);
-	 * 
-	 * if(check > 0 ) { throw new EmailDuplicateException("이미 존재하는 이메일 입니다.");
-	 * 
-	 * }
-	 * 
-	 * int result = mapper.updateEmail(checkEmail); return result; }
-	 */
+
 
 	@Override
 	public MypageDTO getUserInfo(Long userNo) {
@@ -100,7 +91,7 @@ public class MypageServiceImpl implements MypageService {
 	public 	int updateName(MypageDTO mypage) {
 		
 		int result = mapper.updateName(mypage);
-		
+					
 		return result;
 	}
 	
@@ -137,38 +128,72 @@ public class MypageServiceImpl implements MypageService {
 	@Override
 	public void deleteUser(MypageDTO mypage) {
 		String passwordCheck = mapper.passowordCheck(mypage.getUserNo());
-		if(!passwordEncoder.matches(mypage.getPassword(), passwordCheck))
+		if(!passwordEncoder.matches(mypage.getPassword(), passwordCheck)) {
+			
 			throw new IllegalArgumentPwException("현재 비밀번호가 일치하지 않습니다.");
-		
-		mapper.deleteUser(mypage);
+		}
+		mapper.deleteUser(mypage.getUserNo());
 	}
 
 	//--------------------------------------------------------
-	public List<MypageDTO> replyCheck(Long userNo){
+	@Override
+	public List<MypageDTO> replyCheck(Long userNo,int limit, int offset){
+		int startRow = offset;
+		int endRow = offset + limit;
 		
-		List<MypageDTO> result = mapper.replyCheck(userNo);
-		System.out.println("댓글 서비스 나오나");
+		Map<String,Object> page = new HashMap<>();
+		page.put("userNo", userNo);
+		page.put("startRow", startRow);
+		page.put("endRow", endRow);
+		
+		List<MypageDTO> result = mapper.replyCheck(page);
 		return result;
 		
 	}
-	
 	@Override
-	public List<MypageDTO> inquiryCheck(Long userNo) {
-		
-		List<MypageDTO> result = mapper.inquiryCheck(userNo);
-		System.out.println("서비스나오나");
-		return result;
+	public int replyCheckCount(Long userNo) {
+		return mapper.replyCheckCount(userNo);
 	}
 	
 	@Override
-	public List<MypageDTO> reviewCheck(Long userNo) {
+	public List<MypageDTO> inquiryCheck(Long userNo,int limit, int offset) {
+		int startRow = offset;
+		int endRow = offset + limit;
 		
-		List<MypageDTO> result =mapper.reviewCheck(userNo);
-		System.out.println(userNo);
-		System.out.println(result);
+		Map<String,Object> page = new HashMap<>();
+		page.put("userNo", userNo);
+		page.put("startRow", startRow);
+		page.put("endRow", endRow);
+		
+		List<MypageDTO> result = mapper.inquiryCheck(page);
+		return result;
+	}
+	@Override
+	public int inquiryCheckCount(Long userNo) {
+		return mapper.inquiryCheckCount(userNo);
+	}
+	
+	@Override
+	public List<MypageDTO> reviewCheck(Long userNo,int limit, int offset) {
+		
+		int startRow = offset;
+		int endRow = offset + limit;
+		
+		Map<String,Object> page = new HashMap<>();
+		page.put("userNo", userNo);
+		page.put("startRow", startRow);
+		page.put("endRow", endRow);
+		
+		List<MypageDTO> result =mapper.reviewCheck(page);
+		
 		return result;
 	}
 
+	@Override
+	public int reviewCheckCount(Long userNo) {
+		return mapper.reviewCheckCount(userNo);
+	}
+	
 	@Override
 	public List<MypageDTO> pointCheck(Long userNo,int limit, int offset) {
 		
@@ -201,13 +226,7 @@ public class MypageServiceImpl implements MypageService {
 	
 	
 
-	@Override
-	public List<MypageDTO> usedCars(Long userNo) {
-		
-		List<MypageDTO> result = mapper.usedCars(userNo);
-		
-		return result;
-	}
+
 
 
 	@Override
@@ -234,5 +253,13 @@ public class MypageServiceImpl implements MypageService {
 		
 		return reservationList;
 	}
+
+	
+	
+
+
+	
+
+	
 
 }
