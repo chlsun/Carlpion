@@ -25,25 +25,29 @@ public interface MypageService {
 	void deleteUser(MypageDTO mypage);
 	
 	//----------------------------------------------
-	List<MypageDTO> replyCheck(Long userNo);
+	List<MypageDTO> replyCheck(Long userNo,int limit, int offset);
 	
-	List<MypageDTO> inquiryCheck(Long userNo);
+	List<MypageDTO> inquiryCheck(Long userNo,int limit, int offset);
 	
-	List<MypageDTO> reviewCheck(Long userNo);
+	List<MypageDTO> reviewCheck(Long userNo,int limit, int offset);
 	
 	List<MypageDTO> pointCheck(Long userNo,int limit, int offset);
 	
 	int pointCheckCount(Long userNo);
 	
+	int reviewCheckCount(Long userNo);
+	int replyCheckCount(Long userNo);
+	int inquiryCheckCount(Long userNo);
+	
 	//----------------------------------------------
 	
 	List<MypageDTO> reservations(Long userNo);
 	
-	List<MypageDTO> usedCars(Long userNo);
 
 	MypageDTO selectNickName(Long userNo);
 	
 	Map<String, Object> getReservationList();
+
 
 
 
