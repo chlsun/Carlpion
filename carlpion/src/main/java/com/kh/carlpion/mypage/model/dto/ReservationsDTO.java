@@ -22,7 +22,7 @@ public class ReservationsDTO {
 	private Long rentPrice;
 	private Long carNo;
 	
-	private Long  reservationNo;
+	private String  reservationId;
 	private Date rentalDate; 
 	private Date returnDate;
 	private Long totalPrice;
