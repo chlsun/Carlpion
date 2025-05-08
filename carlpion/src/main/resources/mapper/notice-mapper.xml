@@ -15,12 +15,14 @@
 		  		CP_NOTICE
 		  	 (
 			 	USER_NO
+			 ,	MODIFIER_NO
 			 ,	TITLE
 			 , 	CONTENT
 			 )
 		VALUES 
 			 (
 			   	#{userNo}
+			 , 	#{modifierNo}
 			 , 	#{title} 	
 			 , 	#{content} 	
 			 )
