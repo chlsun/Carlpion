@@ -91,16 +91,19 @@ public class MypageController {
 	
 	
 	@PutMapping("/users/update-profile")
-	public ResponseEntity<MypageDTO> updateProfile(@RequestParam("file") MultipartFile file,
-											        @RequestParam("userNo") Long userNo){
-		MypageDTO result = mypageService.updateProfile(file, userNo);
-		return ResponseEntity.ok(result);
+	public ResponseEntity<?> updateProfile(@RequestParam("file") MultipartFile file,
+			@AuthenticationPrincipal CarlpionUserDetails user){
+		Long userNo = user.getUserNo();
+		
+		MypageDTO dto = mypageService.updateProfile(file, userNo);
+		return ResponseEntity.ok(dto);
 		
 	}
 		
 	@DeleteMapping("/users")
-	public ResponseEntity<String> deleteUser(@RequestBody MypageDTO mypage){
-		
+	public ResponseEntity<String> deleteUser(@AuthenticationPrincipal CarlpionUserDetails user,@RequestBody MypageDTO mypage){
+		Long userNo = user.getUserNo();
+		mypage.setUserNo(userNo);
 		mypageService.deleteUser(mypage);
 		
 		return ResponseEntity.ok("탈퇴에 성공하셨습니다.");
@@ -139,17 +142,22 @@ public class MypageController {
 	} 
 	
 	@GetMapping("/mypage/points")
-	public ResponseEntity<List<MypageDTO>> pointCheck(@AuthenticationPrincipal CarlpionUserDetails user ,
-														@RequestParam(defaultValue = "3")int limit,
-														@RequestParam(defaultValue = "0") int offset){
+	public ResponseEntity<Map<String, Object>> pointCheck(@AuthenticationPrincipal CarlpionUserDetails user ,
+														@RequestParam("limit")int limit,
+														@RequestParam("offset") int offset){
 		Long userNo= user.getUserNo();
-		List<MypageDTO> result = mypageService.pointCheck(userNo, limit, offset);
+		List<MypageDTO> pointList = mypageService.pointCheck(userNo, limit, offset);
+		int totalCount = mypageService.pointCheckCount(userNo);
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("pointList", pointList);
+		result.put("totalCount", totalCount);
 		
 		return ResponseEntity.ok(result);
 		
 	}
 
-	@GetMapping("/mypage/reservations")
+	@GetMapping("/mypage/use")
 	public ResponseEntity<List<MypageDTO>> reservations(@AuthenticationPrincipal CarlpionUserDetails user){
 		Long userNo = user.getUserNo();
 		System.out.println("값오나");
