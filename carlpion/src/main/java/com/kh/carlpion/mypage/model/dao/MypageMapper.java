@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +31,7 @@ public interface MypageMapper {
 	
 	int updateName(MypageDTO updateName);
 	
-	MypageDTO updateProfile (MultipartFile file, Long userNo);
+	void updateProfile(@Param("userNo") Long userNo, @Param("fileUrl") String imgUrl);
 	
 	void deleteUser(MypageDTO mypage);
 //--------------------------------------------------------
@@ -41,6 +42,7 @@ public interface MypageMapper {
 	List<MypageDTO> reviewCheck(Long userNo);
 	
 	List<MypageDTO> pointCheck(Map<String, Object> page);
+	int pointCheckCount(Long userNo);
 
 //--------------------------------------------------------
 
