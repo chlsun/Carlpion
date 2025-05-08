@@ -46,6 +46,7 @@ public interface MypageService {
 	Map<String, Object> getReservationList();
 
 
+
 	
 
 
