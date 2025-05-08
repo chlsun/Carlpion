@@ -52,7 +52,8 @@ public class SecurityConfigure {
 									   "/uploads/**", 
 									   "/parking/**", 
 									   "/rents/**",
-									   "/carModel").permitAll();
+									   "/carModel",
+									   "/board/**").permitAll();
 							   request.requestMatchers(HttpMethod.GET, 
 									   "/mypage/**", 
 									   "/admin/**", 
