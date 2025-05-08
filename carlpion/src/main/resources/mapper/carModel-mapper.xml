@@ -117,5 +117,12 @@
 			MODEL_NO = #{modelNo}
 	</update>
 	
+	<select id="getCarModelRandomList"
+			parameterType="com.kh.carlpion.admin.model.dto.CarModelDTO">
+		<include refid="carModelColumn"/>
+		ORDER BY 
+			DBMS_RANDOM.VALUE
+		FETCH FIRST 5 ROWS ONLY
+	</select>
 
 </mapper>
