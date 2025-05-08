@@ -37,7 +37,7 @@ public interface MypageService {
 	
 	//----------------------------------------------
 	
-	List<MypageDTO> reservations(Long userNo);
+	List<ReservationHistoryDTO> reservations(Long userNo);
 	
 	List<MypageDTO> usedCars(Long userNo);
 
