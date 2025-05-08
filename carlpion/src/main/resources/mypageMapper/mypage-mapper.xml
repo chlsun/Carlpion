@@ -98,7 +98,8 @@
 				
 			SELECT 
 					REALNAME realName,
-					EMAIL email
+					EMAIL email,
+					FILE_URL fileUrl
 			FROM 
 					CP_USER
 			WHERE 
@@ -111,9 +112,9 @@
 			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 		
 			UPDATE
-					CP_USER_IMG
+					CP_USER
 			   SET
-			   		IMG_URL = #{fileUrl}
+			   		FILE_URL = #{fileUrl}
 			 WHERE 
 			 		USER_NO = #{userNo}
 			
@@ -143,8 +144,7 @@
 					CP_USER
 			 WHERE
 			 		USER_NO = #{userNo}
-			  AND
-			 		PASSWORD = #{password}
+			 
 					
 	</delete>
 

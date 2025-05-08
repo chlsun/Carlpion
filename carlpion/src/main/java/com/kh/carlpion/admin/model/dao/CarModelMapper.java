@@ -28,4 +28,7 @@ public interface CarModelMapper {
 	int getRentCarByModelNo(int modelNo);
 	
 	List<CarModelDTO> getCarModelNameList();
+	
+	List<CarModelDTO> getCarModelRandomList();
+	
 }
