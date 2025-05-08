@@ -33,6 +33,8 @@ public interface MypageService {
 	
 	List<MypageDTO> pointCheck(Long userNo,int limit, int offset);
 	
+	int pointCheckCount(Long userNo);
+	
 	//----------------------------------------------
 	
 	List<MypageDTO> reservations(Long userNo);
@@ -42,6 +44,8 @@ public interface MypageService {
 	MypageDTO selectNickName(Long userNo);
 	
 	Map<String, Object> getReservationList();
+
+
 
 	
 
