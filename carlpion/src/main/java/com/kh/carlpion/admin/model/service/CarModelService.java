@@ -19,4 +19,6 @@ public interface CarModelService {
 	
 	void removeCarModel(CarModelDTO carModel);
 	
+	List<CarModelDTO> getCarModelRandomList();
+	
 }

@@ -160,6 +160,22 @@ public class CarModelServiceImpl implements CarModelService {
 		return returnList;
 	}
 
+
+
+	@Override
+	public List<CarModelDTO> getCarModelRandomList() {
+		
+		List<CarModelDTO> carModelList = carModelMapper.getCarModelRandomList();
+		
+		if(!carModelList.isEmpty()) {
+			for(CarModelDTO carModel : carModelList) {
+				carModel.setImgURL("http://localhost/uploads/carModel/" + carModel.getImgURL());
+			}
+		}
+		
+		return carModelList;
+	}
+
 	
 
 }
