@@ -18,7 +18,7 @@ public interface PointMapper {
 	
 	List<PointHistoryDTO> findAllHistory(Long userNo);
 	
-	PointVO findByPoint(Long userNo);
+	PointDTO findByPoint(Long userNo);
 			
 	void updateUserPoint(PointVO pointVO);
 	
@@ -26,7 +26,9 @@ public interface PointMapper {
 	
 	void saveReviewLike(LikeVO likeVO);
 	
-	List<LikeDTO> findAllLike();
+	List<LikeDTO> findAllLike(LikeDTO likeDTO);
+	
+	Long findByLike(LikeDTO likeDTO);
 	
 	void deleteReviewLike(LikeVO likeVO);
 }
