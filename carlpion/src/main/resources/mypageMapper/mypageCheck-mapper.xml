@@ -9,27 +9,27 @@
  	<select id="replyCheck"
         resultType="com.kh.carlpion.mypage.model.dto.BoardDTO">
 
-SELECT *
-FROM (
-  SELECT ROWNUM AS RN, sub.*
-  FROM (
-    SELECT
-      V.COMMENT_NO AS commentNo,
-      V.CONTENT AS content,
-      V.CREATE_DATE AS createDate,
-      V.REVIEW_NO AS reviewNo,
-      R.TITLE AS title,
-      R.COUNT AS count
-    FROM CP_RV_COMMENT V
-    JOIN CP_REVIEW R ON V.REVIEW_NO = R.REVIEW_NO
-    WHERE 
-      V.USER_NO = #{userNo}
-      AND V.IS_ACTIVE = 'Y'
-    ORDER BY V.CREATE_DATE DESC
-  ) sub
-  WHERE ROWNUM <![CDATA[<=]]> #{endRow}
-)
-WHERE RN > #{startRow}
+		SELECT *
+		FROM (
+		  SELECT ROWNUM AS RN, sub.*
+		  FROM (
+		    SELECT
+		      V.COMMENT_NO AS commentNo,
+		      V.CONTENT AS content,
+		      V.CREATE_DATE AS createDate,
+		      V.REVIEW_NO AS reviewNo,
+		      R.TITLE AS title,
+		      R.COUNT AS count
+		    FROM CP_RV_COMMENT V
+		    JOIN CP_REVIEW R ON V.REVIEW_NO = R.REVIEW_NO
+		    WHERE 
+		      V.USER_NO = #{userNo}
+		      AND V.IS_ACTIVE = 'Y'
+		    ORDER BY V.CREATE_DATE DESC
+		  ) sub
+		  WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+		)
+		WHERE RN > #{startRow}
 </select>	
 	<select id="replyCheckCount" resultType="int">
 		
