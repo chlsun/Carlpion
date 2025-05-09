@@ -1,7 +1,6 @@
 package com.kh.carlpion.notice.model.dto;
 
 import java.sql.Date;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

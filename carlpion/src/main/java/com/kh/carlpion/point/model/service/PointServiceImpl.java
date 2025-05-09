@@ -125,6 +125,11 @@ public class PointServiceImpl implements PointService {
 	public List<LikeDTO> findAllLike(LikeDTO likeDTO) {
 		return null;	/* 구현 필요 */
 	}
+	
+	@Override
+	public boolean findByLike(LikeDTO likeDTO) {
+		return pointMapper.findByLike(likeDTO);	
+	}
 
 	@Override
 	@Transactional
@@ -140,10 +145,5 @@ public class PointServiceImpl implements PointService {
 								   .reviewNo(likeDTO.getReviewNo())
 								   .build();		
 		return requestData;
-	}
-
-	@Override
-	public Long findByLike(LikeDTO likeDTO) {
-		return null;	/* 구현 필요 */
 	}
 }
