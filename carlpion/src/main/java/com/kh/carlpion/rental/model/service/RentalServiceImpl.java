@@ -19,6 +19,8 @@ import com.kh.carlpion.exception.exceptions.BadRequestException;
 import com.kh.carlpion.exception.exceptions.CarNotFoundException;
 import com.kh.carlpion.exception.exceptions.RentCarNotFoundException;
 import com.kh.carlpion.payment.model.service.PortoneService;
+import com.kh.carlpion.point.model.dto.PointHistoryDTO;
+import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.rental.model.dao.RentalMapper;
 import com.kh.carlpion.rental.model.dto.PreparePaymentRequestDTO;
 import com.kh.carlpion.rental.model.dto.RentCarPriceDTO;
@@ -39,6 +41,7 @@ public class RentalServiceImpl implements RentalService{
 	private final RentalMapper rentalMapper;
 	private final PortoneService portoneService;
 	private final AuthService authService;
+	private final PointService pointService;
 
 
 	@Override
@@ -168,6 +171,13 @@ public class RentalServiceImpl implements RentalService{
     										  	 .build();
         
         rentalMapper.saveReservation(reservation);
+        
+        PointHistoryDTO historyPoint = new PointHistoryDTO();
+        historyPoint.setUserNo(user.getUserNo());
+        historyPoint.setPointChange(30L);
+        historyPoint.setReason("차량 렌트 에약 성공");
+
+        pointService.saveHistoryPoint(historyPoint);
 	}
 	
 
@@ -268,6 +278,13 @@ public class RentalServiceImpl implements RentalService{
 		}
 		
 		rentalMapper.deleteReservationByImpUID(impUID);
+		
+		PointHistoryDTO historyPoint = new PointHistoryDTO();
+        historyPoint.setUserNo(userNo);
+        historyPoint.setPointChange(-30L);
+        historyPoint.setReason("차량 렌트 예약 취소");
+
+        pointService.saveHistoryPoint(historyPoint);
 	}
 
 }
