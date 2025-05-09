@@ -1,7 +1,6 @@
 package com.kh.carlpion.notice.model.dto;
 
 import java.sql.Date;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +23,7 @@ public class NoticeDTO {
 	private Date createDate;
 	private Date modifyDate;
 	private Long count;
-	private List<String> fileUrls;
+	private String fileUrl;
 	private Long point;
 	private String userLevel;
 }
