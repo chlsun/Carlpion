@@ -282,7 +282,7 @@ public class RentalServiceImpl implements RentalService{
 		PointHistoryDTO historyPoint = new PointHistoryDTO();
         historyPoint.setUserNo(userNo);
         historyPoint.setPointChange(-30L);
-        historyPoint.setReason("차량 렌트 에약 취소");
+        historyPoint.setReason("차량 렌트 예약 취소");
 
         pointService.saveHistoryPoint(historyPoint);
 	}
