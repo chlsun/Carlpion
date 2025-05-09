@@ -120,9 +120,22 @@
 	<select id="getCarModelRandomList"
 			parameterType="com.kh.carlpion.admin.model.dto.CarModelDTO">
 		<include refid="carModelColumn"/>
+		WHERE
+			STATUS = 'Y'
 		ORDER BY 
 			DBMS_RANDOM.VALUE
 		FETCH FIRST 5 ROWS ONLY
 	</select>
-
+	
+	<select id="getRentCarByModelNo"
+			resultType="_int">
+	SELECT
+		COUNT(*)
+	FROM
+		CP_RENTAL_CAR
+	WHERE
+		MODEL_NO = #{modelNo}
+	AND
+		STATUS = 'Y'
+	</select>
 </mapper>

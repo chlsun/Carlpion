@@ -23,18 +23,18 @@ import lombok.extern.slf4j.Slf4j;
 public class PortoneServiceImpl implements PortoneService {
 
 	private final RestTemplate restTemplate = new RestTemplate();
-//	@Value("${portone.secret}")
-	private String secretKey = "0536240542055225";
+	@Value("${portone.secret}")
+	private String secretKey;
 	
-//	@Value("${portone.key}")
-	private String restAPIKey = "xwdFEKwacXombyPw5EtCc4C6sSmMAjPe8vL19KrlD10EuXvb2IGaLMkNOsxK56nIkfUCAPkOxCroiynb";
+	@Value("${portone.key}")
+	private String restAPIKey;
 	
 	
 	public String getAccessToken() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
-        PortOneTokenRequest tokenRequest = new PortOneTokenRequest("0536240542055225", "xwdFEKwacXombyPw5EtCc4C6sSmMAjPe8vL19KrlD10EuXvb2IGaLMkNOsxK56nIkfUCAPkOxCroiynb");
+        
+        PortOneTokenRequest tokenRequest = new PortOneTokenRequest(restAPIKey, secretKey);
         
         ObjectMapper objectMapper = new ObjectMapper();
         String json = null;
@@ -56,8 +56,6 @@ public class PortoneServiceImpl implements PortoneService {
 	public void preparePayment(String merchantUid, int totalPrice) {
 		String token = getAccessToken();
 		
-		
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -73,9 +71,6 @@ public class PortoneServiceImpl implements PortoneService {
 	
 	public Map<String, Object> verifyPayment(String impUID, String token) {
         HttpHeaders headers = new HttpHeaders();
-        
-        
-        log.info("여기여기여기여기 : {}", impUID);
         
         headers.set("Authorization", token);
 
