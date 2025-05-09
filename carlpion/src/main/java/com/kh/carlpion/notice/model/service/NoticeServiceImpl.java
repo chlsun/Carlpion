@@ -38,6 +38,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		NoticeVO requestData = NoticeVO.builder()
 									   .userNo(userNo)
+									   .modifierNo(userNo)
 									   .title(noticeDTO.getTitle())
 									   .content(noticeDTO.getContent())
 									   .build();
@@ -112,6 +113,7 @@ public class NoticeServiceImpl implements NoticeService {
 	@Transactional
 	public NoticeDTO updateById(NoticeDTO noticeDTO, List<MultipartFile> files) {
 		Long noticeNo = noticeDTO.getNoticeNo();
+		Long userNo = authService.getUserDetails().getUserNo();
 		checkedOwnerByUser(noticeNo);
 		
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
@@ -131,7 +133,8 @@ public class NoticeServiceImpl implements NoticeService {
 					noticeMapper.saveFile(requestFileData);
 				}
 			}
-		} else { /* 기존 파일 유지 구문 */ }
+		} else { /* 기존 파일 유지 구문 */ }		
+		noticeDTO.setModifierNo(userNo);
 		noticeMapper.updateById(noticeDTO);
 		return noticeDTO;
 	}
