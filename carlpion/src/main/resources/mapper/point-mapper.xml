@@ -109,7 +109,7 @@
 		resultType="com.kh.carlpion.point.model.dto.LikeDTO"
 	>
 		SELECT 
-			 	USER_NO		AS	userNo
+				USER_NO		AS	userNo
 			 ,	REVIEW_NO	AS	reviewNo
 		  FROM
 		  		CP_LIKE
