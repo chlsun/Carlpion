@@ -57,7 +57,7 @@ public class PointServiceImpl implements PointService {
 		Long changePoint = pointDTO.getPoint();
 		
 		if(changePoint != null && changePoint < 0) {
-			PointVO currentPoint = pointMapper.findByPoint(userNo);
+			PointDTO currentPoint = pointMapper.findByPoint(userNo);
 			
 			if(currentPoint == null) {
 				throw new PointException("포인트 조회의 오류가 발생했습니다.");
@@ -107,7 +107,7 @@ public class PointServiceImpl implements PointService {
 		if( !isAdmin && !userNo.equals(targetUserNo)) {
 			throw new UnauthorizedException("해당 요청을 처리할 수 없습니다.");
 		}
-		PointVO userInfo = pointMapper.findByPoint(targetUserNo);
+		PointDTO userInfo = pointMapper.findByPoint(targetUserNo);
 		
 		if(userInfo == null) {
 			throw new NotFindException("해당 사용자를 찾을 수 없습니다. ["+ targetUserNo +"]");
@@ -122,8 +122,8 @@ public class PointServiceImpl implements PointService {
 	}
 
 	@Override
-	public List<LikeDTO> findAllLike() {
-		return pointMapper.findAllLike();
+	public List<LikeDTO> findAllLike(LikeDTO likeDTO) {
+		return null;	/* 구현 필요 */
 	}
 
 	@Override
@@ -140,5 +140,10 @@ public class PointServiceImpl implements PointService {
 								   .reviewNo(likeDTO.getReviewNo())
 								   .build();		
 		return requestData;
+	}
+
+	@Override
+	public Long findByLike(LikeDTO likeDTO) {
+		return null;	/* 구현 필요 */
 	}
 }

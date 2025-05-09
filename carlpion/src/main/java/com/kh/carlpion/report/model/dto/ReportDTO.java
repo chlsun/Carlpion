@@ -22,7 +22,7 @@ public class ReportDTO {
 	private String nickName;
 	private Date createDate;
 	private Long count;
-	private List<String> fileUrls;
+	private String fileUrl;
 	private Long point;
 	private String userLevel;
 }
