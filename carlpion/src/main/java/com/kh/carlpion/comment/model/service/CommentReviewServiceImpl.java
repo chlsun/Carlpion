@@ -43,6 +43,7 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 		commentMapper.saveComment(requestData);
 		
 		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
+		pointHistoryDTO.setUserNo(userNo);
 		pointHistoryDTO.setReason("리뷰 댓글 작성");
 		pointHistoryDTO.setPointChange(5L);
 		pointService.saveHistoryPoint(pointHistoryDTO);
@@ -60,19 +61,19 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 	@Override
 	@Transactional
 	public void softDeleteCommentById(Long commentNo) {
-		CommentVO requestData = checkedOwnerByUser(commentNo);
+		Long userNo = authService.getUserDetails().getUserNo();
+		CommentVO requestData = checkedOwnerByUser(userNo, commentNo);
 		commentMapper.softDeleteCommentById(requestData);
 		
 		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
+		pointHistoryDTO.setUserNo(userNo);
 		pointHistoryDTO.setReason("리뷰 댓글 삭제");
 		pointHistoryDTO.setPointChange(-5L);
 		pointService.saveHistoryPoint(pointHistoryDTO);
 	}
 
 	/** 사용자 인증 */
-	private CommentVO checkedOwnerByUser(Long commentNo) {
-		Long authUserNo = authService.getUserDetails().getUserNo();
-		
+	private CommentVO checkedOwnerByUser(Long userNo, Long commentNo) {
 		CommentVO requestData = CommentVO.builder()
 										 .commentType(COMMENT_TYPE)
 										 .commentNo(commentNo)
@@ -84,7 +85,7 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 		
 		
-		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
+		if (!isAdmin && (findUserNo == null || !userNo.equals(findUserNo))) {
 			throw new UnauthorizedException("삭제할 권한이 없습니다.");
 		}
 		
