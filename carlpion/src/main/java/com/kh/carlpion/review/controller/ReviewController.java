@@ -47,7 +47,8 @@ public class ReviewController {
 	}
 	
 	@PostMapping("/{id}")
-	public ResponseEntity<LikeDTO> like(@PathVariable(name = "id") Long reviewNo, LikeDTO likeDTO) {
+	public ResponseEntity<LikeDTO> like(@PathVariable(name = "id") Long reviewNo) {
+		LikeDTO likeDTO = new LikeDTO();
 		likeDTO.setReviewNo(reviewNo);
 		pointService.saveReviewLike(likeDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).build();

@@ -107,7 +107,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public ReviewDTO findById(Long reviewNo) {
-		ReviewDTO reviewDTO = reviewMapper.findById(reviewNo);		
+		ReviewDTO reviewDTO = reviewMapper.findById(reviewNo);
 		
 		if(reviewDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
@@ -115,8 +115,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 		List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
 		
-		reviewDTO.setFileUrls(fileUrls);
-		
+		reviewDTO.setFileUrls(fileUrls);		
 		reviewMapper.updateCount(reviewNo);		
 		return reviewDTO;
 	}

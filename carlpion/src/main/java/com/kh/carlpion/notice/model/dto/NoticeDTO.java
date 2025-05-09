@@ -24,7 +24,7 @@ public class NoticeDTO {
 	private Date createDate;
 	private Date modifyDate;
 	private Long count;
-	private List<String> fileUrls;
+	private String fileUrl;
 	private Long point;
 	private String userLevel;
 }
