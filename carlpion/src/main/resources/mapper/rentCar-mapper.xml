@@ -248,9 +248,9 @@
 			FROM 
 				CP_RENTAL_RESERVATION 
 			WHERE 
-				RENTAL_DATE &lt; TO_DATE(#{returnDate}, 'YY/MM/DD HH24')
+				RENTAL_DATE &lt; TO_DATE(#{returnDate}, 'YYYY/MM/DD HH24')
 			AND
-			    RETURN_DATE &gt; TO_DATE(#{rentalDate}, 'YY/MM/DD HH24')
+			    RETURN_DATE &gt; TO_DATE(#{rentalDate}, 'YYYY/MM/DD HH24')
 			) R ON (C.CAR_NO = R.CAR_NO)
 		WHERE 
 			C.PARKING_ID = #{parkingId}

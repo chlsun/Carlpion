@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.board.dao.BoardMapper">
+
+	
+	<select id="getReviewBoard"
+			resultType="com.kh.carlpion.board.dto.BoardDTO">
+		SELECT
+			TITLE
+			, REVIEW_NO boardNo
+		FROM
+			CP_REVIEW
+		WHERE
+			IS_ACTIVE = 'Y'
+		ORDER BY
+			CREATE_DATE DESC
+	</select>
+	
+	<select id="getReportBoard"
+			resultType="com.kh.carlpion.board.dto.BoardDTO">
+		SELECT
+			TITLE
+			, REPORT_NO boardNo
+		FROM
+			CP_REPORT
+		WHERE
+			IS_ACTIVE = 'Y'
+		ORDER BY
+			CREATE_DATE DESC
+	</select>
+	
+	<select id="getNoticeBoard"
+			resultType="com.kh.carlpion.board.dto.BoardDTO">
+		SELECT
+			TITLE
+			, NOTICE_NO boardNo
+		FROM
+			CP_NOTICE
+		WHERE
+			IS_ACTIVE = 'Y'
+		ORDER BY
+			CREATE_DATE DESC
+	</select>
+
+</mapper>

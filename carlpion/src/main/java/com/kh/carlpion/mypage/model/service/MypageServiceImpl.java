@@ -216,9 +216,12 @@ public class MypageServiceImpl implements MypageService {
 	
 	//--------------------------------------------------------
 	@Override
-	public List<MypageDTO> reservations(Long userNo) {
+	public List<ReservationHistoryDTO> reservations(Long userNo) {
 		
-		List<MypageDTO> result = mapper.reservations(userNo);
+		RowBounds rowBounds = new RowBounds(0, 3);
+		
+		List<ReservationHistoryDTO> result = rentalMapper.getRentHistory(rowBounds, userNo);
+	
 		
 		return result;
 	}

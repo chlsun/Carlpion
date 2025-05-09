@@ -12,6 +12,8 @@ import com.kh.carlpion.comment.model.dto.CommentDTO;
 import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
 import com.kh.carlpion.comment.model.vo.CommentVO;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
+import com.kh.carlpion.point.model.dto.PointHistoryDTO;
+import com.kh.carlpion.point.model.service.PointService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 
 	private final CommentMapper commentMapper;
 	private final AuthService authService;
+	private final PointService pointService;
 	
 	private static final String COMMENT_TYPE = "review";
 
@@ -38,6 +41,11 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 										 .reviewNo(commentDynamicDTO.getReviewNo())
 										 .build();
 		commentMapper.saveComment(requestData);
+		
+		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
+		pointHistoryDTO.setReason("리뷰 댓글 작성");
+		pointHistoryDTO.setPointChange(5L);
+		pointService.saveHistoryPoint(pointHistoryDTO);
 	}
 
 	@Override
@@ -54,6 +62,11 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 	public void softDeleteCommentById(Long commentNo) {
 		CommentVO requestData = checkedOwnerByUser(commentNo);
 		commentMapper.softDeleteCommentById(requestData);
+		
+		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
+		pointHistoryDTO.setReason("리뷰 댓글 삭제");
+		pointHistoryDTO.setPointChange(-5L);
+		pointService.saveHistoryPoint(pointHistoryDTO);
 	}
 
 	/** 사용자 인증 */

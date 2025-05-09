@@ -102,13 +102,11 @@ public class ReportServiceImpl implements ReportService {
 	@Override
 	public ReportDTO findById(Long reportNo) {
 		ReportDTO reportDTO = reportMapper.findById(reportNo);
-
 		
 		if(reportDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
-		
-		
+				
 		reportMapper.updateCount(reportNo);
 		return reportDTO;
 	}
@@ -119,19 +117,13 @@ public class ReportServiceImpl implements ReportService {
 		Long reportNo = reportDTO.getReportNo();
 		checkedOwnerByUser(reportNo);
 		
-		if(files != null && !files.isEmpty() && files.stream().anyMatch(file -> !file.isEmpty())) {
-			List<String> fileUrls = reportMapper.findFileByAll(reportNo);
+		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
+		
+		if(containsFiles) {				
+			deleteFiles(reportNo);	
 			
-			if(fileUrls != null) {
-				for(String fileUrl : fileUrls) {
-					fileService.deleteFile(fileUrl);
-				}
-			}
-			reportMapper.deleteFileById(reportNo);
-			
-			for(MultipartFile file : files) {
-				
-				if( !file.isEmpty()) {
+			for(MultipartFile file : files) {				
+				if(file != null && !file.isEmpty()) {
 					String filePath = fileService.storage(file);					
 					
 					ReportVO requestFileData = ReportVO.builder()
@@ -141,9 +133,20 @@ public class ReportServiceImpl implements ReportService {
 					reportMapper.saveFile(requestFileData);
 				}
 			}			
-		}
+		} else { /* 기존 파일 유지 구문 */ }
 		reportMapper.updateById(reportDTO);
 		return reportDTO;
+	}
+	
+	private void deleteFiles(Long reportNo) {
+		List<String> fileUrls = reportMapper.findFileByAll(reportNo);
+		
+		if(fileUrls != null && !fileUrls.isEmpty()) {
+			for(String fileUrl : fileUrls) {
+				fileService.deleteFile(fileUrl);
+			}
+			reportMapper.deleteFileById(reportNo);
+		}
 	}
 
 	@Override

@@ -16,7 +16,6 @@ import lombok.ToString;
 public class PointHistoryDTO {
 	private Long historyNo;
 	private Long userNo;
-	private Long reviewNo;
 	private Long pointChange;
 	private String reason;
 	private Date createDate;

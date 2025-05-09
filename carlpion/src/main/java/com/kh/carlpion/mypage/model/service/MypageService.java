@@ -41,7 +41,7 @@ public interface MypageService {
 	
 	//----------------------------------------------
 	
-	List<MypageDTO> reservations(Long userNo);
+	List<ReservationHistoryDTO> reservations(Long userNo);
 	
 
 	MypageDTO selectNickName(Long userNo);

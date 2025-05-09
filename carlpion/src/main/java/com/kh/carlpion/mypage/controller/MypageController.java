@@ -175,10 +175,10 @@ public class MypageController {
 	}
 
 	@GetMapping("/mypage/use")
-	public ResponseEntity<List<MypageDTO>> reservations(@AuthenticationPrincipal CarlpionUserDetails user){
+	public ResponseEntity<?> reservations(@AuthenticationPrincipal CarlpionUserDetails user){
 		Long userNo = user.getUserNo();
 		System.out.println("값오나");
-		List<MypageDTO> result = mypageService.reservations(userNo);
+		List<ReservationHistoryDTO> result = mypageService.reservations(userNo);
 		return ResponseEntity.ok(result);
 	}
 	
