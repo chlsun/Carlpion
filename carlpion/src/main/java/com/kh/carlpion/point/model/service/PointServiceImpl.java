@@ -116,7 +116,13 @@ public class PointServiceImpl implements PointService {
 	@Override
 	@Transactional
 	public void saveReviewLike(LikeDTO likeDTO) {
-		pointMapper.saveReviewLike(likeData(likeDTO));		
+		pointMapper.saveReviewLike(likeData(likeDTO));
+		
+		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();
+		pointHistoryDTO.setUserNo(likeData(likeDTO).getUserNo());
+		pointHistoryDTO.setPointChange(5L);
+		pointHistoryDTO.setReason("리뷰 추천");
+		saveHistoryPoint(pointHistoryDTO);
 	}
 
 	@Override
