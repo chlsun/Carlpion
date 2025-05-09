@@ -58,6 +58,8 @@ public class MypageController {
 	}
 	
 	
+	
+	
 	@PutMapping("/users/update-pw")
 	public ResponseEntity<?> updatePassword(@AuthenticationPrincipal CarlpionUserDetails user,@RequestBody MypageDTO mypage) {
 		Long userNo = user.getUserNo();
@@ -113,30 +115,45 @@ public class MypageController {
 	//------------------------------------------------------------
 	
 	@GetMapping("/mypage/comments")
-	public ResponseEntity<List<MypageDTO>> replyCheck(@AuthenticationPrincipal CarlpionUserDetails user){
+	public ResponseEntity<Map<String, Object>> replyCheck(@AuthenticationPrincipal CarlpionUserDetails user,
+														@RequestParam("limit")int limit,
+														@RequestParam("offset") int offset){
 		Long userNo = user.getUserNo();
 		
-		List<MypageDTO> result = mypageService.replyCheck(userNo);
-		System.out.println("댓글 컨트롤러 나오나");
-		return ResponseEntity.ok(result);
+		List<MypageDTO> replyList = mypageService.replyCheck(userNo,limit,offset);
+		int totalCount = mypageService.replyCheckCount(userNo);
+		Map<String, Object> result = new HashMap<>();
+		result.put("replyList", replyList);
+		result.put("totalCount", totalCount);
+			return ResponseEntity.ok(result);
 	}
 	
 
 	@GetMapping("/mypage/reports")
-	public ResponseEntity<List<MypageDTO>> inquiryCheck(@AuthenticationPrincipal CarlpionUserDetails user){
+	public ResponseEntity<Map<String, Object>> inquiryCheck(@AuthenticationPrincipal CarlpionUserDetails user,
+														@RequestParam("limit")int limit,
+														@RequestParam("offset") int offset){
 		Long userNo = user.getUserNo();
-		System.out.println("문의 컨트롤러 나오나");
-	List<MypageDTO> result	= mypageService.inquiryCheck(userNo);
-		
+	List<MypageDTO> inquiryList	= mypageService.inquiryCheck(userNo,limit,offset);
+	int totalCount = mypageService.replyCheckCount(userNo);
+	Map<String, Object> result = new HashMap<>();
+	result.put("inquiryList", inquiryList);
+	result.put("totalCount", totalCount);
 		return ResponseEntity.ok(result);
 	
 	}
 
 	@GetMapping("/mypage/reviews")
-	public ResponseEntity<List<MypageDTO>> reviewCheck(@AuthenticationPrincipal CarlpionUserDetails user){
+	public ResponseEntity<Map<String, Object>> reviewCheck(@AuthenticationPrincipal CarlpionUserDetails user,
+													@RequestParam("limit")int limit,
+													@RequestParam("offset") int offset){
 		Long userNo = user.getUserNo();
-		List<MypageDTO> result = mypageService.reviewCheck(userNo);
-		System.out.println(result);
+		List<MypageDTO> reviewList = mypageService.reviewCheck(userNo,limit,offset);
+		int totalCount = mypageService.reviewCheckCount(userNo);
+		Map<String, Object> result = new HashMap<>();
+		result.put("reviewList", reviewList);
+		result.put("totalCount", totalCount);
+		
 		return ResponseEntity.ok(result);
 		
 	} 
@@ -172,14 +189,7 @@ public class MypageController {
 		return ResponseEntity.status(HttpStatus.OK).body(reservationList);
 	}
 	
-	@GetMapping("/mypage/usedCars")
-	public ResponseEntity<List<MypageDTO>> usedCars(@AuthenticationPrincipal CarlpionUserDetails user){
-		Long userNo = user.getUserNo();
-		
-			List<MypageDTO> result = mypageService.usedCars(userNo);
-		return ResponseEntity.ok(result);
-	}
- 	
+
 	
 	
 }
