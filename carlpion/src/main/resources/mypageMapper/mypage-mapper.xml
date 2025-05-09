@@ -30,13 +30,15 @@
 				resultType="com.kh.carlpion.mypage.model.dto.MypageDTO">
 		
 			SELECT 
-					NICKNAME nickname
+					U.NICKNAME nickname,
+					P.USER_LEVEL userLevel
 			FROM
-					CP_USER
+					CP_USER U
+			JOIN 
+					CP_POINT P ON P.USER_NO = U.USER_NO
 			WHERE
-					USER_NO = #{userNo}
-	
-	
+					U.USER_NO = #{userNo}
+			
 	
 	</select>
 	
