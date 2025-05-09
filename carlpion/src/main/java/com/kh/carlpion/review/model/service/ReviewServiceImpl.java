@@ -14,6 +14,8 @@ import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.point.model.dto.LikeDTO;
+import com.kh.carlpion.point.model.dto.PointHistoryDTO;
 import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dao.ReviewMapper;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
@@ -60,6 +62,11 @@ public class ReviewServiceImpl implements ReviewService {
 				}
 			}
 		}
+		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();
+		pointHistoryDTO.setUserNo(userNo);
+		pointHistoryDTO.setReason("리뷰 작성");
+		pointHistoryDTO.setPointChange(10L);
+		pointService.saveHistoryPoint(pointHistoryDTO);
 //		log.info("save: {}", requestData);		
 	}
 
@@ -106,13 +113,11 @@ public class ReviewServiceImpl implements ReviewService {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
 
-		
 		List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
+		
 		reviewDTO.setFileUrls(fileUrls);
-		reviewMapper.updateCount(reviewNo);
 		
-		
-		
+		reviewMapper.updateCount(reviewNo);		
 		return reviewDTO;
 	}
 
@@ -120,21 +125,16 @@ public class ReviewServiceImpl implements ReviewService {
 	@Transactional
 	public ReviewDTO updateById(ReviewDTO reviewDTO, List<MultipartFile> files) {
 		Long reviewNo = reviewDTO.getReviewNo();
-		checkedOwnerByUser(reviewNo);
+		Long userNo = authService.getUserDetails().getUserNo();
+		checkedOwnerByUser(userNo, reviewNo);
 		
-		if(files != null && !files.isEmpty() && files.stream().anyMatch(file -> !file.isEmpty())) {
-			List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
+		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
+		
+		if(containsFiles) {				
+			deleteFiles(reviewNo);
 			
-			if(fileUrls != null) {
-				for(String fileUrl : fileUrls) {
-					fileService.deleteFile(fileUrl);
-				}
-			}
-			reviewMapper.deleteFileById(reviewNo);
-			
-			for(MultipartFile file : files) {
-				
-				if( !file.isEmpty()) {
+			for(MultipartFile file : files) {			
+				if(file != null && !file.isEmpty()) {
 					String filePath = fileService.storage(file);
 					
 					ReviewVO requestFileData = ReviewVO.builder()
@@ -143,31 +143,48 @@ public class ReviewServiceImpl implements ReviewService {
 													   .build();
 					reviewMapper.saveFile(requestFileData);
 				}
-			}			
-		}
+			}
+		} else { /* 기존 파일 유지 구문 */ }
 		reviewMapper.updateById(reviewDTO);
 		return reviewDTO;
+	}
+	
+	private void deleteFiles(Long reviewNo) {
+	    List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
+	    
+	    if (fileUrls != null && !fileUrls.isEmpty()) {
+	        for (String fileUrl : fileUrls) {
+	            fileService.deleteFile(fileUrl);
+	        }
+	        reviewMapper.deleteFileById(reviewNo);
+	    }
 	}
 
 	@Override
 	@Transactional
 	public void softDeleteById(Long reviewNo) {
-		checkedOwnerByUser(reviewNo);
+		Long userNo = authService.getUserDetails().getUserNo();
+		checkedOwnerByUser(userNo, reviewNo);
 		reviewMapper.softDeleteById(reviewNo);
+		
+		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
+		pointHistoryDTO.setUserNo(userNo);
+		pointHistoryDTO.setReason("리뷰 삭제");
+		pointHistoryDTO.setPointChange(-10L);	
+		pointService.saveHistoryPoint(pointHistoryDTO);
 	}
 	
 	/** 사용자 인증 */
-	private void checkedOwnerByUser(Long reviewNo) {
-		Long authUserNo = authService.getUserDetails().getUserNo();
-		Long findUserNo = reviewMapper.findByUserNo(reviewNo);
+	private void checkedOwnerByUser(Long userNo, Long reviewNo) {
+		Long findUserNo = reviewMapper.findByUserNo(reviewNo);	
 		
 		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
 		        .getAuthorities().stream()
 		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 		
 		
-		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
-	        throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
+		if (!isAdmin && (findUserNo == null || !userNo.equals(findUserNo))) {
+	        throw new UnauthorizedException("수정할 권한이 없습니다.");
 	    }
 	}
 }
