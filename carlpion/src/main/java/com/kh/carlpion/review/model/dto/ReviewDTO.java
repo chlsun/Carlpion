@@ -25,4 +25,5 @@ public class ReviewDTO {
 	private List<String> fileUrls;
 	private Long point;
 	private String userLevel;
+	private Long like;	
 }
