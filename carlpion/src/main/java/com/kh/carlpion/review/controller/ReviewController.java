@@ -71,10 +71,10 @@ public class ReviewController {
 		likeDTO.setReviewNo(reviewNo);
 		LikeDTO resultLike = pointService.findByLike(likeDTO);
 		
-		Map<String, Object> response = new HashMap<>();
-		response.put("review", reviewDTO);
-		response.put("likeInfo", resultLike);
-		return ResponseEntity.ok(response);
+		Map<String, Object> map = new HashMap<>();
+		map.put("review", reviewDTO);
+		map.put("likeInfo", resultLike);
+		return ResponseEntity.ok(map);
 	}
 	
 	@PutMapping("/{id}")
