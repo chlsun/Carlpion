@@ -63,10 +63,7 @@
 			WHERE
 					USER_NO = #{userNo}
 					
-	
-	
 	</select>
-	
 	
 	
 	<update id="updateEmail"
@@ -136,16 +133,12 @@
 	
 	</update>
 
-	<delete id="deleteUser"
-			parameterType="com.kh.carlpion.mypage.model.dto.MypageDTO">
-	
+	<delete id="deleteUser">
 			DELETE
 			  FROM
 					CP_USER
 			 WHERE
 			 		USER_NO = #{userNo}
-			 
-					
 	</delete>
 
 
