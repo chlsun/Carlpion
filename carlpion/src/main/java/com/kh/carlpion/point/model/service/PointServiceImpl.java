@@ -49,7 +49,6 @@ public class PointServiceImpl implements PointService {
 		updateUserPoint(pointDTO);
 	}
 
-	/** Long point */
 	@Override
 	@Transactional
 	public void updateUserPoint(PointDTO pointDTO) {
@@ -68,7 +67,6 @@ public class PointServiceImpl implements PointService {
 				throw new PointException("포인트가 부족합니다. 보유한 포인트: ["+ totalPoint +"]");
 			}
 		}
-
 		PointVO pointVO = PointVO.builder()
 								 .userNo(userNo)
 								 .point(changePoint)
@@ -127,7 +125,9 @@ public class PointServiceImpl implements PointService {
 	}
 	
 	@Override
-	public boolean findByLike(LikeDTO likeDTO) {
+	public LikeDTO findByLike(LikeDTO likeDTO) {
+		Long userNo = authService.getUserDetails().getUserNo();
+		likeDTO.setUserNo(userNo);
 		return pointMapper.findByLike(likeDTO);	
 	}
 
