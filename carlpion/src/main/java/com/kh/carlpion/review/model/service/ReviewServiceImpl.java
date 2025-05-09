@@ -107,7 +107,8 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public ReviewDTO findById(Long reviewNo) {
-		ReviewDTO reviewDTO = reviewMapper.findById(reviewNo);		
+		ReviewDTO reviewDTO = reviewMapper.findById(reviewNo);
+		Long userNo = authService.getUserDetails().getUserNo();
 		
 		if(reviewDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
@@ -115,9 +116,15 @@ public class ReviewServiceImpl implements ReviewService {
 
 		List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
 		
-		reviewDTO.setFileUrls(fileUrls);
+		reviewDTO.setFileUrls(fileUrls);		
+		reviewMapper.updateCount(reviewNo);	
 		
-		reviewMapper.updateCount(reviewNo);		
+		LikeDTO likeDTO = new LikeDTO();
+		likeDTO.setUserNo(userNo);
+		likeDTO.setReviewNo(reviewNo);
+		boolean like = pointService.findByLike(likeDTO);
+		
+		reviewDTO.setLike(like);
 		return reviewDTO;
 	}
 
@@ -144,7 +151,9 @@ public class ReviewServiceImpl implements ReviewService {
 					reviewMapper.saveFile(requestFileData);
 				}
 			}
-		} else { /* 기존 파일 유지 구문 */ }
+		} else { 
+			deleteFiles(reviewNo);
+		}
 		reviewMapper.updateById(reviewDTO);
 		return reviewDTO;
 	}

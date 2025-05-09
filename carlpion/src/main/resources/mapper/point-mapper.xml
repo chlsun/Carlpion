@@ -39,7 +39,7 @@
 	</select>
 	<select 
 		id="findByPoint" 
-		resultType="com.kh.carlpion.point.model.vo.PointVO"
+		resultType="com.kh.carlpion.point.model.dto.PointDTO"
 	>
 		SELECT 
 				POINT
@@ -103,6 +103,20 @@
 			 ,	REVIEW_NO	AS	reviewNo
 		  FROM
 		  		CP_LIKE
+	</select>
+	<select 
+		id="findByLike" 
+		resultType="com.kh.carlpion.point.model.dto.LikeDTO"
+	>
+		SELECT 
+			 	USER_NO		AS	userNo
+			 ,	REVIEW_NO	AS	reviewNo
+		  FROM
+		  		CP_LIKE
+		 WHERE
+		 		USER_NO = #{userNo}
+		   AND
+		 		REVIEW_NO = #{reviewNo}
 	</select>
 
 	<delete 
