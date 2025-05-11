@@ -139,17 +139,6 @@
 			DBMS_RANDOM.VALUE
 		FETCH FIRST 5 ROWS ONLY
 	</select>
-	
-	<select id="getRentCarByModelNo">
-		SELECT
-			COUNT(*)
-		FROM
-			CP_RENTAL_CAR
-		WHERE
-			MODEL_NO = #{modelNo}
-		AND
-			STATUS = 'Y'
-	</select>
 
 	<select id="getRentCarByModelNo">
 		SELECT
