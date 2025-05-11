@@ -10,6 +10,8 @@ import com.kh.carlpion.admin.model.vo.CarModel;
 
 @Mapper
 public interface CarModelMapper {
+	
+	int checkDuplicateCarModel(String carModel);
 
 	String checkCarModel(int modelNo);
 	
