@@ -48,11 +48,10 @@ public class FileService {
 		String originalFileName = file.getOriginalFilename();
 		String newFileName = createdFileName(originalFileName);
 
-		// uploads + 하위 경로 (예: uploads/carModel)
 		Path targetDirectory = BASE_LOCATION.resolve(subDirectory).normalize();
 
 		try {
-			Files.createDirectories(targetDirectory); // 하위 디렉토리도 없으면 생성
+			Files.createDirectories(targetDirectory); 
 			Path targetLocation = targetDirectory.resolve(newFileName);
 			Files.copy(file.getInputStream(), targetLocation);
 			return newFileName;

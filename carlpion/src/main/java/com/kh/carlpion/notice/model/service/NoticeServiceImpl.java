@@ -133,7 +133,9 @@ public class NoticeServiceImpl implements NoticeService {
 					noticeMapper.saveFile(requestFileData);
 				}
 			}
-		} else { /* 기존 파일 유지 구문 */ }		
+		} else { 
+			deleteFiles(noticeNo);
+		}		
 		noticeDTO.setModifierNo(userNo);
 		noticeMapper.updateById(noticeDTO);
 		return noticeDTO;

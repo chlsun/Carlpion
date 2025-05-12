@@ -69,16 +69,13 @@ public class CarModelServiceImpl implements CarModelService {
 			throw new ImgFileNotFoundException("이미지 파일을 꼭 추가해주세요");
 		}
 		
-		String check = carModelMapper.checkCarModel(carModel.getModelNo());
+		int check = carModelMapper.checkDuplicateCarModel(carModel.getCarModel());
 		
-		if(check != null) {
+		if(check > 0) {
 			throw new AlreadyExistsException("이미 존재하는 차량 모델입니다.");
 		}
 		
 		String filePath = fileService.storage(file, "carModel");
-		
-		
-		log.info("filePath : ", filePath);
 		
 		CarModel model = CarModel.builder()
 								 .carModel(carModel.getCarModel())

@@ -28,7 +28,7 @@ public interface PointMapper {
 	
 	List<LikeDTO> findAllLike(LikeDTO likeDTO);
 	
-	Long findByLike(LikeDTO likeDTO);
+	LikeDTO findByLike(LikeDTO likeDTO);
 	
 	void deleteReviewLike(LikeVO likeVO);
 }
