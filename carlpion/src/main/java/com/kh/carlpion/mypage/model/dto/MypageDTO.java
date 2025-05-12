@@ -24,6 +24,8 @@ public class MypageDTO {
 	private String nickName;
 	private String fileUrl;
 	private String modifyPw;
+	private String userLevel;
+	
 
 	
 	

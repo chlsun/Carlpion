@@ -40,8 +40,6 @@ public class AdminController {
 
 		Map<String, Object> viewInfo = carModelService.getCarModelList(page);
 		
-		log.info("viewInfo : ", viewInfo);
-		
 		return ResponseEntity.status(HttpStatus.OK).body(viewInfo);
 	}
 	
@@ -57,19 +55,14 @@ public class AdminController {
 	public ResponseEntity<?> setCarModel(@Valid @ModelAttribute CarModelDTO carModel, 
 										 @RequestParam(name="file", required=false) MultipartFile file){
 		
-		log.info("여기는 오나");
-		
 		carModelService.setCarModel(carModel, file);
 		
 		return ResponseEntity.status(HttpStatus.CREATED).build();
-		
 	}
 	
 	@PutMapping("/model")
 	public ResponseEntity<?> updateCarModel(@Valid @ModelAttribute CarModelDTO carModel,
 											@RequestParam(name="file", required=false) MultipartFile file){
-		
-		log.info("file: {} ", file);
 		
 		carModelService.updateCarModel(carModel, file);
 		

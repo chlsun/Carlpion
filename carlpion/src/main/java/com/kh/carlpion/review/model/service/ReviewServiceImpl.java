@@ -14,7 +14,6 @@ import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
 import com.kh.carlpion.file.service.FileService;
-import com.kh.carlpion.point.model.dto.LikeDTO;
 import com.kh.carlpion.point.model.dto.PointHistoryDTO;
 import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dao.ReviewMapper;
@@ -111,12 +110,11 @@ public class ReviewServiceImpl implements ReviewService {
 		
 		if(reviewDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
-		}
-
+		}				
 		List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
 		
 		reviewDTO.setFileUrls(fileUrls);		
-		reviewMapper.updateCount(reviewNo);		
+		reviewMapper.updateCount(reviewNo);	
 		return reviewDTO;
 	}
 
@@ -143,7 +141,9 @@ public class ReviewServiceImpl implements ReviewService {
 					reviewMapper.saveFile(requestFileData);
 				}
 			}
-		} else { /* 기존 파일 유지 구문 */ }
+		} else { 
+			deleteFiles(reviewNo);
+		}
 		reviewMapper.updateById(reviewDTO);
 		return reviewDTO;
 	}

@@ -133,7 +133,9 @@ public class ReportServiceImpl implements ReportService {
 					reportMapper.saveFile(requestFileData);
 				}
 			}			
-		} else { /* 기존 파일 유지 구문 */ }
+		} else { 
+			deleteFiles(reportNo);
+		}
 		reportMapper.updateById(reportDTO);
 		return reportDTO;
 	}

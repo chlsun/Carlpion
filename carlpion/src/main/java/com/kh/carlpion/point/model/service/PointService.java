@@ -20,7 +20,7 @@ public interface PointService {
 	
 	List<LikeDTO> findAllLike(LikeDTO likeDTO);
 	
-	Long findByLike(LikeDTO likeDTO);
+	LikeDTO findByLike(LikeDTO likeDTO);
 	
 	void deleteReviewLike(LikeDTO likeDTO);
 }

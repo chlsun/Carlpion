@@ -46,6 +46,19 @@
 			STATUS = 'Y'
 	</select>
 			
+			
+	<select id="checkDuplicateCarModel"
+			parameterType="string"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM 
+			CP_RENTAL_CAR_MODEL
+		WHERE 
+			CAR_MODEL = #{carModel}
+		AND
+			STATUS = 'Y'
+	</select>
 
 	<select id="checkCarModel"
 			parameterType="_int"
@@ -126,7 +139,7 @@
 			DBMS_RANDOM.VALUE
 		FETCH FIRST 5 ROWS ONLY
 	</select>
-	
+
 	<select id="getRentCarByModelNo">
 		SELECT
 			COUNT(*)
@@ -137,5 +150,5 @@
 		AND
 			STATUS = 'Y'
 	</select>
-
+	
 </mapper>

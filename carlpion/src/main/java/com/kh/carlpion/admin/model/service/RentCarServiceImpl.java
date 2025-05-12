@@ -79,7 +79,7 @@ public class RentCarServiceImpl implements RentCarService {
 		String checkId = rentCarMapper.checkCarNo(rentCar.getCarNo());
 		
 		if(checkId == null) {
-			throw new CarNotFoundException("등록되어있지 않은 차량입니다.");
+			throw new CarNotFoundException("등록 되어있지 않은 차량입니다.");
 		}
 		
 		if(!!!checkId.equals(rentCar.getCarId())) {
