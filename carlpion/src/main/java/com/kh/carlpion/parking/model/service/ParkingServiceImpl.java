@@ -115,8 +115,6 @@ public class ParkingServiceImpl implements ParkingService {
 					parking.setLot(node.path("LOT").asText());
 					
 					existingParkingIds.add(parkingId);
-					
-					log.info("{}", parking);
 
 					parkingList.add(parking);
 				}

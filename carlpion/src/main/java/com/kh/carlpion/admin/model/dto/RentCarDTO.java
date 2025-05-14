@@ -2,6 +2,8 @@ package com.kh.carlpion.admin.model.dto;
 
 import java.sql.Date;
 
+import org.springframework.validation.annotation.Validated;
+
 import com.kh.carlpion.parking.model.dto.ParkingDTO;
 import com.kh.carlpion.rental.model.dto.ReservationDateDTO;
 
@@ -11,6 +13,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@Validated
 public class RentCarDTO {
 	
 	private int CarNo;
