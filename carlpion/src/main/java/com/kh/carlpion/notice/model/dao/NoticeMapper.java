@@ -21,11 +21,6 @@ public interface NoticeMapper {
 	
 	void softDeleteById(Long noticeNo);
 	
-	void saveFile(NoticeVO noticeVO);
-	
-	List<String> findFileByAll(Long noticeNo);
-	
-	void deleteFileById(Long noticeNo);
 	
 	Long findByUserNo(Long noticeNo);
 	

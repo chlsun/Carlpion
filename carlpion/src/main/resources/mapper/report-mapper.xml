@@ -25,23 +25,6 @@
 			 , 	#{content} 	
 			 )
 	</insert>
-	<insert 
-		id="saveFile"
-		parameterType="com.kh.carlpion.report.model.vo.ReportVO"
-	>
-		INSERT
-		  INTO	
-		  		CP_RP_FILE
-		  	 (
-				REPORT_NO
-			 ,	FILE_URL
-			 )
-		VALUES
-			 (
-				#{reportNo}
-			 ,	#{fileUrl}
-			 )
-	</insert>
 	
 	<select 
 		id="findTotalCount" 
@@ -149,23 +132,5 @@
 		 WHERE	
 		 		REPORT_NO = #{reportNo}
 	</update>
-	
-	<select 
-		id="findFileByAll"
-		resultType="string"
-	>
-		SELECT 
-				FILE_URL	AS	fileUrl
-		  FROM	
-		  		CP_RP_FILE
-		 WHERE	
-		 		REPORT_NO = #{reportNo}
-	</select>
-	<delete id="deleteFileById">
-		DELETE
-		  FROM
-		  		CP_RP_FILE
-		 WHERE	
-		 		REPORT_NO = #{reportNo}
-	</delete>
+
 </mapper>

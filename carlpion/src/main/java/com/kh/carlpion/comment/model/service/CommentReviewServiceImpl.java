@@ -42,11 +42,7 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 										 .build();
 		commentMapper.saveComment(requestData);
 		
-		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
-		pointHistoryDTO.setUserNo(userNo);
-		pointHistoryDTO.setReason("리뷰 댓글 작성");
-		pointHistoryDTO.setPointChange(5L);
-		pointService.saveHistoryPoint(pointHistoryDTO);
+		pointService.saveHistory(userNo, "리뷰 댓글 작성", 5L);
 	}
 
 	@Override
@@ -65,11 +61,7 @@ public class CommentReviewServiceImpl implements CommentReviewService {
 		CommentVO requestData = checkedOwnerByUser(userNo, commentNo);
 		commentMapper.softDeleteCommentById(requestData);
 		
-		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
-		pointHistoryDTO.setUserNo(userNo);
-		pointHistoryDTO.setReason("리뷰 댓글 삭제");
-		pointHistoryDTO.setPointChange(-5L);
-		pointService.saveHistoryPoint(pointHistoryDTO);
+		pointService.saveHistory(userNo, "리뷰 댓글 삭제", -5L);
 	}
 
 	/** 사용자 인증 */

@@ -16,6 +16,9 @@ public interface PointService {
 			
 	void updateUserLevel(PointDTO pointDTO);
 	
+	void saveHistory(Long userNo, String string, Long point);
+	
+	
 	void saveReviewLike(LikeDTO likeDTO);
 	
 	List<LikeDTO> findAllLike(LikeDTO likeDTO);

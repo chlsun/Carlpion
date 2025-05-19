@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.file.service.FileReportService;
 import com.kh.carlpion.report.model.dao.ReportMapper;
 import com.kh.carlpion.report.model.dto.ReportDTO;
 import com.kh.carlpion.report.model.vo.ReportVO;
@@ -28,7 +28,7 @@ public class ReportServiceImpl implements ReportService {
 	
 	private final ReportMapper reportMapper;	
 	private final AuthService authService;
-	private final FileService fileService;
+	private final FileReportService fileReportService;
 
 	@Override
 	@Transactional
@@ -41,25 +41,14 @@ public class ReportServiceImpl implements ReportService {
 									   .title(reportDTO.getTitle())
 									   .content(reportDTO.getContent())
 									   .build();
-		reportMapper.save(requestData);
-		
-		
+		reportMapper.save(requestData);	
+		Long reportNo = requestData.getReportNo();
 		
 		if(files != null && !files.isEmpty()) {
 			for(MultipartFile file : files) {
-				
-				if( !file.isEmpty()) {					
-					String filePath = fileService.storage(file);
-					
-					ReportVO requestFileData = ReportVO.builder()
-													   .reportNo(requestData.getReportNo())
-													   .fileUrl(filePath)
-													   .build();
-					reportMapper.saveFile(requestFileData);
-				}
+				fileReportService.saveFiles(file, reportNo);
 			}
 		}
-//		log.info("save: {}", requestData);		
 	}
 	
 	@Override
@@ -82,7 +71,6 @@ public class ReportServiceImpl implements ReportService {
 		if(endBtn > maxPage) {
 			endBtn = maxPage;
 		}
-		log.info("{}", maxPage);
 
 		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);		
 		List<ReportDTO> list = reportMapper.findAll(rowBounds);	
@@ -120,35 +108,16 @@ public class ReportServiceImpl implements ReportService {
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
 		
 		if(containsFiles) {				
-			deleteFiles(reportNo);	
+			fileReportService.deleteFiles(reportNo);	
 			
 			for(MultipartFile file : files) {				
-				if(file != null && !file.isEmpty()) {
-					String filePath = fileService.storage(file);					
-					
-					ReportVO requestFileData = ReportVO.builder()
-													   .reportNo(reportNo)
-													   .fileUrl(filePath)
-													   .build();
-					reportMapper.saveFile(requestFileData);
-				}
+				fileReportService.saveFiles(file, reportNo);
 			}			
 		} else { 
-			deleteFiles(reportNo);
+			fileReportService.deleteFiles(reportNo);
 		}
 		reportMapper.updateById(reportDTO);
 		return reportDTO;
-	}
-	
-	private void deleteFiles(Long reportNo) {
-		List<String> fileUrls = reportMapper.findFileByAll(reportNo);
-		
-		if(fileUrls != null && !fileUrls.isEmpty()) {
-			for(String fileUrl : fileUrls) {
-				fileService.deleteFile(fileUrl);
-			}
-			reportMapper.deleteFileById(reportNo);
-		}
 	}
 
 	@Override

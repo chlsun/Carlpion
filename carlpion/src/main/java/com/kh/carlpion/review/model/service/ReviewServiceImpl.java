@@ -13,8 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.file.service.FileService;
-import com.kh.carlpion.point.model.dto.PointHistoryDTO;
+import com.kh.carlpion.file.service.FileReviewService;
 import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dao.ReviewMapper;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
@@ -30,7 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	private final ReviewMapper reviewMapper;
 	private final AuthService authService;
-	private final FileService fileService;
+	private final FileReviewService fileReviewService;
 	private final PointService pointService;
 
 	@Override
@@ -47,26 +46,12 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewMapper.save(requestData);
 		Long reviewNo = requestData.getReviewNo();
 		
-		if(files != null && !files.isEmpty()) {
+		if(files != null && !files.isEmpty()) {			
 			for(MultipartFile file : files) {
-				
-				if( !file.isEmpty()) {
-					String filePath = fileService.storage(file);
-					
-					ReviewVO requestFileData = ReviewVO.builder()
-													   .reviewNo(reviewNo)
-													   .fileUrl(filePath)
-													   .build();
-					reviewMapper.saveFile(requestFileData);
-				}
+				fileReviewService.saveFiles(file, reviewNo);
 			}
 		}
-		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();
-		pointHistoryDTO.setUserNo(userNo);
-		pointHistoryDTO.setReason("리뷰 작성");
-		pointHistoryDTO.setPointChange(10L);
-		pointService.saveHistoryPoint(pointHistoryDTO);
-//		log.info("save: {}", requestData);		
+		pointService.saveHistory(userNo,"리뷰 작성", 10L);
 	}
 
 	@Override
@@ -111,7 +96,7 @@ public class ReviewServiceImpl implements ReviewService {
 		if(reviewDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}				
-		List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
+		List<String> fileUrls = fileReviewService.findFileByAll(reviewNo);
 		
 		reviewDTO.setFileUrls(fileUrls);		
 		reviewMapper.updateCount(reviewNo);	
@@ -128,35 +113,16 @@ public class ReviewServiceImpl implements ReviewService {
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
 		
 		if(containsFiles) {				
-			deleteFiles(reviewNo);
+			fileReviewService.deleteFiles(reviewNo);
 			
 			for(MultipartFile file : files) {			
-				if(file != null && !file.isEmpty()) {
-					String filePath = fileService.storage(file);
-					
-					ReviewVO requestFileData = ReviewVO.builder()
-													   .reviewNo(reviewNo)
-													   .fileUrl(filePath)
-													   .build();
-					reviewMapper.saveFile(requestFileData);
-				}
+				fileReviewService.saveFiles(file, reviewNo);
 			}
 		} else { 
-			deleteFiles(reviewNo);
+			fileReviewService.deleteFiles(reviewNo);
 		}
 		reviewMapper.updateById(reviewDTO);
 		return reviewDTO;
-	}
-	
-	private void deleteFiles(Long reviewNo) {
-	    List<String> fileUrls = reviewMapper.findFileByAll(reviewNo);
-	    
-	    if (fileUrls != null && !fileUrls.isEmpty()) {
-	        for (String fileUrl : fileUrls) {
-	            fileService.deleteFile(fileUrl);
-	        }
-	        reviewMapper.deleteFileById(reviewNo);
-	    }
 	}
 
 	@Override
@@ -165,12 +131,8 @@ public class ReviewServiceImpl implements ReviewService {
 		Long userNo = authService.getUserDetails().getUserNo();
 		checkedOwnerByUser(userNo, reviewNo);
 		reviewMapper.softDeleteById(reviewNo);
-		
-		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();	
-		pointHistoryDTO.setUserNo(userNo);
-		pointHistoryDTO.setReason("리뷰 삭제");
-		pointHistoryDTO.setPointChange(-10L);	
-		pointService.saveHistoryPoint(pointHistoryDTO);
+
+		pointService.saveHistory(userNo,"리뷰 삭제", -10L);
 	}
 	
 	/** 사용자 인증 */

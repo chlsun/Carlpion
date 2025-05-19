@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.carlpion.file.dao.FileMapper">
+	<insert 
+		id="saveFile"
+		parameterType="com.kh.carlpion.file.vo.FileVO"
+	>
+		INSERT 
+		  INTO	
+		  		<choose>
+		  			<when test="type == 'notice'">CP_NT_FILE</when>
+		  			<when test="type == 'report'">CP_RP_FILE</when>
+		  			<when test="type == 'review'">CP_RV_FILE</when>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
+		  		</choose>
+		  	 (	
+				<choose>
+		  			<when test="type == 'notice'">NOTICE_NO</when>
+		  			<when test="type == 'report'">REPORT_NO</when>
+		  			<when test="type == 'review'">REVIEW_NO</when>
+					<otherwise>TYPE_ERROR_COLUMN</otherwise>
+		  		</choose>
+			 ,	FILE_URL
+			 )
+		VALUES 
+			 (
+				<choose>
+		  			<when test="type == 'notice'">#{noticeNo}</when>
+		  			<when test="type == 'report'">#{reportNo}</when>
+		  			<when test="type == 'review'">#{reviewNo}</when>
+					<otherwise>TYPE_ERROR_VALUES</otherwise>
+		  		</choose>
+ 			 ,	#{fileUrl}
+			 )
+	</insert>
+	
+	<select 
+		id="findFileByAll"
+		parameterType="com.kh.carlpion.file.vo.FileVO"
+		resultType="string"
+	>
+		SELECT
+				FILE_URL	AS	fileUrl
+		  FROM	
+		  		<choose>
+		  			<when test="type == 'notice'">CP_NT_FILE</when>
+		  			<when test="type == 'report'">CP_RP_FILE</when>
+		  			<when test="type == 'review'">CP_RV_FILE</when>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
+		  		</choose>
+		 WHERE
+		 		<choose>
+		  			<when test="type == 'notice'">NOTICE_NO = #{noticeNo}</when>
+		  			<when test="type == 'report'">REPORT_NO = #{reportNo}</when>
+		  			<when test="type == 'review'">REVIEW_NO = #{reviewNo}</when>
+					<otherwise>TYPE_ERROR_VALUES</otherwise>
+		  		</choose>		
+	</select>	
+	
+	<delete
+		id="deleteFileById"
+		parameterType="com.kh.carlpion.file.vo.FileVO"
+	>
+		DELETE
+		  FROM
+				<choose>
+		  			<when test="type == 'notice'">CP_NT_FILE</when>
+		  			<when test="type == 'report'">CP_RP_FILE</when>
+		  			<when test="type == 'review'">CP_RV_FILE</when>
+					<otherwise>TYPE_ERROR_TABLE</otherwise>
+		  		</choose>
+		 WHERE	
+		 		<choose>
+		  			<when test="type == 'notice'">NOTICE_NO = #{noticeNo}</when>
+		  			<when test="type == 'report'">REPORT_NO = #{reportNo}</when>
+		  			<when test="type == 'review'">REVIEW_NO = #{reviewNo}</when>
+					<otherwise>TYPE_ERROR_VALUES</otherwise>
+		  		</choose>
+	</delete>
+</mapper>

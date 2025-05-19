@@ -92,6 +92,15 @@ public class PointServiceImpl implements PointService {
 		pointMapper.updateUserLevel(pointVO);
 	}
 	
+	/** 회원번호, 사유, 변경할 포인트 */
+	public void saveHistory(Long userNo, String reason, Long point) {
+		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();
+		pointHistoryDTO.setUserNo(userNo);
+		pointHistoryDTO.setReason(reason);
+		pointHistoryDTO.setPointChange(point);
+		saveHistoryPoint(pointHistoryDTO);
+	}
+
 	/** 사용자 인증 */
 	private void checkedOwnerByUser(Long targetUserNo) {
 		Long userNo = authService.getUserDetails().getUserNo();
@@ -117,12 +126,7 @@ public class PointServiceImpl implements PointService {
 	@Transactional
 	public void saveReviewLike(LikeDTO likeDTO) {
 		pointMapper.saveReviewLike(likeData(likeDTO));
-		
-		PointHistoryDTO pointHistoryDTO = new PointHistoryDTO();
-		pointHistoryDTO.setUserNo(likeData(likeDTO).getUserNo());
-		pointHistoryDTO.setPointChange(5L);
-		pointHistoryDTO.setReason("리뷰 추천");
-		saveHistoryPoint(pointHistoryDTO);
+		saveHistory(likeData(likeDTO).getUserNo(), "리뷰 추천", 5L);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.file.service.FileNoticeService;
 import com.kh.carlpion.notice.model.dao.NoticeMapper;
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
 import com.kh.carlpion.notice.model.vo.NoticeVO;
@@ -28,7 +28,7 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	private final NoticeMapper noticeMapper;
 	private final AuthService authService;
-	private final FileService fileService;
+	private final FileNoticeService fileNoticeService;	
 
 	@Override
 	@Transactional
@@ -43,22 +43,13 @@ public class NoticeServiceImpl implements NoticeService {
 									   .content(noticeDTO.getContent())
 									   .build();
 		noticeMapper.save(requestData);
+		Long noticeNo = requestData.getNoticeNo();
 		
 		if(files != null && !files.isEmpty()) {					
 			for(MultipartFile file : files) {	
-				
-				if( !file.isEmpty()) {
-					String filePath = fileService.storage(file);
-					
-					NoticeVO requestFileData = NoticeVO.builder()
-													   .noticeNo(requestData.getNoticeNo())
-													   .fileUrl(filePath)
-													   .build();
-					noticeMapper.saveFile(requestFileData);
-				}
+				fileNoticeService.saveFiles(file, noticeNo);
 			}
 		}	
-//		log.info("save: {}", requestData);
 	}
 
 	@Override
@@ -119,37 +110,17 @@ public class NoticeServiceImpl implements NoticeService {
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
 		
 		if(containsFiles) {
-			deleteFiles(noticeNo);
+			fileNoticeService.deleteFiles(noticeNo);
 			
 			for(MultipartFile file : files) {
-				
-				if(file != null && !file.isEmpty()) {
-					String filePath = fileService.storage(file);
-					
-					NoticeVO requestFileData = NoticeVO.builder()
-													   .noticeNo(noticeNo)
-													   .fileUrl(filePath)
-													   .build();
-					noticeMapper.saveFile(requestFileData);
-				}
+				fileNoticeService.saveFiles(file, noticeNo);
 			}
 		} else { 
-			deleteFiles(noticeNo);
+			fileNoticeService.deleteFiles(noticeNo);
 		}		
 		noticeDTO.setModifierNo(userNo);
 		noticeMapper.updateById(noticeDTO);
 		return noticeDTO;
-	}
-	
-	private void deleteFiles(Long noticeNo) {
-		List<String> fileUrls = noticeMapper.findFileByAll(noticeNo);
-		
-		if(fileUrls != null && !fileUrls.isEmpty()) {
-			for(String fileUrl : fileUrls) {
-				fileService.deleteFile(fileUrl);
-			}
-			noticeMapper.deleteFileById(noticeNo);
-		}
 	}
 
 	@Override
