@@ -26,12 +26,7 @@
 			 )
 		VALUES 
 			 (
-				<choose>
-		  			<when test="type == 'notice'">#{noticeNo}</when>
-		  			<when test="type == 'report'">#{reportNo}</when>
-		  			<when test="type == 'review'">#{reviewNo}</when>
-					<otherwise>TYPE_ERROR_VALUES</otherwise>
-		  		</choose>
+				#{boardNo}
  			 ,	#{fileUrl}
 			 )
 	</insert>
@@ -52,9 +47,9 @@
 		  		</choose>
 		 WHERE
 		 		<choose>
-		  			<when test="type == 'notice'">NOTICE_NO = #{noticeNo}</when>
-		  			<when test="type == 'report'">REPORT_NO = #{reportNo}</when>
-		  			<when test="type == 'review'">REVIEW_NO = #{reviewNo}</when>
+		  			<when test="type == 'notice'">NOTICE_NO = #{boardNo}</when>
+		  			<when test="type == 'report'">REPORT_NO = #{boardNo}</when>
+		  			<when test="type == 'review'">REVIEW_NO = #{boardNo}</when>
 					<otherwise>TYPE_ERROR_VALUES</otherwise>
 		  		</choose>		
 	</select>	
@@ -73,9 +68,9 @@
 		  		</choose>
 		 WHERE	
 		 		<choose>
-		  			<when test="type == 'notice'">NOTICE_NO = #{noticeNo}</when>
-		  			<when test="type == 'report'">REPORT_NO = #{reportNo}</when>
-		  			<when test="type == 'review'">REVIEW_NO = #{reviewNo}</when>
+		  			<when test="type == 'notice'">NOTICE_NO = #{boardNo}</when>
+		  			<when test="type == 'report'">REPORT_NO = #{boardNo}</when>
+		  			<when test="type == 'review'">REVIEW_NO = #{boardNo}</when>
 					<otherwise>TYPE_ERROR_VALUES</otherwise>
 		  		</choose>
 	</delete>

@@ -14,8 +14,5 @@ import lombok.ToString;
 public class FileDTO {
 	private String type;
 	private String fileUrl;
-	
-	private Long noticeNo;
-	private Long reportNo;
-	private Long reviewNo;
+	private Long boardNo;
 }

@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.file.service.FileNoticeService;
+import com.kh.carlpion.file.service.FileDynamicService;
 import com.kh.carlpion.notice.model.dao.NoticeMapper;
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
 import com.kh.carlpion.notice.model.vo.NoticeVO;
@@ -28,7 +28,9 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	private final NoticeMapper noticeMapper;
 	private final AuthService authService;
-	private final FileNoticeService fileNoticeService;	
+	private final FileDynamicService fileDynamicService;
+	
+	private static final String BOARD_TYPE = "notice";
 
 	@Override
 	@Transactional
@@ -47,7 +49,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		if(files != null && !files.isEmpty()) {					
 			for(MultipartFile file : files) {	
-				fileNoticeService.saveFiles(file, noticeNo);
+				fileDynamicService.saveFiles(file, noticeNo, BOARD_TYPE);
 			}
 		}	
 	}
@@ -110,13 +112,13 @@ public class NoticeServiceImpl implements NoticeService {
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
 		
 		if(containsFiles) {
-			fileNoticeService.deleteFiles(noticeNo);
+			fileDynamicService.deleteFiles(noticeNo, BOARD_TYPE);
 			
 			for(MultipartFile file : files) {
-				fileNoticeService.saveFiles(file, noticeNo);
+				fileDynamicService.saveFiles(file, noticeNo, BOARD_TYPE);
 			}
 		} else { 
-			fileNoticeService.deleteFiles(noticeNo);
+			fileDynamicService.deleteFiles(noticeNo, BOARD_TYPE);
 		}		
 		noticeDTO.setModifierNo(userNo);
 		noticeMapper.updateById(noticeDTO);

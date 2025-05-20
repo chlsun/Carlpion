@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.file.service.FileReviewService;
+import com.kh.carlpion.file.service.FileDynamicService;
 import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dao.ReviewMapper;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
@@ -29,8 +29,10 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	private final ReviewMapper reviewMapper;
 	private final AuthService authService;
-	private final FileReviewService fileReviewService;
+	private final FileDynamicService fileDynamicService;
 	private final PointService pointService;
+	
+	private static final String BOARD_TYPE = "review";
 
 	@Override
 	@Transactional
@@ -48,7 +50,7 @@ public class ReviewServiceImpl implements ReviewService {
 		
 		if(files != null && !files.isEmpty()) {			
 			for(MultipartFile file : files) {
-				fileReviewService.saveFiles(file, reviewNo);
+				fileDynamicService.saveFiles(file, reviewNo, BOARD_TYPE);
 			}
 		}
 		pointService.saveHistory(userNo,"리뷰 작성", 10L);
@@ -96,7 +98,7 @@ public class ReviewServiceImpl implements ReviewService {
 		if(reviewDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}				
-		List<String> fileUrls = fileReviewService.findFileByAll(reviewNo);
+		List<String> fileUrls = fileDynamicService.findFileByAll(reviewNo, BOARD_TYPE);
 		
 		reviewDTO.setFileUrls(fileUrls);		
 		reviewMapper.updateCount(reviewNo);	
@@ -113,13 +115,13 @@ public class ReviewServiceImpl implements ReviewService {
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
 		
 		if(containsFiles) {				
-			fileReviewService.deleteFiles(reviewNo);
+			fileDynamicService.deleteFiles(reviewNo, BOARD_TYPE);
 			
 			for(MultipartFile file : files) {			
-				fileReviewService.saveFiles(file, reviewNo);
+				fileDynamicService.saveFiles(file, reviewNo, BOARD_TYPE);
 			}
 		} else { 
-			fileReviewService.deleteFiles(reviewNo);
+			fileDynamicService.deleteFiles(reviewNo, BOARD_TYPE);
 		}
 		reviewMapper.updateById(reviewDTO);
 		return reviewDTO;

@@ -18,9 +18,5 @@ public class CommentDTO {
 	private String content;
 	private String nickName;
 	private Date createDate;
-
-	private Long noticeNo;
-	private Long reportNo;
-	private Long reviewNo;
-
+	private Long boardNo;
 }

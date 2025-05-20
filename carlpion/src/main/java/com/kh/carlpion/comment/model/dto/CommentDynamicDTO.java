@@ -15,8 +15,5 @@ public class CommentDynamicDTO {
 	private String commentType;
 	private Long commentNo;
 	private String content;
-	
-	private Long noticeNo;
-	private Long reportNo;
-	private Long reviewNo;
+	private Long boardNo;
 }

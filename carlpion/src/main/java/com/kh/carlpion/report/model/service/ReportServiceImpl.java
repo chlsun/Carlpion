@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.file.service.FileReportService;
+import com.kh.carlpion.file.service.FileDynamicService;
 import com.kh.carlpion.report.model.dao.ReportMapper;
 import com.kh.carlpion.report.model.dto.ReportDTO;
 import com.kh.carlpion.report.model.vo.ReportVO;
@@ -28,7 +28,9 @@ public class ReportServiceImpl implements ReportService {
 	
 	private final ReportMapper reportMapper;	
 	private final AuthService authService;
-	private final FileReportService fileReportService;
+	private final FileDynamicService fileDynamicService;
+	
+	private static final String BOARD_TYPE = "report";
 
 	@Override
 	@Transactional
@@ -46,7 +48,7 @@ public class ReportServiceImpl implements ReportService {
 		
 		if(files != null && !files.isEmpty()) {
 			for(MultipartFile file : files) {
-				fileReportService.saveFiles(file, reportNo);
+				fileDynamicService.saveFiles(file, reportNo, BOARD_TYPE);
 			}
 		}
 	}
@@ -108,13 +110,13 @@ public class ReportServiceImpl implements ReportService {
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
 		
 		if(containsFiles) {				
-			fileReportService.deleteFiles(reportNo);	
+			fileDynamicService.deleteFiles(reportNo, BOARD_TYPE);	
 			
 			for(MultipartFile file : files) {				
-				fileReportService.saveFiles(file, reportNo);
+				fileDynamicService.saveFiles(file, reportNo, BOARD_TYPE);
 			}			
 		} else { 
-			fileReportService.deleteFiles(reportNo);
+			fileDynamicService.deleteFiles(reportNo, BOARD_TYPE);
 		}
 		reportMapper.updateById(reportDTO);
 		return reportDTO;
@@ -135,7 +137,6 @@ public class ReportServiceImpl implements ReportService {
 		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
 		        .getAuthorities().stream()
 		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-		
 		
 		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
 	        throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
