@@ -19,5 +19,4 @@ public class NoticeVO {
 	private String content;
 	private Date modifyDate;
 	private String nickName;
-	private String fileUrl;
 }

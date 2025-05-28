@@ -27,12 +27,7 @@
 			 )
 		VALUES 
 			 (
-				<choose>
-		  			<when test="commentType == 'notice'">#{noticeNo}</when>
-		  			<when test="commentType == 'report'">#{reportNo}</when>
-		  			<when test="commentType == 'review'">#{reviewNo}</when>
-					<otherwise>TYPE_ERROR_VALUES</otherwise>
-		  		</choose>
+		  		#{boardNo}
 			 , 	#{userNo} 	
 			 , 	#{content} 	
 			 )
@@ -62,10 +57,10 @@
 		 		c.IS_ACTIVE = 'Y'
 		   AND
 		   		<choose>
-		  			<when test="commentType == 'notice'">c.NOTICE_NO = #{noticeNo}</when>
-		  			<when test="commentType == 'report'">c.REPORT_NO = #{reportNo}</when>
-		  			<when test="commentType == 'review'">c.REVIEW_NO = #{reviewNo}</when>
-					<otherwise>TYPE_ERROR_COLUMN</otherwise>
+		  			<when test="commentType == 'notice'">c.NOTICE_NO = #{boardNo}</when>
+		  			<when test="commentType == 'report'">c.REPORT_NO = #{boardNo}</when>
+		  			<when test="commentType == 'review'">c.REVIEW_NO = #{boardNo}</when>
+					<otherwise>TYPE_ERROR_VALUES</otherwise>
 		  		</choose>
 		 ORDER
 		 	BY	

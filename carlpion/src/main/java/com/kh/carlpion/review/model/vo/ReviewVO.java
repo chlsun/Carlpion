@@ -15,5 +15,4 @@ public class ReviewVO {
 	private String title;
 	private String content;
 	private String nickName;
-	private String fileUrl;
 }

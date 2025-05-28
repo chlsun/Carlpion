@@ -20,12 +20,7 @@ public interface ReportMapper {
 	void updateById(ReportDTO reportDTO);
 			
 	void softDeleteById(Long reportNo);
-	
-	void saveFile(ReportVO reportVO);
-	
-	List<String> findFileByAll(Long reportNo);
-	
-	void deleteFileById(Long reportNo);
+
 	
 	Long findByUserNo(Long reportNo);
 	

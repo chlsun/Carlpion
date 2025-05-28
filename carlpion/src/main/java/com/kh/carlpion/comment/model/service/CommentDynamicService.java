@@ -5,11 +5,11 @@ import java.util.List;
 import com.kh.carlpion.comment.model.dto.CommentDTO;
 import com.kh.carlpion.comment.model.dto.CommentDynamicDTO;
 
-public interface CommentNoticeService {
+public interface CommentDynamicService {
 	
 	void saveComment(CommentDynamicDTO commentDynamicDTO);
 	
-	List<CommentDTO> findAllComment(Long noticeNo);
+	List<CommentDTO> findAllComment(Long boardNo, String type);
 	
-	void softDeleteCommentById(Long commentNo);
+	void softDeleteCommentById(Long commentNo, String type);
 }

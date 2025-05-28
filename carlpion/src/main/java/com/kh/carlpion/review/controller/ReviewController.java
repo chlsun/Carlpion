@@ -1,6 +1,5 @@
 package com.kh.carlpion.review.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,20 +60,8 @@ public class ReviewController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Map<String, Object>> findById(@PathVariable(name = "id") @Min(value = 1) Long reviewNo) {
-		ReviewDTO reviewDTO = reviewService.findById(reviewNo);
-		
-		if (reviewDTO == null) {
-			return ResponseEntity.notFound().build();
-		}
-		LikeDTO likeDTO = new LikeDTO();
-		likeDTO.setReviewNo(reviewNo);
-		LikeDTO resultLike = pointService.findByLike(likeDTO);
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("review", reviewDTO);
-		map.put("likeInfo", resultLike);
-		return ResponseEntity.ok(map);
+	public ResponseEntity<ReviewDTO> findById(@PathVariable(name = "id") @Min(value = 1) Long reviewNo) {		
+		return ResponseEntity.ok(reviewService.findById(reviewNo));
 	}
 	
 	@PutMapping("/{id}")

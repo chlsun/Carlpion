@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.exception.exceptions.NotFindException;
 import com.kh.carlpion.exception.exceptions.UnauthorizedException;
-import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.file.service.FileDynamicService;
 import com.kh.carlpion.report.model.dao.ReportMapper;
 import com.kh.carlpion.report.model.dto.ReportDTO;
 import com.kh.carlpion.report.model.vo.ReportVO;
@@ -28,7 +28,9 @@ public class ReportServiceImpl implements ReportService {
 	
 	private final ReportMapper reportMapper;	
 	private final AuthService authService;
-	private final FileService fileService;
+	private final FileDynamicService fileDynamicService;
+	
+	private static final String BOARD_TYPE = "report";
 
 	@Override
 	@Transactional
@@ -41,25 +43,14 @@ public class ReportServiceImpl implements ReportService {
 									   .title(reportDTO.getTitle())
 									   .content(reportDTO.getContent())
 									   .build();
-		reportMapper.save(requestData);
-		
-		
+		reportMapper.save(requestData);	
+		Long reportNo = requestData.getReportNo();
 		
 		if(files != null && !files.isEmpty()) {
 			for(MultipartFile file : files) {
-				
-				if( !file.isEmpty()) {					
-					String filePath = fileService.storage(file);
-					
-					ReportVO requestFileData = ReportVO.builder()
-													   .reportNo(requestData.getReportNo())
-													   .fileUrl(filePath)
-													   .build();
-					reportMapper.saveFile(requestFileData);
-				}
+				fileDynamicService.saveFiles(file, reportNo, BOARD_TYPE);
 			}
 		}
-//		log.info("save: {}", requestData);		
 	}
 	
 	@Override
@@ -82,7 +73,6 @@ public class ReportServiceImpl implements ReportService {
 		if(endBtn > maxPage) {
 			endBtn = maxPage;
 		}
-		log.info("{}", maxPage);
 
 		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);		
 		List<ReportDTO> list = reportMapper.findAll(rowBounds);	
@@ -120,35 +110,16 @@ public class ReportServiceImpl implements ReportService {
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
 		
 		if(containsFiles) {				
-			deleteFiles(reportNo);	
+			fileDynamicService.deleteFiles(reportNo, BOARD_TYPE);	
 			
 			for(MultipartFile file : files) {				
-				if(file != null && !file.isEmpty()) {
-					String filePath = fileService.storage(file);					
-					
-					ReportVO requestFileData = ReportVO.builder()
-													   .reportNo(reportNo)
-													   .fileUrl(filePath)
-													   .build();
-					reportMapper.saveFile(requestFileData);
-				}
+				fileDynamicService.saveFiles(file, reportNo, BOARD_TYPE);
 			}			
 		} else { 
-			deleteFiles(reportNo);
+			fileDynamicService.deleteFiles(reportNo, BOARD_TYPE);
 		}
 		reportMapper.updateById(reportDTO);
 		return reportDTO;
-	}
-	
-	private void deleteFiles(Long reportNo) {
-		List<String> fileUrls = reportMapper.findFileByAll(reportNo);
-		
-		if(fileUrls != null && !fileUrls.isEmpty()) {
-			for(String fileUrl : fileUrls) {
-				fileService.deleteFile(fileUrl);
-			}
-			reportMapper.deleteFileById(reportNo);
-		}
 	}
 
 	@Override
@@ -166,7 +137,6 @@ public class ReportServiceImpl implements ReportService {
 		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
 		        .getAuthorities().stream()
 		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-		
 		
 		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
 	        throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");

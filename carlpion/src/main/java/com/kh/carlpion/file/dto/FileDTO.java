@@ -1,4 +1,4 @@
-package com.kh.carlpion.comment.model.dto;
+package com.kh.carlpion.file.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,12 +11,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class CommentDynamicDTO {
-	private String commentType;
-	private Long commentNo;
-	private String content;
+public class FileDTO {
+	private String type;
+	private String fileUrl;
 	private Long boardNo;
-	private Long noticeNo;
-	private Long reportNo;
-	private Long reviewNo;
 }
