@@ -1,7 +1,6 @@
 package com.kh.carlpion.notice.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.notice.model.dto.NoticeDTO;
 import com.kh.carlpion.notice.model.service.NoticeService;
+import com.kh.carlpion.utill.service.ResponseDataService;
 
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -29,44 +30,38 @@ import lombok.extern.slf4j.Slf4j;
 public class NoticeController {
 	
 	private final NoticeService noticeService;
-	
-	private static final int MAX_FILE_COUNT = 5;
+	private final ResponseDataService dataService;
+	private final FileService fileService;
 	
 	@PostMapping
 	public ResponseEntity<?> save(NoticeDTO noticeDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files) {
-		
-		if(files != null && MAX_FILE_COUNT < files.size()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
-		}
-		
+		fileService.filesCheck(files);
 		noticeService.save(noticeDTO, files);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.status(HttpStatus.CREATED).body(dataService.responseData("201", "CREATED", null));
 	}
 	
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {		
-		return ResponseEntity.ok(noticeService.findAll(pageNo));
+	public ResponseEntity<?> findAll(@RequestParam(name = "page", defaultValue = "0") int pageNo) {		
+		return ResponseEntity.status(HttpStatus.OK).body(dataService.responseData("200", "OK", noticeService.findAll(pageNo)));
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<NoticeDTO> findById(@PathVariable(name = "id") @Min(value = 1) Long noticeNo) {		
-		return ResponseEntity.ok(noticeService.findById(noticeNo));
+	public ResponseEntity<?> findById(@PathVariable(name = "id") @Min(value = 1) Long noticeNo) {		
+		NoticeDTO noticeDTO = noticeService.findById(noticeNo);
+		return ResponseEntity.status(HttpStatus.OK).body(dataService.responseData("200", "OK", noticeDTO));
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateById(@PathVariable(name = "id") Long noticeNo, NoticeDTO noticeDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files) {
-
-		if(files != null && MAX_FILE_COUNT < files.size()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
-		}
-		
+	public ResponseEntity<?> updateById(@PathVariable(name = "id") Long noticeNo, NoticeDTO noticeDTO, 
+																			@RequestParam(name = "file", required = false) List<MultipartFile> files) {
+		fileService.filesCheck(files);
 		noticeDTO.setNoticeNo(noticeNo);		
-		return ResponseEntity.ok(noticeService.updateById(noticeDTO, files));
+		return ResponseEntity.status(HttpStatus.OK).body(dataService.responseData("200", "OK", noticeService.updateById(noticeDTO, files)));
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> softDeleteById(@PathVariable(name = "id") Long noticeNo) {
 		noticeService.softDeleteById(noticeNo);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dataService.responseData("204", "NO_CONTENT", null));
 	}	
 }

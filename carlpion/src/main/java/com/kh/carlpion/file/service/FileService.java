@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FileService {
 	
 	private static final Path BASE_LOCATION = Paths.get("uploads").toAbsolutePath().normalize();
+	private static final int MAX_FILE_COUNT = 5;
 	
 	private static final List<String> FILE_EXTENSIONS = Arrays.asList(
 		".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".pdf", 
@@ -67,8 +68,8 @@ public class FileService {
 		UUID uuid = UUID.randomUUID();	/* 32자 (-)포함 36자 */
 		
 		String uuidShort = Base64.getUrlEncoder()
-								 .withoutPadding()
-								 .encodeToString(uuid.toString().getBytes());	/* 22자 */	
+															.withoutPadding()
+															.encodeToString(uuid.toString().getBytes());	/* 22자 */	
 		String extension = "";
 		
 		/* 파일 확장자 검증 */
@@ -112,5 +113,11 @@ public class FileService {
 	/** 원본 파일명만 return */
 	public String memory(MultipartFile file) {
 		return file.getOriginalFilename();
+	}
+
+	public void filesCheck(List<MultipartFile> files) {
+		if(files != null && MAX_FILE_COUNT < files.size()) {
+			throw new FileSaveException("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
+		}
 	}
 }

@@ -41,10 +41,10 @@ public class ReviewServiceImpl implements ReviewService {
 		Long userNo = authService.getUserDetails().getUserNo();		
 		
 		ReviewVO requestData = ReviewVO.builder()
-									   .userNo(userNo)
-									   .title(reviewDTO.getTitle())
-									   .content(reviewDTO.getContent())
-									   .build();
+																	.userNo(userNo)
+																	.title(reviewDTO.getTitle())
+																	.content(reviewDTO.getContent())
+																	.build();
 		reviewMapper.save(requestData);
 		Long reviewNo = requestData.getReviewNo();
 		
@@ -63,19 +63,11 @@ public class ReviewServiceImpl implements ReviewService {
 		int totalCount = reviewMapper.findTotalCount(pageNo);
 		int maxPage = (int)Math.ceil((double) totalCount / pageLimit);	
 		int startBtn = (pageNo - 1) / btnLimit * btnLimit + 1;
-		int endBtn = startBtn + btnLimit - 1;
+		int endBtn = startBtn + btnLimit - 1;	
 		
-		if(pageNo > maxPage && maxPage > 0) {
-			pageNo = maxPage;
-		}
-		
-		if(maxPage == 0) {
-			pageNo = 1;
-		}
-
-		if(endBtn > maxPage) {
-			endBtn = maxPage;
-		}
+		if(pageNo > maxPage && maxPage > 0) { pageNo = maxPage; }
+		if(maxPage == 0) { pageNo = 1; }
+		if(endBtn > maxPage) { endBtn = maxPage; }
 		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);
 		List<ReviewDTO> list = reviewMapper.findAll(rowBounds);
 		
@@ -99,7 +91,6 @@ public class ReviewServiceImpl implements ReviewService {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}				
 		List<String> fileUrls = fileDynamicService.findFileByAll(reviewNo, BOARD_TYPE);
-		
 		reviewDTO.setFileUrls(fileUrls);		
 		reviewMapper.updateCount(reviewNo);	
 		return reviewDTO;
@@ -133,21 +124,17 @@ public class ReviewServiceImpl implements ReviewService {
 		Long userNo = authService.getUserDetails().getUserNo();
 		checkedOwnerByUser(userNo, reviewNo);
 		reviewMapper.softDeleteById(reviewNo);
-
 		pointService.saveHistory(userNo,"리뷰 삭제", -10L);
 	}
 	
 	/** 사용자 인증 */
 	private void checkedOwnerByUser(Long userNo, Long reviewNo) {
 		Long findUserNo = reviewMapper.findByUserNo(reviewNo);	
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+		        							   							.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 		
-		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
-		        .getAuthorities().stream()
-		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-		
-		
-		if (!isAdmin && (findUserNo == null || !userNo.equals(findUserNo))) {
-	        throw new UnauthorizedException("수정할 권한이 없습니다.");
-	    }
+		if( !isAdmin && (findUserNo == null || !userNo.equals(findUserNo))) {
+	    throw new UnauthorizedException("수정할 권한이 없습니다.");
+	  }
 	}
 }

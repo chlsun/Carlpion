@@ -39,10 +39,10 @@ public class ReportServiceImpl implements ReportService {
 		Long userNo = authService.getUserDetails().getUserNo();
 		
 		ReportVO requestData = ReportVO.builder()
-									   .userNo(userNo)
-									   .title(reportDTO.getTitle())
-									   .content(reportDTO.getContent())
-									   .build();
+																	.userNo(userNo)
+																	.title(reportDTO.getTitle())
+																	.content(reportDTO.getContent())
+																	.build();
 		reportMapper.save(requestData);	
 		Long reportNo = requestData.getReportNo();
 		
@@ -60,20 +60,11 @@ public class ReportServiceImpl implements ReportService {
 		int totalCount = reportMapper.findTotalCount(pageNo);
 		int maxPage = (int)Math.ceil((double) totalCount / pageLimit);	
 		int startBtn = (pageNo - 1) / btnLimit * btnLimit + 1;
-		int endBtn = startBtn + btnLimit - 1;
-		
-		if(pageNo > maxPage && maxPage > 0) {
-			pageNo = maxPage;
-		}
-		
-		if(maxPage == 0) {
-			pageNo = 1;
-		}
+		int endBtn = startBtn + btnLimit - 1;	
 
-		if(endBtn > maxPage) {
-			endBtn = maxPage;
-		}
-
+		if(pageNo > maxPage && maxPage > 0) { pageNo = maxPage; }
+		if(maxPage == 0) { pageNo = 1; }
+		if(endBtn > maxPage) { endBtn = maxPage; }
 		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);		
 		List<ReportDTO> list = reportMapper.findAll(rowBounds);	
 		
@@ -96,7 +87,6 @@ public class ReportServiceImpl implements ReportService {
 		if(reportDTO == null) {
 			throw new NotFindException("해당 글을 찾을 수 없습니다.");
 		}
-				
 		reportMapper.updateCount(reportNo);
 		return reportDTO;
 	}
@@ -106,7 +96,7 @@ public class ReportServiceImpl implements ReportService {
 	public ReportDTO updateById(ReportDTO reportDTO, List<MultipartFile> files) {
 		Long reportNo = reportDTO.getReportNo();
 		checkedOwnerByUser(reportNo);
-		
+
 		boolean containsFiles = files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty());
 		
 		if(containsFiles) {				
@@ -133,14 +123,11 @@ public class ReportServiceImpl implements ReportService {
 	private void checkedOwnerByUser(Long reportNo) {
 		Long authUserNo = authService.getUserDetails().getUserNo();
 		Long findUserNo = reportMapper.findByUserNo(reportNo);
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+																					.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 		
-		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
-		        .getAuthorities().stream()
-		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-		
-		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
-	        throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
-	    }
+		if( !isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
+	    throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
+	  }
 	}	
-
 }

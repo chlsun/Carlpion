@@ -9,18 +9,18 @@
 	>
 		INSERT
 		  INTO
-		  		CP_POINT_HISTORY
-		  	 (
-				USER_NO
-			 ,	POINT_CHANGE
-			 ,	REASON
-			 )
+		  			CP_POINT_HISTORY
+					(
+						USER_NO
+					,	POINT_CHANGE
+					,	REASON
+					)
 		VALUES
-			 (
-				#{userNo}
-			 ,	#{pointChange}
-			 ,	#{reason}
-			 )
+					(
+						#{userNo}
+					,	#{pointChange}
+					,	#{reason}
+					)
 	</insert>
 	
 	<select 
@@ -28,26 +28,26 @@
 		resultType="com.kh.carlpion.point.model.dto.PointHistoryDTO"
 	>
 		SELECT
-				HISTORY_NO
-			 ,	POINT_CHANGE
-			 ,	REASON
-			 ,	CREATE_DATE
+						HISTORY_NO
+					,	POINT_CHANGE
+					,	REASON
+					,	CREATE_DATE
 		  FROM
-		  		CP_POINT_HISTORY
+		  			CP_POINT_HISTORY
 		 WHERE
-		 		USER_NO = #{userNo}
+		 				USER_NO = #{userNo}
 	</select>
 	<select 
 		id="findByPoint" 
 		resultType="com.kh.carlpion.point.model.dto.PointDTO"
 	>
 		SELECT 
-				POINT
-			 ,	USER_LEVEL	AS userLevel
+						POINT
+					,	USER_LEVEL	AS userLevel
 		  FROM	
-		  		CP_POINT
+		  			CP_POINT
 		 WHERE
-		 		USER_NO = #{userNo}
+		 				USER_NO = #{userNo}
 	</select>
 
 	<update 
@@ -55,24 +55,24 @@
 		parameterType="com.kh.carlpion.point.model.vo.PointVO"
 	>
 		UPDATE 
-				CP_POINT
+						CP_POINT
 		   SET	
-		  		POINT = POINT + #{point}
+		  			POINT = POINT + #{point}
 		 WHERE
-		 		USER_NO = #{userNo}
+		 				USER_NO = #{userNo}
 		   AND
-		   		(POINT + #{point}) >= 0
+		   			(POINT + #{point}) >= 0
 	</update>
 	<update 
 		id="updateUserLevel"
 		parameterType="com.kh.carlpion.point.model.vo.PointVO"
 	>
 		UPDATE 
-				CP_POINT
+						CP_POINT
 		   SET	
-		  		USER_LEVEL = #{userLevel}
+		  			USER_LEVEL = #{userLevel}
 		 WHERE
-		 		USER_NO = #{userNo}
+		 				USER_NO = #{userNo}
 	</update>
 	
 	
@@ -82,16 +82,16 @@
 	>
 		INSERT 
 		  INTO	
-		  		CP_LIKE
-		  	 (
-				USER_NO
-			 ,	REVIEW_NO
-			 )
+		  			CP_LIKE
+		  	 	(
+						USER_NO
+					,	REVIEW_NO
+					)
 		VALUES 
-			 (
-			   	#{userNo}
-			 , 	#{reviewNo} 		
-			 )
+					(
+						#{userNo}
+					, #{reviewNo} 		
+					)
 	</insert>
 	
 	<select 
@@ -99,24 +99,24 @@
 		resultType="com.kh.carlpion.point.model.dto.LikeDTO"
 	>
 		SELECT 
-			 	USER_NO		AS	userNo
-			 ,	REVIEW_NO	AS	reviewNo
+						USER_NO		AS	userNo
+					,	REVIEW_NO	AS	reviewNo
 		  FROM
-		  		CP_LIKE
+		  			CP_LIKE
 	</select>
 	<select 
 		id="findByLike" 
 		resultType="com.kh.carlpion.point.model.dto.LikeDTO"
 	>
 		SELECT 
-				USER_NO		AS	userNo
-			 ,	REVIEW_NO	AS	reviewNo
+						USER_NO		AS	userNo
+					,	REVIEW_NO	AS	reviewNo
 		  FROM
-		  		CP_LIKE
+		  			CP_LIKE
 		 WHERE
-		 		USER_NO = #{userNo}
+		 				USER_NO = #{userNo}
 		   AND
-		 		REVIEW_NO = #{reviewNo}
+		 				REVIEW_NO = #{reviewNo}
 	</select>
 
 	<delete 
@@ -125,10 +125,10 @@
 	>
 		DELETE
 		  FROM
-		  		CP_LIKE
+		  			CP_LIKE
 		 WHERE	
-		 		USER_NO = #{userNo}
+		 				USER_NO = #{userNo}
 		   AND
-		 		REVIEW_NO = #{reviewNo}
+		 				REVIEW_NO = #{reviewNo}
 	</delete>	
 </mapper>

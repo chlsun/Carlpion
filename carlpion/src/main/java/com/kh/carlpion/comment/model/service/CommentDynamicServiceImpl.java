@@ -30,6 +30,7 @@ public class CommentDynamicServiceImpl implements CommentDynamicService {
 	@Transactional
 	public void saveComment(CommentDynamicDTO commentDynamicDTO) {
 		Long userNo = authService.getUserDetails().getUserNo();
+		
 		CommentVO requestData = CommentVO.builder()
 										 .commentType(commentDynamicDTO.getCommentType())
 										 .userNo(userNo)
@@ -71,11 +72,10 @@ public class CommentDynamicServiceImpl implements CommentDynamicService {
 										 .commentNo(commentNo)
 										 .build();		
 		Long findUserNo = commentMapper.findUserNoById(requestData);
-		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
-		        .getAuthorities().stream()
-		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+											   .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 		
-		if (!isAdmin && (findUserNo == null || !userNo.equals(findUserNo))) {
+		if( !isAdmin && (findUserNo == null || !userNo.equals(findUserNo))) {
 			throw new UnauthorizedException("삭제할 권한이 없습니다.");
 		}		
 		return requestData;

@@ -39,11 +39,11 @@ public class NoticeServiceImpl implements NoticeService {
 		Long userNo = authService.getUserDetails().getUserNo();
 		
 		NoticeVO requestData = NoticeVO.builder()
-									   .userNo(userNo)
-									   .modifierNo(userNo)
-									   .title(noticeDTO.getTitle())
-									   .content(noticeDTO.getContent())
-									   .build();
+																	.userNo(userNo)
+																	.modifierNo(userNo)
+																	.title(noticeDTO.getTitle())
+																	.content(noticeDTO.getContent())
+																	.build();
 		noticeMapper.save(requestData);
 		Long noticeNo = requestData.getNoticeNo();
 		
@@ -63,18 +63,9 @@ public class NoticeServiceImpl implements NoticeService {
 		int startBtn = (pageNo - 1) / btnLimit * btnLimit + 1;
 		int endBtn = startBtn + btnLimit - 1;
 		
-		if(pageNo > maxPage && maxPage > 0) {
-			pageNo = maxPage;
-		}
-		
-		if(maxPage == 0) {
-			pageNo = 1;
-		}
-
-		if(endBtn > maxPage) {
-			endBtn = maxPage;
-		}
-
+		if(pageNo > maxPage && maxPage > 0) { pageNo = maxPage; }
+		if(maxPage == 0) { pageNo = 1; }
+		if(endBtn > maxPage) { endBtn = maxPage; }
 		RowBounds rowBounds = new RowBounds((pageNo - 1) * pageLimit, pageLimit);		
 		List<NoticeDTO> list = noticeMapper.findAll(rowBounds);
 		
@@ -92,14 +83,13 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public NoticeDTO findById(Long noticeNo) {
-	    NoticeDTO noticeDTO = noticeMapper.findById(noticeNo);
+		NoticeDTO noticeDTO = noticeMapper.findById(noticeNo);
 
-	    if(noticeDTO == null) {
-	        throw new NotFindException("해당 글을 찾을 수 없습니다.");
-	    }
-
-	    noticeMapper.updateCount(noticeNo);
-	    return noticeDTO;
+		if(noticeDTO == null) {
+			throw new NotFindException("해당 글을 찾을 수 없습니다.");
+		}
+		noticeMapper.updateCount(noticeNo);
+		return noticeDTO;
 	}
 	
 	@Override
@@ -119,7 +109,7 @@ public class NoticeServiceImpl implements NoticeService {
 			}
 		} else { 
 			fileDynamicService.deleteFiles(noticeNo, BOARD_TYPE);
-		}		
+		}	
 		noticeDTO.setModifierNo(userNo);
 		noticeMapper.updateById(noticeDTO);
 		return noticeDTO;
@@ -136,14 +126,11 @@ public class NoticeServiceImpl implements NoticeService {
 	private void checkedOwnerByUser(Long noticeNo) {
 		Long authUserNo = authService.getUserDetails().getUserNo();
 		Long findUserNo = noticeMapper.findByUserNo(noticeNo);
-
-		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication()
-		        .getAuthorities().stream()
-		        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+																					.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 		
-		
-		if (!isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
-	        throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
-	    }
+		if( !isAdmin && (findUserNo == null || !authUserNo.equals(findUserNo))) {
+	  	throw new UnauthorizedException("수정/삭제할 권한이 없습니다.");
+	  }
 	}
 }

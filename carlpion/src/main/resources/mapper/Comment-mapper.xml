@@ -9,28 +9,28 @@
 	>
 		INSERT 
 		  INTO	
-		  		<choose>
-		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
-		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
-		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
-					<otherwise>TYPE_ERROR_TABLE</otherwise>
-		  		</choose>
-		  	 (	
-				<choose>
-		  			<when test="commentType == 'notice'">NOTICE_NO</when>
-		  			<when test="commentType == 'report'">REPORT_NO</when>
-		  			<when test="commentType == 'review'">REVIEW_NO</when>
-					<otherwise>TYPE_ERROR_COLUMN</otherwise>
-		  		</choose>
-			 ,	USER_NO
-			 , 	CONTENT
-			 )
+						<choose>
+							<when test="commentType == 'notice'">CP_NT_COMMENT</when>
+							<when test="commentType == 'report'">CP_RP_COMMENT</when>
+							<when test="commentType == 'review'">CP_RV_COMMENT</when>
+							<otherwise>TYPE_ERROR_TABLE</otherwise>
+		  			</choose>
+		  	 	(	
+						<choose>
+							<when test="commentType == 'notice'">NOTICE_NO</when>
+							<when test="commentType == 'report'">REPORT_NO</when>
+							<when test="commentType == 'review'">REVIEW_NO</when>
+							<otherwise>TYPE_ERROR_COLUMN</otherwise>
+						</choose>
+					,	USER_NO
+					, CONTENT
+					)
 		VALUES 
-			 (
-		  		#{boardNo}
-			 , 	#{userNo} 	
-			 , 	#{content} 	
-			 )
+					(
+						#{boardNo}
+					, #{userNo} 	
+					, #{content} 	
+					)
 	</insert>
 	
 	<select 
@@ -39,32 +39,32 @@
 		resultType="com.kh.carlpion.comment.model.dto.CommentDTO"
 	>
 		SELECT 
-				c.COMMENT_NO	AS	commentNo
-			 ,	c.CONTENT
-			 ,	u.NICKNAME		AS	nickName
-			 ,	c.CREATE_DATE	AS	createDate
+						c.COMMENT_NO	AS	commentNo
+					,	c.CONTENT
+					,	u.NICKNAME		AS	nickName
+					,	c.CREATE_DATE	AS	createDate
 		  FROM
-		  		<choose>
-		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
-		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
-		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
-					<otherwise>TYPE_ERROR_TABLE</otherwise>
-		  		</choose>
-		  		c
+						<choose>
+							<when test="commentType == 'notice'">CP_NT_COMMENT</when>
+							<when test="commentType == 'report'">CP_RP_COMMENT</when>
+							<when test="commentType == 'review'">CP_RV_COMMENT</when>
+							<otherwise>TYPE_ERROR_TABLE</otherwise>
+						</choose>
+		  			c
 		  JOIN
-		  		CP_USER u 		ON 	u.USER_NO = c.USER_NO
+		  			CP_USER u 		ON 	u.USER_NO = c.USER_NO
 		 WHERE	
-		 		c.IS_ACTIVE = 'Y'
+		 				<choose>
+							<when test="commentType == 'notice'">c.NOTICE_NO = #{boardNo}</when>
+							<when test="commentType == 'report'">c.REPORT_NO = #{boardNo}</when>
+							<when test="commentType == 'review'">c.REVIEW_NO = #{boardNo}</when>
+							<otherwise>TYPE_ERROR_VALUES</otherwise>
+						</choose>
 		   AND
-		   		<choose>
-		  			<when test="commentType == 'notice'">c.NOTICE_NO = #{boardNo}</when>
-		  			<when test="commentType == 'report'">c.REPORT_NO = #{boardNo}</when>
-		  			<when test="commentType == 'review'">c.REVIEW_NO = #{boardNo}</when>
-					<otherwise>TYPE_ERROR_VALUES</otherwise>
-		  		</choose>
+			 			c.IS_ACTIVE = 'Y'					
 		 ORDER
-		 	BY	
-		 		c.CREATE_DATE 	ASC
+		 		BY	
+		 				c.CREATE_DATE 	ASC
 	</select>	
 	
 	<select 
@@ -73,31 +73,31 @@
 		resultType="long"
 	>
 		SELECT
-				USER_NO		AS	userNo
+						USER_NO		AS	userNo
 		  FROM	
-		  		<choose>
-		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
-		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
-		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
-					<otherwise>TYPE_ERROR_TABLE</otherwise>
-		  		</choose>
+						<choose>
+							<when test="commentType == 'notice'">CP_NT_COMMENT</when>
+							<when test="commentType == 'report'">CP_RP_COMMENT</when>
+							<when test="commentType == 'review'">CP_RV_COMMENT</when>
+							<otherwise>TYPE_ERROR_TABLE</otherwise>
+						</choose>
 		 WHERE
-		 		COMMENT_NO = #{commentNo}	  		
+		 				COMMENT_NO = #{commentNo}	  		
 	</select>
 	<update 
 		id="softDeleteCommentById"
 		parameterType="com.kh.carlpion.comment.model.vo.CommentVO"
 	>
 		UPDATE
-				<choose>
-		  			<when test="commentType == 'notice'">CP_NT_COMMENT</when>
-		  			<when test="commentType == 'report'">CP_RP_COMMENT</when>
-		  			<when test="commentType == 'review'">CP_RV_COMMENT</when>
-					<otherwise>TYPE_ERROR_TABLE</otherwise>
-		  		</choose>
+						<choose>
+							<when test="commentType == 'notice'">CP_NT_COMMENT</when>
+							<when test="commentType == 'report'">CP_RP_COMMENT</when>
+							<when test="commentType == 'review'">CP_RV_COMMENT</when>
+							<otherwise>TYPE_ERROR_TABLE</otherwise>
+						</choose>
 		   SET
-		   		IS_ACTIVE = 'N'
+		   			IS_ACTIVE = 'N'
 		 WHERE	
-		 		COMMENT_NO = #{commentNo}
+		 				COMMENT_NO = #{commentNo}
 	</update>
 </mapper>

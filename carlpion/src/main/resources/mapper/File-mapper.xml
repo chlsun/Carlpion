@@ -8,27 +8,27 @@
 		parameterType="com.kh.carlpion.file.vo.FileVO"
 	>
 		INSERT 
-		  INTO	
-		  		<choose>
-					<when test="type == 'notice'">CP_NT_FILE</when>
-					<when test="type == 'report'">CP_RP_FILE</when>
-					<when test="type == 'review'">CP_RV_FILE</when>
-					<otherwise>TYPE_ERROR_TABLE</otherwise>
-				</choose>
-		  	 (	
-				<choose>
-		  			<when test="type == 'notice'">NOTICE_NO</when>
-		  			<when test="type == 'report'">REPORT_NO</when>
-		  			<when test="type == 'review'">REVIEW_NO</when>
-					<otherwise>TYPE_ERROR_COLUMN</otherwise>
-		  		</choose>
-			 ,	FILE_URL
-			 )
+			INTO
+						<choose>
+							<when test="type == 'notice'">CP_NT_FILE</when>
+							<when test="type == 'report'">CP_RP_FILE</when>
+							<when test="type == 'review'">CP_RV_FILE</when>
+							<otherwise>TYPE_ERROR_TABLE</otherwise>
+						</choose>
+		  		(	
+						<choose>
+							<when test="type == 'notice'">NOTICE_NO</when>
+							<when test="type == 'report'">REPORT_NO</when>
+							<when test="type == 'review'">REVIEW_NO</when>
+							<otherwise>TYPE_ERROR_COLUMN</otherwise>
+						</choose>
+					,	FILE_URL
+					)
 		VALUES 
-			 (
-				#{boardNo}
- 			 ,	#{fileUrl}
-			 )
+			 		(
+						#{boardNo}
+					,	#{fileUrl}
+					)
 	</insert>
 	
 	<select 
@@ -37,21 +37,21 @@
 		resultType="string"
 	>
 		SELECT
-				FILE_URL	AS	fileUrl
+						FILE_URL	AS	fileUrl
 		  FROM	
-		  		<choose>
-					<when test="type == 'notice'">CP_NT_FILE</when>
-					<when test="type == 'report'">CP_RP_FILE</when>
-					<when test="type == 'review'">CP_RV_FILE</when>
-					<otherwise>TYPE_ERROR_TABLE</otherwise>
-				</choose>
+						<choose>
+							<when test="type == 'notice'">CP_NT_FILE</when>
+							<when test="type == 'report'">CP_RP_FILE</when>
+							<when test="type == 'review'">CP_RV_FILE</when>
+							<otherwise>TYPE_ERROR_TABLE</otherwise>
+						</choose>
 		 WHERE
-		 		<choose>
-					<when test="type == 'notice'">NOTICE_NO = #{boardNo}</when>
-		  			<when test="type == 'report'">REPORT_NO = #{boardNo}</when>
-		  			<when test="type == 'review'">REVIEW_NO = #{boardNo}</when>
-					<otherwise>TYPE_ERROR_VALUES</otherwise>
-				</choose>
+						<choose>
+							<when test="type == 'notice'">NOTICE_NO = #{boardNo}</when>
+							<when test="type == 'report'">REPORT_NO = #{boardNo}</when>
+							<when test="type == 'review'">REVIEW_NO = #{boardNo}</when>
+							<otherwise>TYPE_ERROR_VALUES</otherwise>
+						</choose>
 	</select>	
 	
 	<delete
@@ -60,18 +60,18 @@
 	>
 		DELETE
 		  FROM
-				<choose>
-					<when test="type == 'notice'">CP_NT_FILE</when>
-					<when test="type == 'report'">CP_RP_FILE</when>
-					<when test="type == 'review'">CP_RV_FILE</when>
-					<otherwise>TYPE_ERROR_TABLE</otherwise>
-				</choose>
+						<choose>
+							<when test="type == 'notice'">CP_NT_FILE</when>
+							<when test="type == 'report'">CP_RP_FILE</when>
+							<when test="type == 'review'">CP_RV_FILE</when>
+							<otherwise>TYPE_ERROR_TABLE</otherwise>
+						</choose>
 		 WHERE	
-		 		<choose>
-					<when test="type == 'notice'">NOTICE_NO = #{boardNo}</when>
-		  			<when test="type == 'report'">REPORT_NO = #{boardNo}</when>
-		  			<when test="type == 'review'">REVIEW_NO = #{boardNo}</when>
-					<otherwise>TYPE_ERROR_VALUES</otherwise>
-				</choose>
+						<choose>
+							<when test="type == 'notice'">NOTICE_NO = #{boardNo}</when>
+							<when test="type == 'report'">REPORT_NO = #{boardNo}</when>
+							<when test="type == 'review'">REVIEW_NO = #{boardNo}</when>
+							<otherwise>TYPE_ERROR_VALUES</otherwise>
+						</choose>
 	</delete>
 </mapper>

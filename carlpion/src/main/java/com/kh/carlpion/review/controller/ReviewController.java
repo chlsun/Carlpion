@@ -1,7 +1,6 @@
 package com.kh.carlpion.review.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.point.model.dto.LikeDTO;
 import com.kh.carlpion.point.model.service.PointService;
 import com.kh.carlpion.review.model.dto.ReviewDTO;
 import com.kh.carlpion.review.model.service.ReviewService;
+import com.kh.carlpion.utill.service.ResponseDataService;
 
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -31,23 +32,19 @@ import lombok.extern.slf4j.Slf4j;
 public class ReviewController {
 
 	private final ReviewService reviewService;
+	private final ResponseDataService dataService;
+	private final FileService fileService;
 	private final PointService pointService;
-	
-	private static final int MAX_FILE_COUNT = 5;
 	
 	@PostMapping
 	public ResponseEntity<?> save(ReviewDTO reviewDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files) {
-
-		if(files != null && MAX_FILE_COUNT < files.size()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
-		}
-		
+		fileService.filesCheck(files);
 		reviewService.save(reviewDTO, files);
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.status(HttpStatus.CREATED).body(dataService.responseData("201", "CREATED", null));
 	}
 	
 	@PostMapping("/{id}")
-	public ResponseEntity<LikeDTO> like(@PathVariable(name = "id") Long reviewNo) {
+	public ResponseEntity<?> like(@PathVariable(name = "id") Long reviewNo) {
 		LikeDTO likeDTO = new LikeDTO();
 		likeDTO.setReviewNo(reviewNo);
 		pointService.saveReviewLike(likeDTO);
@@ -55,29 +52,27 @@ public class ReviewController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<Map<String, Object>> findAll(@RequestParam(name = "page", defaultValue = "1") int pageNo) {
-		return ResponseEntity.ok(reviewService.findAll(pageNo));
+	public ResponseEntity<?> findAll(@RequestParam(name = "page", defaultValue = "1") int pageNo) {
+		return ResponseEntity.status(HttpStatus.OK).body(dataService.responseData("200", "OK", reviewService.findAll(pageNo)));
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<ReviewDTO> findById(@PathVariable(name = "id") @Min(value = 1) Long reviewNo) {		
-		return ResponseEntity.ok(reviewService.findById(reviewNo));
+	public ResponseEntity<?> findById(@PathVariable(name = "id") @Min(value = 1) Long reviewNo) {		
+		ReviewDTO reviewDTO = reviewService.findById(reviewNo);
+		return ResponseEntity.status(HttpStatus.OK).body(dataService.responseData("200", "OK", reviewDTO));
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateById(@PathVariable(name = "id") Long reviewNo, ReviewDTO reviewDTO, @RequestParam(name = "file", required = false) List<MultipartFile> files) {
-
-		if(files != null && MAX_FILE_COUNT < files.size()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일은 최대 " + MAX_FILE_COUNT + "개까지 첨부할 수 있습니다.");
-		}
-		
+	public ResponseEntity<?> updateById(@PathVariable(name = "id") Long reviewNo, ReviewDTO reviewDTO, 
+																			@RequestParam(name = "file", required = false) List<MultipartFile> files) {
+		fileService.filesCheck(files);
 		reviewDTO.setReviewNo(reviewNo);
-		return ResponseEntity.ok(reviewService.updateById(reviewDTO, files));
+		return ResponseEntity.status(HttpStatus.OK).body(dataService.responseData("200", "OK", reviewService.updateById(reviewDTO, files)));
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> softDeleteById(@PathVariable(name = "id") Long reviewNo) {
 		reviewService.softDeleteById(reviewNo);
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(dataService.responseData("204", "NO_CONTENT", null));
 	}
 }
