@@ -55,10 +55,6 @@ public class RentalServiceImpl implements RentalService{
 		
 		rentCarList = rentCarMapper.getRentCarListByAddr(reservation);
 		
-		for(RentCarDTO rentCar : rentCarList) {
-			rentCar.getCarModel().setImgURL("http://localhost/uploads/carModel/" + rentCar.getCarModel().getImgURL());
-		}
-		
 		return rentCarList;
 	}
 
@@ -68,10 +64,6 @@ public class RentalServiceImpl implements RentalService{
 		List<RentCarDTO> rentCarList = null;
 		
 		rentCarList = rentCarMapper.getRentalListByParkingId(reservation);
-		
-		for(RentCarDTO rentCar : rentCarList) {
-			rentCar.getCarModel().setImgURL("http://localhost/uploads/carModel/" + rentCar.getCarModel().getImgURL());
-		}
 		
 		return rentCarList;
 		
@@ -83,10 +75,6 @@ public class RentalServiceImpl implements RentalService{
 		List<RentCarDTO> rentCarList = null;
 		
 		rentCarList = rentCarMapper.getRentalListByCarNo(carNo);
-		
-		for(RentCarDTO rentCar : rentCarList) {
-			rentCar.getCarModel().setImgURL("http://localhost/uploads/carModel/" + rentCar.getCarModel().getImgURL());
-		}
 		
 		return rentCarList;
 		

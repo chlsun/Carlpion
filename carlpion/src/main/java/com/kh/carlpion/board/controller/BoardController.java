@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.carlpion.board.dto.BoardDTO;
 import com.kh.carlpion.board.service.BoardService;
+import com.kh.carlpion.util.model.dto.ResponseData;
+import com.kh.carlpion.util.model.service.ResponseDataService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,28 +21,35 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 	
 	private final BoardService boardService;
+	private final ResponseDataService responseDataService;
 
 	@GetMapping("/review")
-	public ResponseEntity<?> getReviewBoard(){
+	public ResponseEntity<ResponseData> getReviewBoard(){
 		
 		List<BoardDTO> boardList = boardService.getReviewBoard();
+		
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", boardList);
 	
-		return ResponseEntity.status(HttpStatus.OK).body(boardList);
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@GetMapping("/report")
-	public ResponseEntity<?> getReportBoard(){
+	public ResponseEntity<ResponseData> getReportBoard(){
 		
 		List<BoardDTO> boardList = boardService.getReportBoard();
 	
-		return ResponseEntity.status(HttpStatus.OK).body(boardList);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", boardList);
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@GetMapping("/notice")
-	public ResponseEntity<?> getNoticeBoard(){
+	public ResponseEntity<ResponseData> getNoticeBoard(){
 		
 		List<BoardDTO> boardList = boardService.getNoticeBoard();
 	
-		return ResponseEntity.status(HttpStatus.OK).body(boardList);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", boardList);
+		
+		return ResponseEntity.ok(responseData);
 	}
 }

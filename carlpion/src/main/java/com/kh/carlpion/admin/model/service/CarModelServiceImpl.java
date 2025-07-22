@@ -16,7 +16,7 @@ import com.kh.carlpion.exception.exceptions.AlreadyExistsException;
 import com.kh.carlpion.exception.exceptions.CarModelNotFoundException;
 import com.kh.carlpion.exception.exceptions.ImgFileNotFoundException;
 import com.kh.carlpion.exception.exceptions.ModelNotFoundException;
-import com.kh.carlpion.file.service.FileService;
+import com.kh.carlpion.file.service.S3Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class CarModelServiceImpl implements CarModelService {
 	
 	private final PageInfoUtil pageInfoUtil;
 	private final CarModelMapper carModelMapper;
-	private final FileService fileService;
+	private final S3Service s3Service;
 	
 	public Map<String, Object> getCarModelList(int page){
 		
@@ -43,14 +43,7 @@ public class CarModelServiceImpl implements CarModelService {
 		
 		List<CarModelDTO> returnList = carModelMapper.getCarModelList(rowBound);
 		
-		if(!returnList.isEmpty()) {
-			for(CarModelDTO carModel : returnList) {
-				carModel.setImgURL("http://localhost/uploads/carModel/" + carModel.getImgURL());
-			}
-		}
-		
 		Map<String, Integer> pageInfo = pageInfoUtil.getPageInfo(page, carModelCount, pageSize);
-		
 		
 		Map<String, Object> viewInfo = new HashMap();
 		
@@ -75,7 +68,7 @@ public class CarModelServiceImpl implements CarModelService {
 			throw new AlreadyExistsException("이미 존재하는 차량 모델입니다.");
 		}
 		
-		String filePath = fileService.storage(file, "carModel");
+		String filePath = s3Service.upLoad(file);
 		
 		CarModel model = CarModel.builder()
 								 .carModel(carModel.getCarModel())
@@ -102,7 +95,7 @@ public class CarModelServiceImpl implements CarModelService {
 		String filePath = prevImg;
 		
 		if(file != null) {
-			filePath = fileService.storage(file, "carModel");
+			filePath = s3Service.upLoad(file);
 		}
 		
 		CarModel model = CarModel.builder()
@@ -118,7 +111,7 @@ public class CarModelServiceImpl implements CarModelService {
 		carModelMapper.updateCarModel(model);
 		
 		if(file != null) {
-			fileService.deleteFile("carModel", prevImg);
+			s3Service.deleteFile(prevImg);
 		}
 	}
 
@@ -139,7 +132,7 @@ public class CarModelServiceImpl implements CarModelService {
 		
 		carModelMapper.removeCarModel(carModel.getModelNo());
 		
-		fileService.deleteFile("carModel", prevImg);
+		s3Service.deleteFile(prevImg);
 	}
 
 	@Override
@@ -163,12 +156,6 @@ public class CarModelServiceImpl implements CarModelService {
 	public List<CarModelDTO> getCarModelRandomList() {
 		
 		List<CarModelDTO> carModelList = carModelMapper.getCarModelRandomList();
-		
-		if(!carModelList.isEmpty()) {
-			for(CarModelDTO carModel : carModelList) {
-				carModel.setImgURL("http://localhost/uploads/carModel/" + carModel.getImgURL());
-			}
-		}
 		
 		return carModelList;
 	}

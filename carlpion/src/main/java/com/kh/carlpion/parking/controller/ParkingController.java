@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.carlpion.parking.model.dto.ParkingDTO;
 import com.kh.carlpion.parking.model.service.ParkingService;
+import com.kh.carlpion.util.model.dto.ResponseData;
+import com.kh.carlpion.util.model.service.ResponseDataService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ParkingController {
 	
 	private final ParkingService parkingService;
+	private final ResponseDataService responseDataService;
 
 	// 공영주차장API data DB에 저장
 	@PostMapping("/setting")
@@ -38,11 +41,11 @@ public class ParkingController {
 	@GetMapping("/{search}")
 	public ResponseEntity<?> getParkingInfoByTitle(@PathVariable(name="search") String search){
 		
-		log.info("{}", search);
-		
 		List<ParkingDTO> parkingList =  parkingService.getParkingInfoByTitle(search);
 		
-		return ResponseEntity.status(201).body(parkingList);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", parkingList);
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 	

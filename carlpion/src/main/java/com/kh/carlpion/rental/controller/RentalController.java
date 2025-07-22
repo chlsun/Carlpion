@@ -19,6 +19,8 @@ import com.kh.carlpion.rental.model.dto.ReservationDTO;
 import com.kh.carlpion.rental.model.dto.ReservationDetailDTO;
 import com.kh.carlpion.rental.model.dto.ReservationHistoryDTO;
 import com.kh.carlpion.rental.model.service.RentalService;
+import com.kh.carlpion.util.model.dto.ResponseData;
+import com.kh.carlpion.util.model.service.ResponseDataService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,86 +32,107 @@ import lombok.extern.slf4j.Slf4j;
 public class RentalController {
 	
 	private final RentalService rentalService;
+	private final ResponseDataService responseDataService;
 
 	@GetMapping
-	public ResponseEntity<?> getRentalList(ReservationDTO reservation){
+	public ResponseEntity<ResponseData> getRentalList(ReservationDTO reservation){
 			
 			List<RentCarDTO> rentCarList = rentalService.searchRentCarList(reservation);
+			
+			ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", rentCarList);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(rentCarList);
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@GetMapping("/parking")
-	public ResponseEntity<?> getRentalListByParkingId(ReservationDTO reservation){
+	public ResponseEntity<ResponseData> getRentalListByParkingId(ReservationDTO reservation){
 		
 			List<RentCarDTO> rentCarList = rentalService.getRentalListByParkingId(reservation);
+			
+			ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", rentCarList);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(rentCarList);
+			return ResponseEntity.ok(responseData);
 	}
 	
 	@GetMapping("/details/{carNo}")
-	public ResponseEntity<?> getRentalListByCarNo(@PathVariable(name="carNo") int carNo){
+	public ResponseEntity<ResponseData> getRentalListByCarNo(@PathVariable(name="carNo") int carNo){
 		
 			List<RentCarDTO> rentCarList = rentalService.getRentalListByCarNo(carNo);
+			
+			ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", rentCarList);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(rentCarList);
+			return ResponseEntity.ok(responseData);
 	}
 	
 	@PostMapping("/payment/prepare")
-	public ResponseEntity<?> preparePaymdent(@RequestBody PreparePaymentRequestDTO PreparePaymentRequest){
+	public ResponseEntity<ResponseData> preparePaymdent(@RequestBody PreparePaymentRequestDTO PreparePaymentRequest){
 		
 		Map<String, Integer> response = rentalService.preparePaymdent(PreparePaymentRequest);
+		
+		ResponseData responseData = responseDataService.responseDataBuilder("인증 성공", "200", response);
 	
-		return ResponseEntity.status(HttpStatus.OK).body(response);
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@PostMapping("/payment/complate")
-	public ResponseEntity<?> completePayment(@RequestBody ReservationDetailDTO reservationDetail){
+	public ResponseEntity<ResponseData> completePayment(@RequestBody ReservationDetailDTO reservationDetail){
 		
 		rentalService.completePayment(reservationDetail);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body("성공");
+		ResponseData responseData = responseDataService.responseDataBuilder("추가 성공", "201", null);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(responseData);
 	}
 	
 	@GetMapping("/payment/{impUID}")
-	public ResponseEntity<?> getPaymentHistory(@PathVariable(name = "impUID") String impUID){
+	public ResponseEntity<ResponseData> getPaymentHistory(@PathVariable(name = "impUID") String impUID){
 		
 		ReservationHistoryDTO reservation = rentalService.getPaymentHistory(impUID);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(reservation);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", reservation);
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@GetMapping("/reservation")
-	public ResponseEntity<?> getReservation(){
+	public ResponseEntity<ResponseData> getReservation(){
 		
 		ReservationHistoryDTO reservation = rentalService.getReservation();
 		
-		return ResponseEntity.status(HttpStatus.OK).body(reservation);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", reservation);
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@GetMapping("/reservations")
-	public ResponseEntity<?> getReservationList(){
+	public ResponseEntity<ResponseData> getReservationList(){
 		
 		List<ReservationHistoryDTO> reservation = rentalService.getReservationList();
 		
-		return ResponseEntity.status(HttpStatus.OK).body(reservation);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", reservation);
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@DeleteMapping("/reservation/{impUID}")
-	public ResponseEntity<?> deleteReservationByImpUID(@PathVariable(name = "impUID") String impUID){
+	public ResponseEntity<ResponseData> deleteReservationByImpUID(@PathVariable(name = "impUID") String impUID){
 		
 		rentalService.deleteReservationByImpUID(impUID);
 		
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		ResponseData responseData = responseDataService.responseDataBuilder("삭제 성공", "200", null);
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 	
 	@GetMapping("/history/{limit}")
-	public ResponseEntity<?> getRentHistory(@PathVariable(name = "limit") int limit){
+	public ResponseEntity<ResponseData> getRentHistory(@PathVariable(name = "limit") int limit){
 		
 		Map<String, Object> history = rentalService.getRentHistory(limit);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(history);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", history);
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 }
