@@ -138,6 +138,9 @@ public class RentalServiceImpl implements RentalService{
 				  				   rentCarPrice.getHourPrice());
 		
 		Map<String, Integer> response = new HashMap<>();
+		
+		portoneService.preparePayment(preparePaymentRequest.getMerchantUid(), totalPrice);
+		
         response.put("totalPrice", totalPrice);
         
         portoneService.preparePayment(preparePaymentRequest.getMerchantUid(), totalPrice);

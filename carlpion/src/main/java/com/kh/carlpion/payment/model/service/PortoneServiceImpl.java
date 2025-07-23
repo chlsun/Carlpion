@@ -56,8 +56,6 @@ public class PortoneServiceImpl implements PortoneService {
 	public void preparePayment(String merchantUid, int totalPrice) {
 		String token = getAccessToken();
 		
-		
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -73,9 +71,6 @@ public class PortoneServiceImpl implements PortoneService {
 	
 	public Map<String, Object> verifyPayment(String impUID, String token) {
         HttpHeaders headers = new HttpHeaders();
-        
-        
-        log.info("여기여기여기여기 : {}", impUID);
         
         headers.set("Authorization", token);
 
