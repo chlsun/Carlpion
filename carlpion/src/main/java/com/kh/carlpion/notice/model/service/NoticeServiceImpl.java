@@ -48,7 +48,7 @@ public class NoticeServiceImpl implements NoticeService {
 			for(MultipartFile file : files) {	
 				
 				if( !file.isEmpty()) {
-					String filePath = fileService.storage(file);
+					String filePath = fileService.saveFile(file);
 					
 					NoticeVO requestFileData = NoticeVO.builder()
 													   .noticeNo(requestData.getNoticeNo())
@@ -124,7 +124,7 @@ public class NoticeServiceImpl implements NoticeService {
 			for(MultipartFile file : files) {
 				
 				if(file != null && !file.isEmpty()) {
-					String filePath = fileService.storage(file);
+					String filePath = fileService.saveFile(file);
 					
 					NoticeVO requestFileData = NoticeVO.builder()
 													   .noticeNo(noticeNo)

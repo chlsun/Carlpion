@@ -45,7 +45,7 @@ public class CarModelServiceImpl implements CarModelService {
 		
 		if(!returnList.isEmpty()) {
 			for(CarModelDTO carModel : returnList) {
-				carModel.setImgURL("http://localhost/uploads/carModel/" + carModel.getImgURL());
+				carModel.setImgURL(fileService.getSignedUrl(carModel.getImgURL()));
 			}
 		}
 		
@@ -69,13 +69,16 @@ public class CarModelServiceImpl implements CarModelService {
 			throw new ImgFileNotFoundException("이미지 파일을 꼭 추가해주세요");
 		}
 		
-		int check = carModelMapper.checkDuplicateCarModel(carModel.getCarModel());
+		String check = carModelMapper.checkCarModel(carModel.getModelNo());
 		
-		if(check > 0) {
+		if(check != null) {
 			throw new AlreadyExistsException("이미 존재하는 차량 모델입니다.");
 		}
 		
-		String filePath = fileService.storage(file, "carModel");
+		String filePath = fileService.saveFile(file);
+		
+		
+		log.info("filePath : ", filePath);
 		
 		CarModel model = CarModel.builder()
 								 .carModel(carModel.getCarModel())
@@ -102,7 +105,7 @@ public class CarModelServiceImpl implements CarModelService {
 		String filePath = prevImg;
 		
 		if(file != null) {
-			filePath = fileService.storage(file, "carModel");
+			filePath = fileService.saveFile(file);
 		}
 		
 		CarModel model = CarModel.builder()
@@ -118,7 +121,7 @@ public class CarModelServiceImpl implements CarModelService {
 		carModelMapper.updateCarModel(model);
 		
 		if(file != null) {
-			fileService.deleteFile("carModel", prevImg);
+			fileService.deleteFile(prevImg);
 		}
 	}
 
@@ -139,7 +142,7 @@ public class CarModelServiceImpl implements CarModelService {
 		
 		carModelMapper.removeCarModel(carModel.getModelNo());
 		
-		fileService.deleteFile("carModel", prevImg);
+		fileService.deleteFile(prevImg);
 	}
 
 	@Override
@@ -166,7 +169,7 @@ public class CarModelServiceImpl implements CarModelService {
 		
 		if(!carModelList.isEmpty()) {
 			for(CarModelDTO carModel : carModelList) {
-				carModel.setImgURL("http://localhost/uploads/carModel/" + carModel.getImgURL());
+				carModel.setImgURL(fileService.getSignedUrl(carModel.getImgURL()));
 			}
 		}
 		

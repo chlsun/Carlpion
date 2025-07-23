@@ -35,3 +35,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# 빌드 결과물 무시
+carlpion-0.0.1-SNAPSHOT.jar
+
+# Docker 설정 파일 무시 (원하는 경우만)
+Dockerfile
+
+**/resources/*.json

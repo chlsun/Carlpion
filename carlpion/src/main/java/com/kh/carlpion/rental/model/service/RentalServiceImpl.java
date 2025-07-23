@@ -12,12 +12,14 @@ import org.springframework.dao.TypeMismatchDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.kh.carlpion.admin.model.dao.RentCarMapper;
+import com.kh.carlpion.admin.model.dto.CarModelDTO;
 import com.kh.carlpion.admin.model.dto.RentCarDTO;
 import com.kh.carlpion.auth.model.service.AuthService;
 import com.kh.carlpion.auth.model.vo.CarlpionUserDetails;
 import com.kh.carlpion.exception.exceptions.BadRequestException;
 import com.kh.carlpion.exception.exceptions.CarNotFoundException;
 import com.kh.carlpion.exception.exceptions.RentCarNotFoundException;
+import com.kh.carlpion.file.service.FileService;
 import com.kh.carlpion.payment.model.service.PortoneService;
 import com.kh.carlpion.point.model.dto.PointHistoryDTO;
 import com.kh.carlpion.point.model.service.PointService;
@@ -42,7 +44,8 @@ public class RentalServiceImpl implements RentalService{
 	private final PortoneService portoneService;
 	private final AuthService authService;
 	private final PointService pointService;
-
+	private final FileService fileService;
+	
 
 	@Override
 	public List<RentCarDTO> searchRentCarList(ReservationDTO reservation) {
@@ -55,8 +58,10 @@ public class RentalServiceImpl implements RentalService{
 		
 		rentCarList = rentCarMapper.getRentCarListByAddr(reservation);
 		
-		for(RentCarDTO rentCar : rentCarList) {
-			rentCar.getCarModel().setImgURL("http://localhost/uploads/carModel/" + rentCar.getCarModel().getImgURL());
+		if(!rentCarList.isEmpty()) {
+			for(RentCarDTO carModel : rentCarList) {
+				carModel.getCarModel().setImgURL(fileService.getSignedUrl(carModel.getCarModel().getImgURL()));
+			}
 		}
 		
 		return rentCarList;
@@ -69,8 +74,10 @@ public class RentalServiceImpl implements RentalService{
 		
 		rentCarList = rentCarMapper.getRentalListByParkingId(reservation);
 		
-		for(RentCarDTO rentCar : rentCarList) {
-			rentCar.getCarModel().setImgURL("http://localhost/uploads/carModel/" + rentCar.getCarModel().getImgURL());
+		if(!rentCarList.isEmpty()) {
+			for(RentCarDTO carModel : rentCarList) {
+				carModel.getCarModel().setImgURL(fileService.getSignedUrl(carModel.getCarModel().getImgURL()));
+			}
 		}
 		
 		return rentCarList;
@@ -84,8 +91,10 @@ public class RentalServiceImpl implements RentalService{
 		
 		rentCarList = rentCarMapper.getRentalListByCarNo(carNo);
 		
-		for(RentCarDTO rentCar : rentCarList) {
-			rentCar.getCarModel().setImgURL("http://localhost/uploads/carModel/" + rentCar.getCarModel().getImgURL());
+		if(!rentCarList.isEmpty()) {
+			for(RentCarDTO carModel : rentCarList) {
+				carModel.getCarModel().setImgURL(fileService.getSignedUrl(carModel.getCarModel().getImgURL()));
+			}
 		}
 		
 		return rentCarList;

@@ -51,7 +51,7 @@ public class ReviewServiceImpl implements ReviewService {
 			for(MultipartFile file : files) {
 				
 				if( !file.isEmpty()) {
-					String filePath = fileService.storage(file);
+					String filePath = fileService.saveFile(file);
 					
 					ReviewVO requestFileData = ReviewVO.builder()
 													   .reviewNo(reviewNo)
@@ -132,7 +132,7 @@ public class ReviewServiceImpl implements ReviewService {
 			
 			for(MultipartFile file : files) {			
 				if(file != null && !file.isEmpty()) {
-					String filePath = fileService.storage(file);
+					String filePath = fileService.saveFile(file);
 					
 					ReviewVO requestFileData = ReviewVO.builder()
 													   .reviewNo(reviewNo)

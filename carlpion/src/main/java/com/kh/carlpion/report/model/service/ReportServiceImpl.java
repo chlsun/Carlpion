@@ -49,7 +49,7 @@ public class ReportServiceImpl implements ReportService {
 			for(MultipartFile file : files) {
 				
 				if( !file.isEmpty()) {					
-					String filePath = fileService.storage(file);
+					String filePath = fileService.saveFile(file);
 					
 					ReportVO requestFileData = ReportVO.builder()
 													   .reportNo(requestData.getReportNo())
@@ -124,7 +124,7 @@ public class ReportServiceImpl implements ReportService {
 			
 			for(MultipartFile file : files) {				
 				if(file != null && !file.isEmpty()) {
-					String filePath = fileService.storage(file);					
+					String filePath = fileService.saveFile(file);					
 					
 					ReportVO requestFileData = ReportVO.builder()
 													   .reportNo(reportNo)

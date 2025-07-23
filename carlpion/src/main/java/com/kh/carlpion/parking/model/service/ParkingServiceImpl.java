@@ -125,6 +125,7 @@ public class ParkingServiceImpl implements ParkingService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			// HttpURLConnection 연결 해제
 			if (connection != null) {
 				connection.disconnect();
 			}

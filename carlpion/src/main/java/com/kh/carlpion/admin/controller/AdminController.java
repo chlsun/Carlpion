@@ -21,6 +21,8 @@ import com.kh.carlpion.admin.model.dto.CarModelDTO;
 import com.kh.carlpion.admin.model.dto.RentCarDTO;
 import com.kh.carlpion.admin.model.service.CarModelService;
 import com.kh.carlpion.admin.model.service.RentCarService;
+import com.kh.carlpion.util.model.dto.ResponseData;
+import com.kh.carlpion.util.model.service.ResponseDataService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,82 +36,102 @@ public class AdminController {
 	
 	private final CarModelService carModelService;
 	private final RentCarService rentCarService;
+	private final ResponseDataService responseDataService;
 	
 	@GetMapping("/model/{page}")
-	public ResponseEntity<?> getCarModelList(@PathVariable(name="page") int page){
+	public ResponseEntity<ResponseData> getCarModelList(@PathVariable(name="page") int page){
 
 		Map<String, Object> viewInfo = carModelService.getCarModelList(page);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(viewInfo);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", viewInfo);
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@GetMapping("/model")
-	public ResponseEntity<?> getCarModelNameList(){
+	public ResponseEntity<ResponseData> getCarModelNameList(){
 
 		List<CarModelDTO> modelNameList = carModelService.getCarModelNameList();
 		
-		return ResponseEntity.status(HttpStatus.OK).body(modelNameList);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", modelNameList);
+		
+		return ResponseEntity.ok(responseData);
 	}
 
 	@PostMapping("/model")
-	public ResponseEntity<?> setCarModel(@Valid @ModelAttribute CarModelDTO carModel, 
+	public ResponseEntity<ResponseData> setCarModel(@Valid @ModelAttribute CarModelDTO carModel, 
 										 @RequestParam(name="file", required=false) MultipartFile file){
 		
 		carModelService.setCarModel(carModel, file);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		ResponseData responseData = responseDataService.responseDataBuilder("추가 성공", "201", null);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(responseData);
 	}
 	
 	@PutMapping("/model")
-	public ResponseEntity<?> updateCarModel(@Valid @ModelAttribute CarModelDTO carModel,
+	public ResponseEntity<ResponseData> updateCarModel(@Valid @ModelAttribute CarModelDTO carModel,
 											@RequestParam(name="file", required=false) MultipartFile file){
 		
 		carModelService.updateCarModel(carModel, file);
 		
-		return ResponseEntity.status(HttpStatus.OK).build();
+		ResponseData responseData = responseDataService.responseDataBuilder("수정 성공", "200", null);
+		
+		return ResponseEntity.ok(responseData);
 		
 	}
 	
 	@DeleteMapping("/model")
-	public ResponseEntity<?> removeCarModel(@RequestBody CarModelDTO carModel){
+	public ResponseEntity<ResponseData> removeCarModel(@RequestBody CarModelDTO carModel){
 		
 		carModelService.removeCarModel(carModel);
 		
-		return ResponseEntity.status(HttpStatus.OK).build();
+		ResponseData responseData = responseDataService.responseDataBuilder("삭제 성공", "200", null);
+
+		
+		return ResponseEntity.ok(responseData);
 	}
 	
 	
 	@PostMapping("/car")
-	public ResponseEntity<?> setRentCar(@Valid @RequestBody RentCarDTO rentCar){
+	public ResponseEntity<ResponseData> setRentCar(@Valid @RequestBody RentCarDTO rentCar){
 		
 		rentCarService.setRentCar(rentCar);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		ResponseData responseData = responseDataService.responseDataBuilder("추가 성공", "201", null);
+
+		return ResponseEntity.ok(responseData);
 	}
 	
 	
 	@GetMapping("/car/{page}")
-	public ResponseEntity<?> getRentCarList(@PathVariable(name="page") int page){
+	public ResponseEntity<ResponseData> getRentCarList(@PathVariable(name="page") int page){
 		
 		Map<String, Object> viewInfo = rentCarService.getRentCarList(page);
 		
-		return ResponseEntity.status(HttpStatus.OK).body(viewInfo);
+		ResponseData responseData = responseDataService.responseDataBuilder("조회 성공", "200", viewInfo);
+
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@PutMapping("/car")
-	public ResponseEntity<?> updateRentCar(@Valid @RequestBody RentCarDTO rentCar){
+	public ResponseEntity<ResponseData> updateRentCar(@Valid @RequestBody RentCarDTO rentCar){
 		
 		rentCarService.updateRentCar(rentCar);
 		
-		return ResponseEntity.status(HttpStatus.OK).build();
+		ResponseData responseData = responseDataService.responseDataBuilder("수정 성공", "200", null);
+
+		return ResponseEntity.ok(responseData);
 	}
 	
 	@DeleteMapping("/car")
-	public ResponseEntity<?> deleteRentCarByCarNo(@RequestParam(name = "carNo") int carNo){
+	public ResponseEntity<ResponseData> deleteRentCarByCarNo(@RequestParam(name = "carNo") int carNo){
 		
 		rentCarService.deleteRentCarByCarNo(carNo);
 		
-		return ResponseEntity.status(HttpStatus.OK).build();
+		ResponseData responseData = responseDataService.responseDataBuilder("삭제 성공", "200", null);
+
+		return ResponseEntity.ok(responseData);
 	}
 	
 	

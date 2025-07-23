@@ -4,9 +4,11 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -152,6 +154,12 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
 	
+	@ExceptionHandler(TypeMismatchException.class)
+    public ResponseEntity<?> handleTypeMismatchException(TypeMismatchException ex) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("요청 형식이 올바르지 않습니다. 숫자 필드에 문자가 포함되지 않았는지 확인해주세요.");
+    }
+	
 	@ExceptionHandler(NotFindException.class)
 	public ResponseEntity<?> handleNotFind(NotFindException e) {
 		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
@@ -218,6 +226,8 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<?> badRequestError(BadRequestException e) {
 		return exceptionHandler(e, HttpStatus.BAD_REQUEST);
 	}
+	
+
 
 
 }
