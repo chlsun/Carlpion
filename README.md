@@ -7,7 +7,7 @@
 ## 배포 주소
 
 아래 주소에서 서비스를 바로 체험해보실 수 있습니다.  
-👉 [https://your-service-url.com](https://your-service-url.com)  
+👉 [https://carlpion.store](https://carlpion.store)  
 (배포 주소를 입력해주세요!)
 
 ## 주요 기능
